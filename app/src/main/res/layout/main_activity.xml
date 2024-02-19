@@ -7,7 +7,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/settingFragment"
-        android:name="org.example.diploma.fragments.ResultFragment"
+        android:name="org.example.diploma.fragments.SettingFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -19,7 +19,7 @@ import org.example.diploma.adapters.SettingAdapter
 class SettingFragment : Fragment() {
     private lateinit var adapter: SettingAdapter
     private lateinit var viewPager: ViewPager2
-//    private lateinit var settingTab: TabLayout
+    private lateinit var settingTab: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +37,9 @@ class SettingFragment : Fragment() {
         adapter = SettingAdapter(this)
         viewPager = view.findViewById(R.id.settingPager)
         viewPager.adapter = adapter
-//        settingTab = view.findViewById(R.id.settingTab)
-//        TabLayoutMediator(settingTab, viewPager) { tab, position ->
-//            tab.text = "TAB ${(position + 1)}"
-//        }.attach()
+        settingTab = view.findViewById(R.id.settingTab)
+        TabLayoutMediator(settingTab, viewPager) { tab, position ->
+            tab.text = "TAB ${(position + 1)}"
+        }.attach()
     }
 }
