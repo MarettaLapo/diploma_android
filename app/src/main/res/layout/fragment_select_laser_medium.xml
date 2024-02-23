@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SelectLaserMediumFragment">
 
-    <!-- TODO: Добавить двухуровневый список с 4 родителями -->
+    <!-- TODO: Добавить двухуровневый список с 3 родителями -->
     <ExpandableListView
-        android:id="@+id/simpleExpandableListView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-
+        android:id="@+id/expandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

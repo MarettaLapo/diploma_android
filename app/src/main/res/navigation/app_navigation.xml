@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/mainPageFragment">
+
+    <fragment
+        android:id="@+id/mainPageFragment"
+        android:name="org.example.diploma.fragments.MainPageFragment"
+        android:label="fragment_main_page"
+        tools:layout="@layout/fragment_main_page" >
+        <action
+            android:id="@+id/action_mainPageFragment_to_selectLaserMediumFragment"
+            app:destination="@id/selectLaserMediumFragment" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_usageExamplesFragment"
+            app:destination="@id/usageExamplesFragment" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_referenceInformationFragment"
+            app:destination="@id/referenceInformationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/usageExamplesFragment"
+        android:name="org.example.diploma.fragments.UsageExamplesFragment"
+        android:label="fragment_usage_examples"
+        tools:layout="@layout/fragment_usage_examples" />
+    <fragment
+        android:id="@+id/referenceInformationFragment"
+        android:name="org.example.diploma.fragments.ReferenceInformationFragment"
+        android:label="fragment_reference_information"
+        tools:layout="@layout/fragment_reference_information" />
+    <fragment
+        android:id="@+id/selectLaserMediumFragment"
+        android:name="org.example.diploma.fragments.SelectLaserMediumFragment"
+        android:label="fragment_select_laser_medium"
+        tools:layout="@layout/fragment_select_laser_medium" >
+        <action
+            android:id="@+id/action_selectLaserMediumFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="org.example.diploma.fragments.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="org.example.diploma.fragments.ResultFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result" />
+</navigation>

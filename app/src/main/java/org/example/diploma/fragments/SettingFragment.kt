@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.example.diploma.R
 import org.example.diploma.adapters.SettingAdapter
+import org.example.diploma.databinding.FragmentSettingBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -21,25 +22,30 @@ class SettingFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var settingTab: TabLayout
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var binding: FragmentSettingBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false)
+        binding = FragmentSettingBinding.inflate(inflater, container, false)
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = SettingAdapter(this)
         viewPager = view.findViewById(R.id.settingPager)
         viewPager.adapter = adapter
+
         settingTab = view.findViewById(R.id.settingTab)
         TabLayoutMediator(settingTab, viewPager) { tab, position ->
             tab.text = "TAB ${(position + 1)}"
         }.attach()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

@@ -9,16 +9,16 @@ import androidx.viewpager2.widget.ViewPager2
 import org.example.diploma.R
 import org.example.diploma.adapters.ResultAdapter
 import org.example.diploma.adapters.SettingAdapter
+import org.example.diploma.databinding.FragmentResultBinding
+import org.example.diploma.databinding.FragmentSettingBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ResultFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class ResultFragment : Fragment() {
 
     private lateinit var adapter: ResultAdapter
     private lateinit var viewPager: ViewPager2
+
+    private var binding: FragmentResultBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,8 @@ class ResultFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_result, container, false)
+        binding = FragmentResultBinding.inflate(inflater, container, false)
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,6 +41,11 @@ class ResultFragment : Fragment() {
 //        TabLayoutMediator(settingTab, viewPager) { tab, position ->
 //            tab.text = "TAB ${(position + 1)}"
 //        }.attach()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 }

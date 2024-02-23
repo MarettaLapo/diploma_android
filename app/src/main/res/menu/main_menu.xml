@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/selectLaserMediumFragment"
+            android:title="@string/selection_medium">
+        </item>
+
+        <item
+            android:id="@+id/settingFragment"
+            android:title="@string/settings">
+        </item>
+
+        <item
+            android:id="@+id/resultFragment"
+            android:title="@string/results">
+        </item>
+
+        <item
+            android:id="@+id/referenceInformationFragment"
+            android:title="@string/ref_info">
+        </item>
+
+        <item
+            android:id="@+id/usageExamplesFragment"
+            android:title="@string/usage_examples">
+        </item>
+
+    </group>
+</menu>

@@ -4,18 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import org.example.diploma.R
+import org.example.diploma.databinding.FragmentMainPageBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MainPageFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class MainPageFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var binding: FragmentMainPageBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +24,27 @@ class MainPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_page, container, false)
+        binding = FragmentMainPageBinding.inflate(inflater, container, false)
+
+        binding!!.selectMediumButton.setOnClickListener { view: View ->
+            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_selectLaserMediumFragment) }
+
+        binding!!.examplesButton.setOnClickListener { view: View ->
+            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_usageExamplesFragment) }
+
+        binding!!.informationButton.setOnClickListener { view: View ->
+            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_referenceInformationFragment) }
+
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            title = "Главная страница"
+        }
+
+        return binding!!.root
     }
 
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 }

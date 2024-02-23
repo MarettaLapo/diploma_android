@@ -7,28 +7,28 @@
     tools:context=".fragments.MainPageFragment">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/selectMediumButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="132dp"
         android:text="Создать новую конфигурацияю"
-        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.296" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/informationButton"
         android:layout_width="163dp"
         android:layout_height="56dp"
-        android:layout_marginStart="92dp"
+        android:layout_marginStart="56dp"
         android:text="Справочная информация"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.471" />
+        app:layout_constraintTop_toBottomOf="@+id/selectMediumButton"
+        app:layout_constraintVertical_bias="0.278" />
 
     <Button
+        android:id="@+id/examplesButton"
         android:layout_width="117dp"
         android:layout_height="56dp"
         android:layout_marginStart="8dp"
@@ -36,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/informationButton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.471" />
 
@@ -48,7 +48,7 @@
         android:background="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/informationButton" />
 
     <TextView
         android:id="@+id/textView2"

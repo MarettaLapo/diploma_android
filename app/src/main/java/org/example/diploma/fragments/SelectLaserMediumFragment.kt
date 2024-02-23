@@ -5,28 +5,58 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.example.diploma.R
+import org.example.diploma.adapters.ExpandableListAdapter
+import org.example.diploma.databinding.FragmentSelectLaserMediumBinding
+import org.example.diploma.databinding.FragmentSettingBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SelectLaserMediumFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class SelectLaserMediumFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var binding: FragmentSelectLaserMediumBinding? = null
+
+    private val header: MutableList<String> = ArrayList()
+    private val body: MutableList<MutableList<String>> = ArrayList()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_select_laser_medium, container, false)
+        binding = FragmentSelectLaserMediumBinding.inflate(inflater, container, false)
+
+        header.add("Er:Host")
+        header.add("Nd:Host")
+        header.add("Yb:Host")
+
+        val erHost: MutableList<String> = ArrayList()
+        erHost.add("Er:Yb:glass")
+
+        val ndHost: MutableList<String> = ArrayList()
+        ndHost.add("Nd:YAG")
+        ndHost.add("Nd:YLF-PI")
+        ndHost.add("Nd:YLF-S")
+        ndHost.add("Nd:YAP")
+        ndHost.add("Nd:YVO")
+        ndHost.add("Nd:KGW")
+
+        val ybHost: MutableList<String> = ArrayList()
+        ybHost.add("Yb:YAG")
+
+        body.add(erHost)
+        body.add(ndHost)
+        body.add(ybHost)
+
+        val expandableListView = binding!!.expandableListView
+
+        expandableListView.setAdapter(ExpandableListAdapter(this.context, header, body, expandableListView))
+
+        return binding!!.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 }
