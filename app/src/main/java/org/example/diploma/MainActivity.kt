@@ -20,7 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+//        setSupportActionBar(binding.)
+//метод последовательных приближений
         drawerLayout = binding.drawerLayout
 
         val navController = this.findNavController(R.id.appNavHostFragment)

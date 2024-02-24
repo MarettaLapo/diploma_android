@@ -49,7 +49,10 @@ class SelectLaserMediumFragment : Fragment() {
 
         val expandableListView = binding!!.expandableListView
 
-        expandableListView.setAdapter(ExpandableListAdapter(this.context, header, body, expandableListView))
+        val fab = binding!!.floatingActionButton
+        fab.hide()
+
+        expandableListView.setAdapter(ExpandableListAdapter(this.context, header, body, expandableListView, fab))
 
         return binding!!.root
     }

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.ExpandableListView
 import android.widget.TextView
+import androidx.navigation.Navigation
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.example.diploma.R
 import org.w3c.dom.Text
 
@@ -14,7 +16,8 @@ class ExpandableListAdapter(
     var context: Context?,
     var header: MutableList<String>,
     var body: MutableList<MutableList<String>>,
-    var expandableListView: ExpandableListView
+    var expandableListView: ExpandableListView,
+    var fab: FloatingActionButton
 ) : BaseExpandableListAdapter() {
     override fun getGroupCount(): Int {
         return header.size
@@ -72,6 +75,14 @@ class ExpandableListAdapter(
         }
         val title = convertView?.findViewById<TextView>(R.id.tv_title)
         title?.text = getChild(p0, p1)
+        title?.setOnClickListener {
+            fab.show()
+        }
+        fab.setOnClickListener {
+                view: View ->
+            Navigation.findNavController(view).navigate(R.id.action_selectLaserMediumFragment_to_settingFragment)
+        }
+
         return convertView
     }
 
