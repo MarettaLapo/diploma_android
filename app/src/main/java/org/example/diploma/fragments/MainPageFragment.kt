@@ -35,9 +35,6 @@ class MainPageFragment : Fragment() {
         binding!!.informationButton.setOnClickListener { view: View ->
             Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_referenceInformationFragment) }
 
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            title = "Главная страница"
-        }
 
         return binding!!.root
     }

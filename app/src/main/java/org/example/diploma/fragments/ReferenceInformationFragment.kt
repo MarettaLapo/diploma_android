@@ -25,9 +25,7 @@ class ReferenceInformationFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentReferenceInformationBinding.inflate(inflater, container, false)
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            title = "Справочная информация"
-        }
+
         return binding!!.root
     }
     

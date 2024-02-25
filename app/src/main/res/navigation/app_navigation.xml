@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mainPageFragment"
         android:name="org.example.diploma.fragments.MainPageFragment"
-        android:label="fragment_main_page"
+        android:label="@string/main"
         tools:layout="@layout/fragment_main_page" >
         <action
             android:id="@+id/action_mainPageFragment_to_selectLaserMediumFragment"
@@ -23,17 +23,17 @@
     <fragment
         android:id="@+id/usageExamplesFragment"
         android:name="org.example.diploma.fragments.UsageExamplesFragment"
-        android:label="fragment_usage_examples"
+        android:label="@string/usage_examples"
         tools:layout="@layout/fragment_usage_examples" />
     <fragment
         android:id="@+id/referenceInformationFragment"
         android:name="org.example.diploma.fragments.ReferenceInformationFragment"
-        android:label="fragment_reference_information"
+        android:label="@string/ref_info"
         tools:layout="@layout/fragment_reference_information" />
     <fragment
         android:id="@+id/selectLaserMediumFragment"
         android:name="org.example.diploma.fragments.SelectLaserMediumFragment"
-        android:label="fragment_select_laser_medium"
+        android:label="@string/selection_medium"
         tools:layout="@layout/fragment_select_laser_medium" >
         <action
             android:id="@+id/action_selectLaserMediumFragment_to_settingFragment"
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="org.example.diploma.fragments.SettingFragment"
-        android:label="fragment_setting"
+        android:label="@string/settings"
         tools:layout="@layout/fragment_setting" >
         <action
             android:id="@+id/action_settingFragment_to_resultFragment"
@@ -51,6 +51,6 @@
     <fragment
         android:id="@+id/resultFragment"
         android:name="org.example.diploma.fragments.ResultFragment"
-        android:label="fragment_result"
+        android:label="@string/results"
         tools:layout="@layout/fragment_result" />
 </navigation>

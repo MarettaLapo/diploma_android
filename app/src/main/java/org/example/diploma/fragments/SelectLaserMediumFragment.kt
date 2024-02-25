@@ -25,6 +25,9 @@ class SelectLaserMediumFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSelectLaserMediumBinding.inflate(inflater, container, false)
 
+        header.clear()
+        body.clear()
+
         header.add("Er:Host")
         header.add("Nd:Host")
         header.add("Yb:Host")
@@ -56,6 +59,7 @@ class SelectLaserMediumFragment : Fragment() {
 
         return binding!!.root
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

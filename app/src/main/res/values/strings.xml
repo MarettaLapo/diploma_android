@@ -2,6 +2,7 @@
     <string name="app_name">Diploma</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main">Главная страница</string>
     <string name="ref_info">Справочная информация</string>
     <string name="usage_examples">Примеры использования</string>
     <string name="selection_medium">Выбор среды</string>

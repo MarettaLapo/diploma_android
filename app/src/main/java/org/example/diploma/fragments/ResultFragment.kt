@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import org.example.diploma.R
 import org.example.diploma.adapters.ResultAdapter
 import org.example.diploma.adapters.SettingAdapter
@@ -17,6 +19,7 @@ class ResultFragment : Fragment() {
 
     private lateinit var adapter: ResultAdapter
     private lateinit var viewPager: ViewPager2
+    private lateinit var resultsTab: TabLayout
 
     private var binding: FragmentResultBinding? = null
 
@@ -35,12 +38,12 @@ class ResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = ResultAdapter(this)
-        viewPager = view.findViewById(R.id.resultPager)
+        viewPager = binding!!.resultPager
         viewPager.adapter = adapter
-//        settingTab = view.findViewById(R.id.settingTab)
-//        TabLayoutMediator(settingTab, viewPager) { tab, position ->
-//            tab.text = "TAB ${(position + 1)}"
-//        }.attach()
+        resultsTab = binding!!.resultsTab
+        TabLayoutMediator(resultsTab, viewPager) { tab, position ->
+            tab.text = "TAB ${(position + 1)}"
+        }.attach()
     }
 
     override fun onDestroyView() {

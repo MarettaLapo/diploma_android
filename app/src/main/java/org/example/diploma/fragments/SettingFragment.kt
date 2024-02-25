@@ -35,10 +35,10 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = SettingAdapter(this)
-        viewPager = view.findViewById(R.id.settingPager)
+        viewPager = binding!!.settingPager
         viewPager.adapter = adapter
 
-        settingTab = view.findViewById(R.id.settingTab)
+        settingTab = binding!!.settingTab
         TabLayoutMediator(settingTab, viewPager) { tab, position ->
             tab.text = "TAB ${(position + 1)}"
         }.attach()

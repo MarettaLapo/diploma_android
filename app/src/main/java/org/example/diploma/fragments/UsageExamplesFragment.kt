@@ -20,9 +20,7 @@ class UsageExamplesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentUsageExamplesBinding.inflate(inflater, container, false)
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            title = "Примеры использования"
-        }
+
         return binding!!.root
     }
 
