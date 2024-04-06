@@ -25,6 +25,5 @@
             android:id="@+id/usageExamplesFragment"
             android:title="@string/usage_examples">
         </item>
-
     </group>
 </menu>
