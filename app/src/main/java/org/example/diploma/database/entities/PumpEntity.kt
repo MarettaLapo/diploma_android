@@ -70,6 +70,6 @@ data class PumpEntity (
         // and arrange events in ascending order
         // of their ids
         @Query("Select * from pumps")
-        fun getAllPumps(): LiveData<List<PumpEntity>>
+        fun getAllPumps(): List<PumpEntity>
     }
 }

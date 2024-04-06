@@ -79,7 +79,7 @@ class ExpandableListAdapter(
             fab.show()
         }
         fab.setOnClickListener {
-                view: View ->
+            view: View ->
             Navigation.findNavController(view).navigate(R.id.action_selectLaserMediumFragment_to_settingFragment)
         }
 

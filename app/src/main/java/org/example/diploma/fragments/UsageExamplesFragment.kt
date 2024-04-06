@@ -20,7 +20,6 @@ class UsageExamplesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentUsageExamplesBinding.inflate(inflater, container, false)
-
         return binding!!.root
     }
 

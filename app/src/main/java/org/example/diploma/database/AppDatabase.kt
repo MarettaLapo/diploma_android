@@ -1,11 +1,16 @@
 package org.example.diploma.database
 
 import android.content.Context
+import android.util.Log
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.example.diploma.database.entities.AmplifierEntity
 import org.example.diploma.database.entities.ConfigurationEntity
 import org.example.diploma.database.entities.HostEntity
@@ -14,6 +19,7 @@ import org.example.diploma.database.entities.OptimizationEntity
 import org.example.diploma.database.entities.PumpEntity
 import org.example.diploma.database.entities.QSwitchEntity
 import org.example.diploma.database.entities.SaveEntity
+import java.util.concurrent.Executors
 
 @Database(
     version = 1,
@@ -51,22 +57,14 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
+                val scope = CoroutineScope(Dispatchers.IO)
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
                 )
                     .fallbackToDestructiveMigration()
-                    .addCallback(object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-                            // Populate the database with initial data
-                            // For example:
-                            val pumpDao = INSTANCE?.getPumpDao()
-                            pumpDao?.insertPump(PumpEntity())
-                            pumpDao?.insertPump(PumpEntity())
-                        }
-                    })
+                    .addCallback(AppDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 // return instance
@@ -77,12 +75,36 @@ abstract class AppDatabase : RoomDatabase() {
         private class AppDatabaseCallback(
             private val scope: CoroutineScope
         ) : RoomDatabase.Callback() {
-            /**
-             * Override the onCreate method to populate the database.
-             */
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+                INSTANCE?.let { /*database ->*/
+                    scope.launch {
+                        INSTANCE?.getPumpDao()?.insertPump(PumpEntity(
+                            0L,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            "Shoto",
+                            "Gdeto",
+                            "Hehe",
+                            1.0,
+                            1.0,
+                        ))
+                    }
+                }
 
+                INSTANCE?.let { /*database ->*/
+                    val data = scope.async {
+                        INSTANCE?.getPumpDao()?.getAllPumps()
+                    }
+                    scope.launch {
+                        for(item in data.await()!!){
+                            Log.d("asdsa", item.toString())
+                        }
+                    }
+                }
             }
         }
     }
