@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         val toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-//        setSupportActionBar(binding.)
-//метод последовательных приближений
         drawerLayout = binding.drawerLayout
 
         val navController = this.findNavController(R.id.appNavHostFragment)
