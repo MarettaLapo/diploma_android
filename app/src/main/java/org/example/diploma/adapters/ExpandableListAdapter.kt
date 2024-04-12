@@ -1,6 +1,7 @@
 package org.example.diploma.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.navigation.Navigation
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.example.diploma.R
+import org.example.diploma.fragments.setting.SettingViewModel
 import org.w3c.dom.Text
 
 class ExpandableListAdapter(
@@ -17,7 +19,8 @@ class ExpandableListAdapter(
     var header: MutableList<String>,
     var body: MutableList<MutableList<String>>,
     var expandableListView: ExpandableListView,
-    var fab: FloatingActionButton
+    var fab: FloatingActionButton,
+    var settingViewModel: SettingViewModel
 ) : BaseExpandableListAdapter() {
     override fun getGroupCount(): Int {
         return header.size
@@ -32,6 +35,7 @@ class ExpandableListAdapter(
     }
 
     override fun getChild(p0: Int, p1: Int): String {
+        Log.d("hee", p1.toString())
         return body[p0][p1]
     }
 

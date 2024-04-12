@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainPageFragment"
-        android:name="org.example.diploma.fragments.MainPageFragment"
+        android:name="org.example.diploma.fragments.pages.MainPageFragment"
         android:label="@string/main"
         tools:layout="@layout/fragment_main_page" >
         <action
@@ -22,17 +22,17 @@
     </fragment>
     <fragment
         android:id="@+id/usageExamplesFragment"
-        android:name="org.example.diploma.fragments.UsageExamplesFragment"
+        android:name="org.example.diploma.fragments.pages.UsageExamplesFragment"
         android:label="@string/usage_examples"
         tools:layout="@layout/fragment_usage_examples" />
     <fragment
         android:id="@+id/referenceInformationFragment"
-        android:name="org.example.diploma.fragments.ReferenceInformationFragment"
+        android:name="org.example.diploma.fragments.pages.ReferenceInformationFragment"
         android:label="@string/ref_info"
         tools:layout="@layout/fragment_reference_information" />
     <fragment
         android:id="@+id/selectLaserMediumFragment"
-        android:name="org.example.diploma.fragments.SelectLaserMediumFragment"
+        android:name="org.example.diploma.fragments.pages.SelectLaserMediumFragment"
         android:label="@string/selection_medium"
         tools:layout="@layout/fragment_select_laser_medium" >
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="org.example.diploma.fragments.SettingFragment"
+        android:name="org.example.diploma.fragments.setting.SettingFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_setting" >
         <action
@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/resultFragment"
-        android:name="org.example.diploma.fragments.ResultFragment"
+        android:name="org.example.diploma.fragments.setting.ResultFragment"
         android:label="@string/results"
         tools:layout="@layout/fragment_result" />
 </navigation>

@@ -1,26 +1,33 @@
 package org.example.diploma
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.viewpager2.widget.ViewPager2
-import org.example.diploma.adapters.SettingAdapter
-import org.example.diploma.database.AppDatabase
 import org.example.diploma.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: MainActivityBinding
     private lateinit var drawerLayout: DrawerLayout
+
+//    private val wordViewModel: UGViewModel by viewModels {
+//        UGViewModelFactory((application as AppApplication).amplifierRepository)
+//    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppDatabase.getDatabase(this)
+
+
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//        wordViewModel.initialAmplifier.observe(this) { words ->
+//            // Update the cached copy of the words in the adapter.
+//            Log.d("catt", words.ampLength.toString())
+//        }
+
         val toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         drawerLayout = binding.drawerLayout
