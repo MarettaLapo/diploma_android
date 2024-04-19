@@ -15,4 +15,5 @@ data class OptimizationEntity (
     @ColumnInfo(name = "range_start") val rangeStart: Double?,
     @ColumnInfo(name = "range_end") val rangeEnd: Double?,
     @ColumnInfo(name = "number_of_points") val numberOfPoints: Int?,
+    @ColumnInfo(name = "is_use") val isUse: Boolean?,
 )

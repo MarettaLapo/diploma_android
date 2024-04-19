@@ -23,6 +23,6 @@ interface ConfigurationDao {
     suspend fun update(configuration: ConfigurationEntity)
 
     @Query("Select * from configurations where id ==:configurationId")
-    fun getConfigurationData(configurationId: Long): LiveData<ConfigurationEntity>
+    fun getConfigurationData(configurationId: Long?): LiveData<ConfigurationEntity>
 
 }

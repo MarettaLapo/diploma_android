@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
+import androidx.room.Ignore
 
 @Entity(tableName = "laserMediums")
 data class LaserMediumEntity (
@@ -130,4 +130,10 @@ data class LaserMediumEntity (
 
     //"Sensitizing="
     val is_sensitizer: Boolean?,
-    )
+
+    //Constant in temperature emission coefficient
+    val c: Double?,
+    ){
+    @Ignore var ks: Double? = null
+    @Ignore var sp: Double? = null
+}

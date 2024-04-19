@@ -22,5 +22,5 @@ interface QSwitchDao {
     suspend fun update(qSwitch: QSwitchEntity)
 
     @Query("Select * from qSwitches where id ==:qSwitchId")
-    fun getQSwitchData(qSwitchId: Long): LiveData<QSwitchEntity>
+    fun getQSwitchData(qSwitchId: Long?): LiveData<QSwitchEntity>
 }

@@ -67,10 +67,8 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "app_database1"
+                    "9"
                 ).createFromAsset("app_database.db")
-//                    .fallbackToDestructiveMigration()
-//                    .addCallback(AppDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 Log.d("cat123", "tata")
@@ -80,53 +78,5 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
         }
-
-//        private class AppDatabaseCallback(
-//            private val scope: CoroutineScope
-//        ) : RoomDatabase.Callback() {
-//            override fun onCreate(db: SupportSQLiteDatabase) {
-//                super.onCreate(db)
-//                INSTANCE?.let { database ->
-//                    scope.launch(Dispatchers.IO) {
-//                        populateDatabase(database.getPumpDao())
-//                    }
-//                }
-//                INSTANCE?.let { /*database ->*/
-//                    scope.launch {
-//                        INSTANCE?.getPumpDao()?.insertPump(PumpEntity(
-//                            0L,
-//                            1.0,
-//                            1.0,
-//                            1.0,
-//                            1.0,
-//                            1.0,
-//                            "Shoto",
-//                            "Gdeto",
-//                            "Hehe",
-//                            1.0,
-//                            1.0,
-//                        ))
-//                    }
-//                }
-//
-//                INSTANCE?.let { /*database ->*/
-//                    val data = scope.async {
-//                        INSTANCE?.getPumpDao()?.getAllPumps()
-//                    }
-//                    scope.launch {
-//                        for(item in data.await()!!){
-//                            Log.d("asdsa", item.toString())
-//                        }
-//                    }
-//                }
-//            }
-//            suspend fun populateDatabase(pumpDao: PumpEntity.PumpDao) {
-//                // Start the app with a clean database every time.
-//                // Not needed if you only populate on creation.
-//
-//                val pump = PumpEntity(1L, 1.0)
-//                pumpDao.insertPump(pump)
-//            }
     }
-    // }
 }

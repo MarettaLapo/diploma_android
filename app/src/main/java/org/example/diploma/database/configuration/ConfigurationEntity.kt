@@ -3,6 +3,7 @@ package org.example.diploma.database.configuration
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "configurations")
@@ -41,4 +42,11 @@ data class ConfigurationEntity (
 
     //"DIA, cm="
     val dia: Double?,
-    )
+    ){
+
+    //Lasing area, cm^2
+    @Ignore var ag: Double? = null
+
+    //Telescope magnification
+    @Ignore var tm: Double? = 1.0
+}

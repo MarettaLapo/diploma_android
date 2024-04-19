@@ -1,24 +1,25 @@
-package org.example.diploma.fragments.pages
+package org.example.diploma.fragments.setting.pump
 
 import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
-import org.example.diploma.R
-import org.example.diploma.database.AppApplication
-import org.example.diploma.databinding.FragmentMainPageBinding
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
+import org.example.diploma.R
+import org.example.diploma.database.AppApplication
+import org.example.diploma.databinding.FragmentPumpBinding
+import org.example.diploma.databinding.FragmentPumpFluenceBinding
 
 
-class MainPageFragment : Fragment() {
+class PumpFluenceFragment : Fragment() {
 
-    private var binding: FragmentMainPageBinding? = null
-
+    private var binding: FragmentPumpFluenceBinding? = null
     private val viewModel: MainViewModel by activityViewModels {
+
         MainViewModelFactory(
             (activity?.applicationContext as AppApplication).amplifierRepository,
             (activity?.applicationContext as AppApplication).configurationRepository,
@@ -30,41 +31,20 @@ class MainPageFragment : Fragment() {
             (activity?.applicationContext as AppApplication).saveRepository
         )
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentMainPageBinding.inflate(inflater, container, false)
-
-
-        binding!!.selectMediumButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainPageFragment_to_selectLaserMediumFragment)
-        }
-
-        binding!!.examplesButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainPageFragment_to_usageExamplesFragment)
-        }
-
-        binding!!.informationButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainPageFragment_to_referenceInformationFragment)
-        }
-
-
+        binding = FragmentPumpFluenceBinding.inflate(inflater, container, false)
+        binding!!.lifecycleOwner = this
+        binding!!.viewModel = viewModel
         return binding!!.root
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
 }
+

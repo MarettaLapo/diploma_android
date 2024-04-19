@@ -1,22 +1,19 @@
-package org.example.diploma.fragments.pages
+package org.example.diploma.fragments.setting.amplifier
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
-import org.example.diploma.R
-import org.example.diploma.database.AppApplication
-import org.example.diploma.databinding.FragmentMainPageBinding
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
+import org.example.diploma.database.AppApplication
+import org.example.diploma.databinding.FragmentAmplifierBinding
+class AmplifierFragment : Fragment() {
 
-
-class MainPageFragment : Fragment() {
-
-    private var binding: FragmentMainPageBinding? = null
+    private var binding: FragmentAmplifierBinding? = null
 
     private val viewModel: MainViewModel by activityViewModels {
         MainViewModelFactory(
@@ -31,37 +28,26 @@ class MainPageFragment : Fragment() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentMainPageBinding.inflate(inflater, container, false)
 
+        binding = FragmentAmplifierBinding.inflate(inflater, container, false)
+        binding!!.lifecycleOwner = this
+        binding!!.viewModel = viewModel
 
-        binding!!.selectMediumButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainPageFragment_to_selectLaserMediumFragment)
+        val rg = binding!!.currencySwitchers
+
+        rg.setOnCheckedChangeListener{group, checkedId ->
+            val hehe = binding!!.root.findViewById<RadioButton>(checkedId)
+            //Log.d("checkedId", hehe.toString())
         }
-
-        binding!!.examplesButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainPageFragment_to_usageExamplesFragment)
-        }
-
-        binding!!.informationButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainPageFragment_to_referenceInformationFragment)
-        }
-
 
         return binding!!.root
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

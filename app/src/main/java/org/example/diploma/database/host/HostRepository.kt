@@ -7,6 +7,10 @@ class HostRepository(private val hostDao: HostDao) {
 
     fun getHostData(hostId: Long): LiveData<HostEntity> = hostDao.getHostData(hostId)
 
+    fun getAllHosts(): LiveData<List<HostEntity>> = hostDao.getAllHosts()
+
+
+
     suspend fun insert(host: HostEntity) {
         hostDao.insert(host)
     }

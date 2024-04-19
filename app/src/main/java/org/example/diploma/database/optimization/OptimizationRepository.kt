@@ -7,7 +7,7 @@ class OptimizationRepository(private val optimizationDao: OptimizationDao) {
 
     val initialOptimization: LiveData<OptimizationEntity> = optimizationDao.getInitialOptimization()
 
-    fun getOptimizationData(optimizationId: Long): LiveData<OptimizationEntity> =
+    fun getOptimizationData(optimizationId: Long?): LiveData<OptimizationEntity> =
         optimizationDao.getOptimizationData(optimizationId)
 
     suspend fun insert(optimization: OptimizationEntity) {

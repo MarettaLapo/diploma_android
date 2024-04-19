@@ -1,4 +1,4 @@
-package org.example.diploma.fragments
+package org.example.diploma.fragments.sho
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -26,5 +26,5 @@ interface OptimizationDao {
     fun getInitialOptimization(): LiveData<OptimizationEntity>
 
     @Query("Select * from optimizations where id ==:optimizationId")
-    fun getOptimizationData(optimizationId: Long): LiveData<OptimizationEntity>
+    fun getOptimizationData(optimizationId: Long?): LiveData<OptimizationEntity>
 }

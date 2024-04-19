@@ -23,5 +23,5 @@ interface PumpDao {
     suspend fun update(pump: PumpEntity)
 
     @Query("Select * from pumps where id ==:pumpId")
-    fun getPumpData(pumpId: Long): LiveData<PumpEntity>
+    fun getPumpData(pumpId: Long?): LiveData<PumpEntity>
 }

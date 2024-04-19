@@ -23,6 +23,6 @@ interface LaserMediumDao {
     suspend fun update(laserMedium: LaserMediumEntity)
 
     @Query("Select * from laserMediums where id ==:laserMediumId")
-    fun getLaserMediumData(laserMediumId: Long): LiveData<LaserMediumEntity>
+    fun getLaserMediumData(laserMediumId: Long?): LiveData<LaserMediumEntity>
 
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="org.example.diploma.MainViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@{viewModel.optimizationData.isUse}"
+            android:text="Use this" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/values_array"
+            android:selectedItemPosition="@{viewModel.optimizationData.valueId}" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/depends_array"
+            android:selectedItemPosition="@{viewModel.optimizationData.dependsId}" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            app:endIconMode="clear_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="In range: from">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/from_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.optimizationData.rangeStart != null ? String.valueOf(viewModel.optimizationData.rangeStart) : ``}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            app:endIconMode="clear_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="In range: to">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/to_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.optimizationData.rangeEnd != null ? String.valueOf(viewModel.optimizationData.rangeEnd) : ``}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            app:endIconMode="clear_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Number of points">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/points_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.optimizationData.numberOfPoints != null ? String.valueOf(viewModel.optimizationData.numberOfPoints) : ``}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+</layout>

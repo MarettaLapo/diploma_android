@@ -8,4 +8,49 @@
     <string name="selection_medium">Выбор среды</string>
     <string name="settings">Настройка лазера</string>
     <string name="results">Результат симуляции</string>
+    <string name="cavity_length_cm">Cavity length, cm</string>
+
+    <string-array name="modes_array">
+        <item>Single</item>
+        <item>Frequency</item>
+        <item>Linear</item>
+    </string-array>
+
+    <string-array name="front_types_array">
+        <item>AOM / FTIR</item>
+        <item>Electro-optic</item>
+        <item>VOC I</item>
+        <item>VOC II</item>
+    </string-array>
+
+    <string-array name="values_array">
+        <item>Output energy for full simulation time, J</item>
+        <item>First pulse delay after pump on, μs</item>
+        <item>Intracavity peak intensity, MW/cm\u00B2</item>
+        <item>Full efficiency</item>
+        <item>Average output power, W</item>
+        <item>Peak pulse delay after Q-switch on, ns</item>
+        <item>First monopulse delay after pump on, μs</item>
+        <item>1-st giant pulse duration, ns</item>
+        <item>1-st giant pulse energy, J</item>
+        <item>1-st giant pulse generation efficiency</item>
+        <item>Stored energy on LI before Q-switch ON, J</item>
+        <item>Second pulse output energy, J</item>
+        <item>Contrast</item>
+        <item>All</item>
+    </string-array>
+
+    <string-array name="depends_array">
+        <item>Output coupler reflectivity</item>
+        <item>Pump power</item>
+        <item>Cavity length</item>
+        <item>Active element dissipative losses</item>
+        <item>Intrinsic resonator losses</item>
+        <item>Initial AQS transmission</item>
+        <item>Initial PQS transmission</item>
+        <item>Q-switch ON delay</item>
+        <item>Q-switch ON time</item>
+        <item>Q-switch figure of merit</item>
+    </string-array>
+
 </resources>

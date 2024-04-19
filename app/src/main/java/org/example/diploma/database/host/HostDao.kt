@@ -21,4 +21,7 @@ interface HostDao {
 
     @Query("Select * from hosts where id ==:hostId")
     fun getHostData(hostId: Long): LiveData<HostEntity>
+
+    @Query("Select * from hosts")
+    fun getAllHosts(): LiveData<List<HostEntity>>
 }

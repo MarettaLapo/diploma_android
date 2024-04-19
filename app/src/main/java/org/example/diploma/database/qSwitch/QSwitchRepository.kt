@@ -5,7 +5,7 @@ import org.example.diploma.database.pump.PumpEntity
 
 class QSwitchRepository(private val qSwitchDao: QSwitchDao) {
 
-    fun getQSwitchData(qSwitchId: Long): LiveData<QSwitchEntity> = qSwitchDao.getQSwitchData(qSwitchId)
+    fun getQSwitchData(qSwitchId: Long?): LiveData<QSwitchEntity> = qSwitchDao.getQSwitchData(qSwitchId)
     suspend fun insert(qSwitch: QSwitchEntity) {
         qSwitchDao.insert(qSwitch)
     }

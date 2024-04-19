@@ -22,6 +22,6 @@ interface AmplifierDao {
     @Query("Select * from amplifiers")
     fun getAll(): LiveData<List<AmplifierEntity>>
 
-    @Query("Select * from amplifiers where id = 1")
-    fun getInitialAmplifier(): LiveData<AmplifierEntity>
+    @Query("Select * from amplifiers where id ==:amplifierId")
+    fun getAmplifierData(amplifierId: Long?): LiveData<AmplifierEntity>
 }

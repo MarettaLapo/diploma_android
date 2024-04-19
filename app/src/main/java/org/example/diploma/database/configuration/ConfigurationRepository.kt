@@ -5,7 +5,7 @@ import org.example.diploma.database.amplifier.AmplifierEntity
 
 class ConfigurationRepository(private val configurationDao: ConfigurationDao) {
 
-    fun getConfigurationData(configurationId: Long): LiveData<ConfigurationEntity> = configurationDao.getConfigurationData(configurationId)
+    fun getConfigurationData(configurationId: Long?): LiveData<ConfigurationEntity> = configurationDao.getConfigurationData(configurationId)
     suspend fun insert(configuration: ConfigurationEntity) {
         configurationDao.insert(configuration)
     }

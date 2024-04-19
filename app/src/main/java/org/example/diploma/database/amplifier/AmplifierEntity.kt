@@ -27,4 +27,5 @@ data class AmplifierEntity(
 
     //Waveform
     @ColumnInfo(name = "waveform") val waveform: Int?,
+    @ColumnInfo(name = "is_use") val isUse: Boolean?,
 )

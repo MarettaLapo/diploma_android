@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.navigation.Navigation
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.example.diploma.R
-import org.example.diploma.fragments.setting.SettingViewModel
 import org.w3c.dom.Text
 
 class ExpandableListAdapter(
@@ -19,8 +18,7 @@ class ExpandableListAdapter(
     var header: MutableList<String>,
     var body: MutableList<MutableList<String>>,
     var expandableListView: ExpandableListView,
-    var fab: FloatingActionButton,
-    var settingViewModel: SettingViewModel
+    var fab: FloatingActionButton
 ) : BaseExpandableListAdapter() {
     override fun getGroupCount(): Int {
         return header.size

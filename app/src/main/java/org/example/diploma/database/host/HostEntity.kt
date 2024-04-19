@@ -13,9 +13,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
+import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.configuration.ConfigurationEntity
 import org.example.diploma.database.qSwitch.QSwitchEntity
 import org.example.diploma.database.laserMedium.LaserMediumEntity
+import org.example.diploma.database.optimization.OptimizationEntity
 import org.example.diploma.database.pump.PumpEntity
 
 @Entity(
@@ -42,6 +44,18 @@ import org.example.diploma.database.pump.PumpEntity
             parentColumns = ["id"],
             childColumns = ["q_switch_id"]
         )
+        ,
+        ForeignKey(
+            entity = AmplifierEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["amplifier_id"]
+        )
+        ,
+        ForeignKey(
+            entity = OptimizationEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["optimization_id"]
+        )
     ]
 )
 
@@ -64,5 +78,11 @@ data class HostEntity (
 
     @ColumnInfo(name = "configuration_id")
     val configurationId: Long?,
+
+    @ColumnInfo(name = "amplifier_id")
+    val amplifierId: Long?,
+
+    @ColumnInfo(name = "optimization_id")
+    val optimizationId: Long?,
 )
 

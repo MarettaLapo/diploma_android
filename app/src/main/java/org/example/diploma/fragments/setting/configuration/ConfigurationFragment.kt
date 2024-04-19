@@ -6,19 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import org.example.diploma.MainViewModel
+import org.example.diploma.MainViewModelFactory
 import org.example.diploma.R
 import org.example.diploma.database.AppApplication
 import org.example.diploma.databinding.FragmentConfigurationBinding
-import org.example.diploma.fragments.setting.SettingViewModel
-import org.example.diploma.fragments.setting.SettingViewModelFactory
 
 class ConfigurationFragment : Fragment() {
 
     private var binding: FragmentConfigurationBinding? = null
-    private val settingViewModel: SettingViewModel by viewModels {
-        SettingViewModelFactory((activity?.applicationContext as AppApplication).hostRepository)
+
+    private val viewModel: MainViewModel by activityViewModels {
+        MainViewModelFactory(
+            (activity?.applicationContext as AppApplication).amplifierRepository,
+            (activity?.applicationContext as AppApplication).configurationRepository,
+            (activity?.applicationContext as AppApplication).hostRepository,
+            (activity?.applicationContext as AppApplication).laserMediumRepository,
+            (activity?.applicationContext as AppApplication).optimizationRepository,
+            (activity?.applicationContext as AppApplication).pumpRepository,
+            (activity?.applicationContext as AppApplication).qSwitchRepository,
+            (activity?.applicationContext as AppApplication).saveRepository
+        )
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,13 +40,7 @@ class ConfigurationFragment : Fragment() {
 
         binding = FragmentConfigurationBinding.inflate(inflater, container, false)
         binding!!.lifecycleOwner = this
-        binding!!.settingModel = settingViewModel
-//        Log.d("catt", settingViewModel.host.toString())
-//        settingViewModel.hostId.observe(viewLifecycleOwner) { host ->
-//            // Update the cached copy of the words in the adapter.
-////            binding!!.jeje.setText(host.host)
-//            Log.d("catt", host.toString())
-//        }
+        binding!!.viewModel = viewModel
         return binding!!.root
     }
 

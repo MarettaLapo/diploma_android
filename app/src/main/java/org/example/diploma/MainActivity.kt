@@ -7,14 +7,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import org.example.diploma.databinding.MainActivityBinding
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: MainActivityBinding
     private lateinit var drawerLayout: DrawerLayout
 
-//    private val wordViewModel: UGViewModel by viewModels {
-//        UGViewModelFactory((application as AppApplication).amplifierRepository)
-//    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
