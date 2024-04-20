@@ -30,7 +30,7 @@ class MainViewModel(
     val laserMediumRepository: LaserMediumRepository,
     val optimizationRepository: OptimizationRepository,
     val pumpRepository: PumpRepository,
-    private val qSwitchRepository: QSwitchRepository,
+    val qSwitchRepository: QSwitchRepository,
     val saveRepository: SaveRepository
 ) : ViewModel() {
 
@@ -56,6 +56,10 @@ class MainViewModel(
     }
 
     val allHosts = hostRepository.getAllHosts()
+
+    fun hehe(){
+        Log.d("hehe", pumpData.value.toString())
+    }
 
 }
 

@@ -13,6 +13,8 @@ data class LaserMediumEntity (
     @ColumnInfo(name = "id")
     val laserMediumId: Long?,
 
+    val host: String?,
+
     //"Operation temperature, K="
     val ot: Double?,
 

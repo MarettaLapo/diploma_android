@@ -84,7 +84,7 @@
                     android:id="@+id/tp_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.pumpData.p0 != null ? String.valueOf(viewModel.pumpData.p0) : ``}" />
+                    android:text="@{viewModel.pumpData.issp != null ? String.valueOf(viewModel.pumpData.issp) : ``}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
