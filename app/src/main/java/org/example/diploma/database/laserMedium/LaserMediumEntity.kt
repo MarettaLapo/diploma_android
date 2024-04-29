@@ -91,7 +91,7 @@ data class LaserMediumEntity (
     val s0p: String?,
 
     //q
-    val q: Double?,
+    var q: Double?,
 
     //q1
     val q1: Double?,
@@ -136,6 +136,12 @@ data class LaserMediumEntity (
     //Constant in temperature emission coefficient
     val c: Double?,
     ){
-    @Ignore var ks: Double? = null
-    @Ignore var sp: Double? = null
+    constructor() : this(null,null,null,null,null,
+        null,null,null,null,null,null,null,null,
+        null,null,null, null, null, null,null,null,
+        null,null,null,null,null,null,null,null,null
+        ,null,null,null,null,null,null,null,null,null,null
+        ,null,null)
+//    @Ignore var ks: Double? = null
+//    @Ignore var sp: Double? = null
 }

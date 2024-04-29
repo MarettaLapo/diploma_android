@@ -16,4 +16,7 @@ data class OptimizationEntity (
     @ColumnInfo(name = "range_end") val rangeEnd: Double?,
     @ColumnInfo(name = "number_of_points") val numberOfPoints: Int?,
     @ColumnInfo(name = "is_use") val isUse: Boolean?,
-)
+){
+    constructor() : this(null,null,null,null,null,
+        null,null)
+}

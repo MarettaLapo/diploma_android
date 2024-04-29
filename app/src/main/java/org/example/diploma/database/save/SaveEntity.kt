@@ -83,4 +83,7 @@ data class SaveEntity(
     @ColumnInfo(name = "host") val host: String?,
     @ColumnInfo(name = "type") val type: String?,
     @ColumnInfo(name = "date") val date: String?,
-)
+){
+    constructor() : this(null,null,null,null,null,
+        null,null,null,null,null)
+}

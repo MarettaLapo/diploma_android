@@ -85,4 +85,8 @@ data class HostEntity (
     @ColumnInfo(name = "optimization_id")
     val optimizationId: Long?,
 )
+{
+    constructor() : this(null,null,null,null,null,
+        null,null,null,null)
+}
 

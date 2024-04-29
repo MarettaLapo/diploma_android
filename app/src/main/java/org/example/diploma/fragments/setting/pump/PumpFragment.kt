@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import com.google.android.gms.dynamic.SupportFragmentWrapper
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
 import org.example.diploma.database.AppApplication
@@ -39,7 +41,11 @@ class PumpFragment : Fragment() {
         binding = FragmentPumpBinding.inflate(inflater, container, false)
         binding!!.lifecycleOwner = this
         binding!!.viewModel = viewModel
-        Log.d("hehe", viewModel.pumpData.value?.wp.toString())
+        binding!!.but1.setOnClickListener{
+            Log.d("hehe", "ya tyt")
+            val hehe = PumpFluenceFragment()
+            hehe.show(parentFragmentManager, "PumpFluenceDialog")
+        }
         return binding!!.root
     }
 

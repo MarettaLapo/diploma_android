@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
 import org.example.diploma.R
@@ -62,6 +64,10 @@ class SelectLaserMediumFragment : Fragment() {
         viewModel.allHosts.observe(viewLifecycleOwner) {
             adapter.setListHosts(ArrayList(it))
             adapter.notifyDataSetChanged()
+        }
+
+        lifecycleScope.launch {
+            Log.d("hehe", viewModel.getCombinedDataFlow().value.toString())
         }
 
         return binding!!.root

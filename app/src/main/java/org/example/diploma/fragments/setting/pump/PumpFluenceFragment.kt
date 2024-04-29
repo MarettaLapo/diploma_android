@@ -1,11 +1,13 @@
 package org.example.diploma.fragments.setting.pump
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
@@ -15,7 +17,7 @@ import org.example.diploma.databinding.FragmentPumpBinding
 import org.example.diploma.databinding.FragmentPumpFluenceBinding
 
 
-class PumpFluenceFragment : Fragment() {
+class PumpFluenceFragment : DialogFragment() {
 
     private var binding: FragmentPumpFluenceBinding? = null
     private val viewModel: MainViewModel by activityViewModels {
@@ -39,8 +41,13 @@ class PumpFluenceFragment : Fragment() {
         binding = FragmentPumpFluenceBinding.inflate(inflater, container, false)
         binding!!.lifecycleOwner = this
         binding!!.viewModel = viewModel
+        Log.d("hehe", "ya tyt")
         return binding!!.root
     }
+
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        return super.onCreateDialog(savedInstanceState)
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

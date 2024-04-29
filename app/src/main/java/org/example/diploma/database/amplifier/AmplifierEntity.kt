@@ -28,4 +28,6 @@ data class AmplifierEntity(
     //Waveform
     @ColumnInfo(name = "waveform") val waveform: Int?,
     @ColumnInfo(name = "is_use") val isUse: Boolean?,
-)
+) {
+    constructor() : this(null, null, null, null, null, null, null)
+}

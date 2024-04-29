@@ -151,32 +151,35 @@ class SettingFragment : Fragment() {
 
             //Issp
             it.issp = when (viewModel.laserMediumData.value?.host) {
-                "Er" -> it.hc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
+                "Er" -> it.smolHc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
                         (2.0 * viewModel.laserMediumData.value?.sp!! * viewModel.laserMediumData.value?.t31Yb!!) * 1000000.0
 
-                "Nd" -> it.hc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
+                "Nd" -> it.smolHc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
                         (viewModel.laserMediumData.value?.s0p!!.toDouble() * viewModel.laserMediumData.value?.t43!!) * 1000000.0
 
                 "General" -> {
                     if (viewModel.laserMediumData.value?.is_sensitizer == true) {
-                        it.hc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
+                        it.smolHc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
                                 (2.0 * viewModel.laserMediumData.value?.sp!! * viewModel.laserMediumData.value?.t31Yb!!) * 1000000.0
                     } else {
                         if (viewModel.laserMediumData.value?.levels == 0) {
-                            it.hc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
+                            it.smolHc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
                                     (viewModel.laserMediumData.value?.sp!! * viewModel.laserMediumData.value?.t43!!) * 1000000.0
                         } else {
-                            it.hc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
+                            it.smolHc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
                                     (viewModel.laserMediumData.value?.sp!! * viewModel.laserMediumData.value?.t32!!) * 1000000.0
                         }
                     }
                 }
-                "Yb" -> (it.hc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
+                "Yb" -> (it.smolHc!! / viewModel.laserMediumData.value?.ne!! / it.lp!! / 1E-07 /
                         (viewModel.laserMediumData.value?.sp!! * viewModel.laserMediumData.value?.t43!!)) * 1000000.0
                 else -> {
                     0.0
                 }
             }
+
+            it.pav = it.p0!! * (-(it.rp!! * exp(-viewModel.laserMediumData.value?.ac!! * it.pl!!) + 1.0) *
+                    (exp(-viewModel.laserMediumData.value?.ac!! * it.pl!!) - 1.0) / (viewModel.laserMediumData.value?.ac!! * it.pl!!))
 
             Log.d("hehe", (viewModel.laserMediumData.value?.sp!! * viewModel.laserMediumData.value?.s0p!!.toDouble()).toString())
         }

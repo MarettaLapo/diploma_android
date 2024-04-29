@@ -7,6 +7,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
+import org.example.diploma.database.CombinedData
+import org.example.diploma.database.Hehe
 import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.amplifier.AmplifierRepository
 import org.example.diploma.database.configuration.ConfigurationEntity
@@ -22,6 +30,9 @@ import org.example.diploma.database.pump.PumpRepository
 import org.example.diploma.database.qSwitch.QSwitchEntity
 import org.example.diploma.database.qSwitch.QSwitchRepository
 import org.example.diploma.database.save.SaveRepository
+import org.example.diploma.laser.DiffFunc
+import org.example.diploma.laser.DiffResult
+import org.example.diploma.laser.Laser
 
 class MainViewModel(
     val amplifierRepository: AmplifierRepository,
@@ -54,6 +65,50 @@ class MainViewModel(
         optimizationData = optimizationRepository.getOptimizationData(host.optimizationId)
 
     }
+
+    private val dataFlow1: MutableStateFlow<Hehe> = MutableStateFlow(Hehe("alice", 21))
+
+    private val dataFlow2: MutableStateFlow<Hehe> = MutableStateFlow(Hehe("sasha", 22))
+
+    private val combinedDataFlow: MutableStateFlow<CombinedData> =
+        MutableStateFlow(CombinedData(Hehe("he", 1), Hehe("he", 2), ))
+
+    init {
+        // Комбинируем данные из двух репозиториев и обновляем combinedDataFlow
+        viewModelScope.launch {
+            combine(
+                dataFlow1,
+                dataFlow2
+            ) { ag, ap ->
+                // Вычисляем ah = ag + ap
+                CombinedData(ag, ap)
+            }.collect { combinedData ->
+                combinedDataFlow.value = combinedData
+            }
+        }
+    }
+
+    fun getCombinedDataFlow(): StateFlow<CombinedData> {
+        return combinedDataFlow
+    }
+
+    lateinit var diffResult: DiffResult
+    fun laserResultCalculations(){
+        val laser = Laser()
+        val diffFunc = DiffFunc(laser)
+
+        if(laser.amplifier.isUse == true){
+            var diffResult = diffFunc.RkAmp(laser)
+        }
+        else{
+            if(laser.optimization.isUse == false){
+                var diffResult =  diffFunc.Rk()
+            }
+        }
+        diffResult = DiffResult()
+    }
+
+
 
     val allHosts = hostRepository.getAllHosts()
 

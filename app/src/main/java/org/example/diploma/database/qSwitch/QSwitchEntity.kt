@@ -41,8 +41,9 @@ data class QSwitchEntity (
 
 
 
-//    //"AQS is installed"(active)
-//    val isAQS: Boolean?,
+    //"AQS is installed"(active)
+    @ColumnInfo(name = "is_aqs")
+    val isAQS: Boolean?,
 
     //"AQS thickness, cm"
     val lsh: Double?,
@@ -88,3 +89,9 @@ data class QSwitchEntity (
     @ColumnInfo(name = "abs_coef")
     val absCoef: Double?
 )
+{
+    constructor() : this(null,null,null,null,null,
+        null,null,null,null,null,null,null,null,
+        null,null,null, null, null, null,null,null,
+        null,null,null)
+}
