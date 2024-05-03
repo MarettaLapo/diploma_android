@@ -72,29 +72,29 @@ data class PumpEntity(
 
 ) {
 
-    constructor() : this(null,null,null,null,null,
-        null,null,null,null,null,null,null)
+//    constructor() : this(null,null,null,null,null,
+//        null,null,null,null,null,null,null)
     //Pump energy, J
-//    @Ignore var ep: Double? = null
-//
-//    //Pumped area, cm^2
-//    @Ignore var ap: Double? = null
-//
-//    //Effective pump flow
-//    @Ignore var p: Double? = null
-//    @Ignore var fav: Double? = null
-//    @Ignore var fForm: Double? = null
-//
-//    //Input intensity, W/cm^2
-//    @Ignore var p0: Double? = null
-//
-//    //Saturation pump intensity, W/cm^2
-//    @Ignore var issp: Double? = null
-//
-//    //Pump length, cm
-//    @Ignore var pl: Double? = null
-//
-//    @Ignore var pav: Double? = null
-//
-//    @Ignore var smolHc: Double? = 1.9864455003959037E-23
+    @Ignore var ep: Double? = null
+
+    //Pumped area, cm^2
+    @Ignore var ap: Double? = null
+
+    //Effective pump flow
+    @Ignore var p: Double? = null
+    @Ignore var fav: Double? = null
+    @Ignore var fForm: Double? = null
+
+    //Input intensity, W/cm^2
+    @Ignore var p0: Double? = null
+
+    //Saturation pump intensity, W/cm^2
+    @Ignore var issp: Double? = null
+
+    //Pump length, cm
+    @Ignore var pl: Double? = null
+
+    @Ignore var pav: Double? = null
+
+    @Ignore var smolHc: Double? = 1.9864455003959037E-23
 }

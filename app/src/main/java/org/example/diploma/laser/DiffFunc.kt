@@ -7,8 +7,11 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
 
-class DiffFunc(private val laser: Laser) {
+class DiffFunc(val laser: Laser) {
 
+    var Isp = laser.isp
+    val Ffrom = laser.Ffrom
+    val Fto = laser.Fto
 
     var g_31: Double = laser.g31Yb
     var sa_wi: Double = laser.laserMedium.sa_wi ?: 0.0
@@ -23,6 +26,8 @@ class DiffFunc(private val laser: Laser) {
     var g41: Double = laser.g41
     var g51: Double = laser.g51
     var g54: Double = laser.g54
+
+    val ot = laser.laserMedium.ot!!
 
     var S0: Double = laser.s0
     var m0: Double = laser.laserMedium.m!!
@@ -76,29 +81,30 @@ class DiffFunc(private val laser: Laser) {
     var Roc: Double = laser.configuration.roc!!
     var gc: Double = laser.configuration.gc!!
     var ga: Double = laser.configuration.ga!!
-    var La: Double = laser.configuration.la!!
+    var la: Double = laser.configuration.la!!
+
+    var levels = laser.laserMedium.levels!!
+    var is_sensitizer = laser.laserMedium.is_sensitizer
 
     var se_1_06: Double = laser.laserMedium.se?.toDouble()!!
-    var se_1_32: Double = laser.se_1_32
-    var se_1_44: Double = laser.se_1_44
 
     //не надо
-    var AveragePhotonAmpLength: Double = laser.laserMedium.AveragePhotonAmpLength
-
+//    var AveragePhotonAmpLength: Double = laser.laserMedium.AveragePhotonAmpLength
+//
     var Nd: Double = laser.laserMedium.nd?.toDouble()!!
-    var amp_1_06: Double = Nd * AveragePhotonAmpLength * se_1_06
-    var amp_1_32: Double = Nd * AveragePhotonAmpLength * se_1_32
-    var amp_1_44: Double = Nd * AveragePhotonAmpLength * se_1_44
-    var g32_1_32: Double = laser.g32_1_32
-    var g32_1_44: Double = laser.g32_1_44
-    var g21_1_32: Double = laser.g21_1_32
-    var g21_1_44: Double = laser.g21_1_44
-    var lb_1_32: Double = laser.lb_1_32
-    var lb_1_44: Double = laser.lb_1_44
-    var n2_1_32: Double = laser.n2_1_32
-    var n2_1_44: Double = laser.n2_1_44
-    var FOM_1_32: Double = laser.FOM_1_32
-    var FOM_1_44: Double = laser.FOM_1_44
+//    var amp_1_06: Double = Nd * AveragePhotonAmpLength * se_1_06
+//    var amp_1_32: Double = Nd * AveragePhotonAmpLength * se_1_32
+//    var amp_1_44: Double = Nd * AveragePhotonAmpLength * se_1_44
+//    var g32_1_32: Double = laser.g32_1_32
+//    var g32_1_44: Double = laser.g32_1_44
+//    var g21_1_32: Double = laser.g21_1_32
+//    var g21_1_44: Double = laser.g21_1_44
+//    var lb_1_32: Double = laser.lb_1_32
+//    var lb_1_44: Double = laser.lb_1_44
+//    var n2_1_32: Double = laser.n2_1_32
+//    var n2_1_44: Double = laser.n2_1_44
+//    var FOM_1_32: Double = laser.FOM_1_32
+//    var FOM_1_44: Double = laser.FOM_1_44
 
     var cyl: Boolean = laser.configuration.isCylinder!!
 
@@ -114,6 +120,18 @@ class DiffFunc(private val laser: Laser) {
     var a: Double = laser.laserMedium.ac!!
     var Lp: Double = laser.lp
     var Epph: Double = laser.epph
+    var E0ph = laser.e0ph
+    var Iss = laser.iss
+    var Fav = laser.fav
+    var Ap = laser.ap
+    var Ag = laser.ag
+    var shutter = laser.shutter
+    var tpp = laser.tpp
+    var tp = laser.pump.tp!!
+    var host = laser.laserMedium.host
+
+    var TM = laser.TM
+    var AQStype = laser.qSwitch.AQStype
     var Nwion: Double = laser.laserMedium.nwion?.toDouble() ?: 0.0
     var Nsion: Double = laser.laserMedium.nsion?.toDouble() ?: 0.0
     var Ner: Double = laser.laserMedium.ner?.toDouble() ?: 0.0
@@ -164,16 +182,16 @@ class DiffFunc(private val laser: Laser) {
             val t2p = laser.pump.t2p!!
             if (x < t1p)
                 return Fp / t1p * x
-            if (x >= t1p && x <= laser.pump.tp!! - t2p)
+            if (x >= t1p && x <= tp - t2p)
                 return Fp
-            if (x > laser.pump.tp!! - t2p)
-                return Fp / -t2p * (x - laser.pump.tp)
+            if (x > tp - t2p)
+                return Fp / -t2p * (x - tp)
         }
         if (laser.pump.pformId == 2) {
             val length = laser.pformt[0].size
             for (index in 1 until length) {
                 if (x >= laser.pformt[0][index - 1] && x <= laser.pformt[0][index]) {
-                    val num2 = laser.p / laser.pump.wp!!
+                    val num2 = laser.p / Wp
                     if (x == laser.pformt[0][index - 1])
                         return laser.pformt[1][index]
                     val num3 = (laser.pformt[1][index] - laser.pformt[1][index - 1]) / (
@@ -190,9 +208,9 @@ class DiffFunc(private val laser: Laser) {
 
     fun Fp_t(x: Double, alpha: Double): Double {
         val Fp = if (!cyl) {
-            Wp * Hc * (-(Rp * exp(alpha) + 1.0) * (exp(alpha) - 1.0)) / (La * Lb * Ld * Epph) * 1E-06
+            Wp * Hc * (-(Rp * exp(alpha) + 1.0) * (exp(alpha) - 1.0)) / (la * Lb * Ld * Epph) * 1E-06
         } else {
-            Wp * Hc * (-(Rp * exp(alpha) + 1.0) * (exp(alpha) - 1.0)) / (La * (Math.PI * DIA * DIA / 4.0) * Epph) * 1E-06
+            Wp * Hc * (-(Rp * exp(alpha) + 1.0) * (exp(alpha) - 1.0)) / (la * (Math.PI * DIA * DIA / 4.0) * Epph) * 1E-06
         }
 
         var num1 = 0.0
@@ -206,8 +224,8 @@ class DiffFunc(private val laser: Laser) {
                 val t2p = laser.pump.t2p!!
                 return when {
                     x < t1p -> Fp / t1p * x
-                    x >= t1p && x <= laser.pump.tp!! - t2p -> Fp
-                    else -> Fp / -t2p * (x - laser.pump.tp!!)
+                    x >= t1p && x <= tp - t2p -> Fp
+                    else -> Fp / -t2p * (x - tp)
                 }
             }
 
@@ -215,7 +233,7 @@ class DiffFunc(private val laser: Laser) {
                 val length = laser.pformt[0].size
                 for (index in 1 until length) {
                     if (x >= laser.pformt[0][index - 1] && x <= laser.pformt[0][index]) {
-                        val num2 = laser.p / laser.pump.wp!!
+                        val num2 = laser.p / Wp
                         if (x == laser.pformt[0][index - 1]) return laser.pformt[1][index]
                         val num3 =
                             (laser.pformt[1][index] - laser.pformt[1][index - 1]) / (laser.pformt[0][index] - laser.pformt[0][index - 1])
@@ -293,7 +311,7 @@ class DiffFunc(private val laser: Laser) {
         val sts = sts
         when (sMode) {
             0 -> {
-                if (laser.qSwitch.AQStype == 2 || laser.qSwitch.AQStype == 3) {
+                if (AQStype == 2 || AQStype == 3) {
                     num1 = FtirTs(t)
                 } else {
                     when {
@@ -370,39 +388,39 @@ class DiffFunc(private val laser: Laser) {
     }
 
     fun tc_t(t: Double): Double {
-        return when (laser.shutter) {
+        return when (shutter) {
             0 -> {
-                2.0 * laser.lo / vc / (-ln(laser.configuration.roc!! * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                2.0 * Lo / vc / (-ln(Roc * (1.0 - gc)) + 2.0 * ga_t(
                     t
-                ) * laser.configuration.la!!)
+                ) * la)
             }
 
             1 -> {
-                when (laser.qSwitch.AQStype) {
+                when (AQStype) {
                     0 -> {
-                        2.0 * laser.lo / vc / (-ln(laser.configuration.roc!! * Ts(t).pow(2.0) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                        2.0 * Lo / vc / (-ln(Roc * Ts(t).pow(2.0) * (1.0 - gc)) + 2.0 * ga_t(
                             t
-                        ) * laser.configuration.la!!)
+                        ) * la)
                     }
 
                     1 -> {
-                        2.0 * laser.lo / vc / (-ln(laser.configuration.roc!! * Ts(t) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                        2.0 * Lo / vc / (-ln(Roc * Ts(t) * (1.0 - gc)) + 2.0 * ga_t(
                             t
-                        ) * laser.configuration.la!!)
+                        ) * la)
                     }
 
                     2 -> {
                         val num1 = Ts(t)
-                        2.0 * laser.lo / vc / (-ln((1.0 - num1) / (1.0 + num1) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                        2.0 * Lo / vc / (-ln((1.0 - num1) / (1.0 + num1) * (1.0 - gc)) + 2.0 * ga_t(
                             t
-                        ) * laser.configuration.la!!)
+                        ) * la)
                     }
 
                     3 -> {
                         val num2 = Ts(t)
-                        2.0 * laser.lo / vc / (-ln(num2 / (2.0 - num2) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                        2.0 * Lo / vc / (-ln(num2 / (2.0 - num2) * (1.0 - gc)) + 2.0 * ga_t(
                             t
-                        ) * laser.configuration.la!!)
+                        ) * la)
                     }
 
                     else -> {
@@ -420,49 +438,49 @@ class DiffFunc(private val laser: Laser) {
     }
 
     fun tc_t(t: Double, T: Double): Double {
-        when (laser.shutter) {
+        when (shutter) {
             2 -> {
                 val expTerm =
-                    -ln(laser.configuration.roc!! * T.pow(2.0) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                    -ln(Roc * T.pow(2.0) * (1.0 - gc)) + 2.0 * ga_t(
                         t
-                    ) * laser.configuration.la!!
-                return 2.0 * laser.lo / vc / expTerm
+                    ) * la
+                return 2.0 * Lo / vc / expTerm
             }
 
             3 -> {
-                return when (laser.qSwitch.AQStype) {
+                return when (AQStype) {
                     0 -> {
                         val expTerm =
-                            -ln(laser.configuration.roc!! * T.pow(2.0) * Ts(t).pow(2.0) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                            -ln(Roc * T.pow(2.0) * Ts(t).pow(2.0) * (1.0 - gc)) + 2.0 * ga_t(
                                 t
-                            ) * laser.configuration.la!!
-                        2.0 * laser.lo / vc / expTerm
+                            ) * la
+                        2.0 * Lo / vc / expTerm
                     }
 
                     1 -> {
                         val expTerm =
-                            -ln(laser.configuration.roc!! * T.pow(2.0) * Ts(t) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                            -ln(Roc * T.pow(2.0) * Ts(t) * (1.0 - gc)) + 2.0 * ga_t(
                                 t
-                            ) * laser.configuration.la!!
-                        2.0 * laser.lo / vc / expTerm
+                            ) * la
+                        2.0 * Lo / vc / expTerm
                     }
 
                     2 -> {
                         val num1 = Ts(t)
                         val expTerm =
-                            -ln(T.pow(2.0) * (1.0 - num1) / (1.0 + num1) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                            -ln(T.pow(2.0) * (1.0 - num1) / (1.0 + num1) * (1.0 - gc)) + 2.0 * ga_t(
                                 t
-                            ) * laser.configuration.la!!
-                        2.0 * laser.lo / vc / expTerm
+                            ) * la
+                        2.0 * Lo / vc / expTerm
                     }
 
                     3 -> {
                         val num2 = Ts(t)
                         val expTerm =
-                            -ln(T.pow(2.0) * num2 / (2.0 - num2) * (1.0 - laser.configuration.gc!!)) + 2.0 * ga_t(
+                            -ln(T.pow(2.0) * num2 / (2.0 - num2) * (1.0 - gc)) + 2.0 * ga_t(
                                 t
-                            ) * laser.configuration.la!!
-                        2.0 * laser.lo / vc / expTerm
+                            ) * la
+                        2.0 * Lo / vc / expTerm
                     }
 
                     else -> {
@@ -482,33 +500,33 @@ class DiffFunc(private val laser: Laser) {
         var num2 = 0.0
         var num3 = 0.0
         var num4: Double
-        when (laser.laserMedium.host) {
+        when (host) {
             "Nd" -> {
                 num4 = Nd
-                num2 = laser.configuration.roc!!
-                num3 = laser.laserMedium.se?.toDouble()!!
+                num2 = Roc
+                num3 = se_1_06
                 num1 = newSS[1] - newSS[2]
             }
 
             "Er:Host" -> {
                 num4 = Ner
-                num2 = laser.configuration.roc!!
-                num3 = laser.laserMedium.se?.toDouble()!!
+                num2 = Roc
+                num3 = se_1_06
                 num1 = newSS[2] - m0 * (1.0 - newSS[1] - newSS[2])
             }
 
             "General" -> {
                 num4 = Nwion
-                num2 = laser.configuration.roc!!
-                num3 = laser.laserMedium.se?.toDouble()!!
-                num1 = if (laser.laserMedium.levels == 1) {
-                    if (laser.laserMedium.is_sensitizer == false) {
+                num2 = Roc
+                num3 = se_1_06
+                num1 = if (levels == 1) {
+                    if (is_sensitizer == false) {
                         newSS[1] - m0 * (1.0 - newSS[0] - newSS[1])
                     } else {
                         newSS[2] - m0 * (1.0 - newSS[1] - newSS[2])
                     }
                 } else {
-                    if (laser.laserMedium.is_sensitizer == false) {
+                    if (is_sensitizer == false) {
                         newSS[1] - m0 * newSS[2]
                     } else {
                         newSS[2] - m0 * newSS[3]
@@ -518,8 +536,8 @@ class DiffFunc(private val laser: Laser) {
 
             "Yb:Host" -> {
                 num4 = Nwion
-                num2 = laser.configuration.roc!!
-                num3 = laser.laserMedium.se?.toDouble()!!
+                num2 = Roc
+                num3 = se_1_06
                 num1 = newSS[1] - m0 * newSS[2]
             }
 
@@ -527,33 +545,452 @@ class DiffFunc(private val laser: Laser) {
                 return false
             }
         }
-        return when (laser.shutter) {
+        return when (shutter) {
             0 -> num1 >= laser.nth
             1 -> {
                 val num7 = Ts(t)
-                when (laser.qSwitch.AQStype) {
-                    0 -> num1 >= (-ln(num2 * (1.0 - gc) * num7 * num7) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
-                    1 -> num1 >= (-ln(num2 * (1.0 - gc) * num7) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
-                    2 -> num1 >= (-ln((1.0 - num7) / (1.0 + num7) * (1.0 - gc)) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
-                    3 -> num1 >= (-ln(num7 / (2.0 - num7) * (1.0 - gc)) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
+                when (AQStype) {
+                    0 -> num1 >= (-ln(num2 * (1.0 - gc) * num7 * num7) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
+                    1 -> num1 >= (-ln(num2 * (1.0 - gc) * num7) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
+                    2 -> num1 >= (-ln((1.0 - num7) / (1.0 + num7) * (1.0 - gc)) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
+                    3 -> num1 >= (-ln(num7 / (2.0 - num7) * (1.0 - gc)) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
                     else -> false
                 }
             }
 
-            2 -> num1 >= (-ln(num2 * (1.0 - gc) * Tps * Tps) + 2.0 * ga * La) / (2.0 * laser.laserMedium.se.toDouble() * La * num4)
+            2 -> num1 >= (-ln(num2 * (1.0 - gc) * Tps * Tps) + 2.0 * ga * la) / (2.0 * se_1_06 * la * num4)
             3 -> {
                 val num8 = Ts(t)
-                when (laser.qSwitch.AQStype) {
-                    0 -> num1 >= (-ln(num2 * (1.0 - gc) * num8 * num8 * Tps * Tps) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
-                    1 -> num1 >= (-ln(num2 * (1.0 - gc) * num8 * Tps * Tps) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
-                    2 -> num1 >= (-ln((1.0 - num8) / (1.0 + num8) * (1.0 - gc) * Tps * Tps) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
-                    3 -> num1 >= (-ln(num8 / (2.0 - num8) * (1.0 - gc) * Tps * Tps) + 2.0 * ga * La) / (2.0 * num3 * La * num4)
+                when (AQStype) {
+                    0 -> num1 >= (-ln(num2 * (1.0 - gc) * num8 * num8 * Tps * Tps) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
+                    1 -> num1 >= (-ln(num2 * (1.0 - gc) * num8 * Tps * Tps) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
+                    2 -> num1 >= (-ln((1.0 - num8) / (1.0 + num8) * (1.0 - gc) * Tps * Tps) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
+                    3 -> num1 >= (-ln(num8 / (2.0 - num8) * (1.0 - gc) * Tps * Tps) + 2.0 * ga * la) / (2.0 * num3 * la * num4)
                     else -> false
                 }
             }
 
             else -> {
                 false
+            }
+        }
+    }
+    fun DAmpRelaxationOnly(Y: DoubleArray, m: DoubleArray, t: Double) {
+        val length = Y.size
+        for (index in 0 until length) {
+            if (Y[index] < 0.0)
+                Y[index] = 0.0
+        }
+
+        when (host) {
+            "Er" -> {
+                m[0] = 0.5 * g_31 * (1.0 - 2.0 * Y[0]) * Fp_t(t) - k * Y[0] * (1.0 - Y[2] - Y[1]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                m[1] = ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1]) - Y[1] * (g31 + g32) - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + 0.5 * Fp_t(t) * g_31 * (1.0 - Y[2] - 2.0 * Y[1])
+                m[2] = g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3]
+                if (shutter == 2 || shutter == 3) {
+                    m[6] = exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                    m[3] = Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(t, m[6])
+                    m[5] = ssh / SIG * (Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[5] / spt42
+                    m[4] = ssh * (Nsh - 2.0 * Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[4] / spt - m[5]
+                } else {
+                    m[3] = Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3] - Y[3] / tc_t(t) + S0 / tc_t(t)
+                }
+            }
+            "Nd" -> {
+                m[0] = -g43 / HL * Y[0]
+                m[1] = g43 * Y[0] - (g32 + g31) * Y[1]
+                m[2] = lb * g32 * Y[1] - g21 * Y[2] + q * g21 * (1.0 - Y[0] - Y[1])
+                m[3] = 0.0
+            }
+            "General" -> {
+                if (is_sensitizer == true) {
+                    if (levels == 1) {
+                        val num4 = a * (1.0 - 2.0 * Y[0]) + sa_wip * Nwion * (Y[2] - Y[4])
+                        m[0] = a * (1.0 - 2.0 * Y[0]) / num4 * Fp_t(t, -num4 * Lp) / Nsion - k * Y[0] * (1.0 - Y[2] - Y[1] - Y[3] - Y[4]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                        m[1] = ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1] - Y[3] - Y[4]) - Y[1] * g43 - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + g54 * Y[4]
+                        m[2] = Y[1] * g43 - Y[2] * (g32 + g31) - 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - 0.5 * g32 * Y[5] * Y[2] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[2] - Y[4]) / num4 * Fp_t(t, -num4 * Lp) / Nwion
+                        m[3] = g32 * Y[2] + 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - g21 * Y[3]
+                        m[4] = sa_wip * Nwion * (Y[2] - Y[4]) / num4 * Fp_t(t, -num4 * Lp) / Nwion - (g54 + g51) * Y[4]
+                        if (shutter == 2 || shutter == 3) {
+                            m[8] = exp(-(ssh * (Nsh - 2.0 * Y[6] - Y[7] + (Y[6] - Y[7]) / SIG)) * Lpsh)
+                            m[5] = Lac * b * (Y[2] - m0 * Y[3]) * Y[5] + (S0 - Y[5]) / tc_t(t, m[8])
+                            m[7] = ssh / SIG * (Y[5] / 2.0 * TM * TM) * Iss * (Y[6] - Y[7]) - Y[7] / spt42
+                            m[6] = ssh * (Y[5] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[6] - Y[7]) - Y[6] / spt - m[7]
+                        } else {
+                            m[5] = Lac * b * (Y[2] - m0 * Y[3]) * Y[5] - (Y[5] - S0) / tc_t(t)
+                        }
+                    } else {
+                        val num5 = a * (1.0 - 2.0 * Y[0]) + sa_wip * Nwion * (Y[2] - Y[3])
+                        m[0] = a * (1.0 - 2.0 * Y[0]) / num5 * Fp_t(t, -num5 * Lp) / Nsion - k * Y[0] * (1.0 - Y[2] - Y[1]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                        m[1] = ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1]) - Y[1] * (g31 + g32) - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + g43 * Y[3]
+                        m[2] = g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - 0.5 * g21 * Y[4] * Y[2] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(t, -num5 * Lp) / Nwion
+                        m[3] = sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(t, -num5 * Lp) / Nwion - (g43 + g41) * Y[3]
+                        if (shutter == 2 || shutter == 3) {
+                            m[7] = exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] + (S0 - Y[4]) / tc_t(t, m[7])
+                            m[6] = ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            m[5] = ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
+                        } else {
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] - (Y[4] - S0 * lb) / tc_t(t)
+                        }
+                    }
+                } else {
+                    if (levels == 1) {
+                        val num6 = a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) + sa_wip * Nwion * (Y[1] - Y[3])
+                        m[0] = a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) / num6 * Fp_t(t, -num6 * Lp) / Nwion - g43 / HL * Y[0] + g54 * Y[3]
+                        m[1] = g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[4] - g32 * Y[4] * Y[1] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(t, -num6 * Lp) / Nwion
+                        m[2] = lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[4] + q * g21 * (1.0 - Y[0] - Y[1])
+                        m[3] = sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(t, -num6 * Lp) / Nwion - (g54 + g51) * Y[3]
+                        if (shutter == 2 || shutter == 3) {
+                            m[7] = Math.exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] + (S0 - Y[4]) / tc_t(t, m[7])
+                            m[6] = ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            m[5] = ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
+                        } else {
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] - (Y[4] - S0 * lb) / tc_t(t)
+                        }
+                    } else {
+                        val num7 = a * (1.0 - 2.0 * Y[0] - Y[1]) + sa_wip * Nwion * (Y[1] - Y[2])
+                        m[0] = a * (1.0 - 2.0 * Y[0] - Y[1]) / num7 * Fp_t(t, -num7 * Lp) / Nwion - (g32 + g31) * Y[0] + g43 * Y[2]
+                        m[1] = g32 * Y[0] - g21 * Y[1] - Y[3] * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * g21 - g21 * Y[3] * Y[1] * sa_wi / se_1_06 + g43 * Y[2] - sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(t, -num7 * Lp) / Nwion
+                        m[2] = sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(t, -num7 * Lp) / Nwion - (g43 + g41) * Y[2]
+                        if (shutter == 2 || shutter == 3) {
+                            m[6] = exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                            m[3] = Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] + (S0 - Y[3]) / tc_t(t, m[6])
+                            m[5] = ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
+                            m[4] = ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+                        } else {
+                            m[3] = Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(t)
+                        }
+                    }
+                }
+            }
+            "Yb:Host" -> {
+                if (Y[2] / (1.0 - Y[1] - Y[0]) < q)
+                    Y[2] = q * (1.0 - Y[1] - Y[0])
+                m[0] = g43 * (1.0 - 2.0 * Y[0] - Y[1] - Y[2]) * Fp_t(t) - g43 * Y[0]
+                m[1] = g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                m[2] = lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                if (shutter == 2 || shutter == 3) {
+                    val m6 = Math.exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                    m[3] = Lac * b * (Y[1] - m0 * Y[2]) * Y[3] + (S0 * lb - Y[3]) / tc_t(t, m6)
+                    m[5] = ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
+                    m[4] = ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+                } else
+                    m[3] = Lac * b * (Y[1] - m0 * Y[2]) * Y[3] - (Y[3] - S0 * lb) / tc_t(t)
+                m[2] += q * (1.0 - m[0] - m[1] - m[2])
+            }
+        }
+    }
+
+    fun ampTc_t(t: Double): Double {
+        return laser.laserMedium.ne!! * la / vc / (-ln(laser.ampT0) + ga_t(t) * la)
+    }
+
+    fun DAmpNoRelaxation(Y: DoubleArray, m: DoubleArray, t: Double) {
+        val length = Y.size
+        for (index in 0 until length) {
+            if (Y[index] < 0.0)
+                Y[index] = 0.0
+        }
+        when (host) {
+            "Er" -> {
+                m[0] = 0.5 * g_31 * (1.0 - 2.0 * Y[0]) * Fp_t(t) - k * Y[0] * (1.0 - Y[2] - Y[1]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                m[1] = ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1]) - Y[1] * (g31 + g32) - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + 0.5 * Fp_t(t) * g_31 * (1.0 - Y[2] - 2.0 * Y[1])
+                m[2] = g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3]
+                if (shutter == 2 || shutter == 3) {
+                    m[6] = exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                    m[3] = Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(t, m[6])
+                    m[5] = ssh / SIG * (Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[5] / spt42
+                    m[4] = ssh * (Nsh - 2.0 * Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[4] / spt - m[5]
+                } else {
+                    m[3] = Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3] - Y[3] / tc_t(t) + S0 / tc_t(t)
+                }
+            }
+
+            "Nd" -> {
+                m[0] = 0.0
+                m[1] = -g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                m[2] = g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                m[3] = b * (Y[1] - m0 * Y[2]) * Y[3] - (Y[3] - S0 * lb) / ampTc_t(t)
+            }
+
+            "General" -> {
+                if (is_sensitizer == true) {
+                    if (levels == 1) {
+                        val num4 = a * (1.0 - 2.0 * Y[0]) + sa_wip * Nwion * (Y[2] - Y[4])
+                        m[0] = a * (1.0 - 2.0 * Y[0]) / num4 * Fp_t(t, -num4 * Lp) / Nsion - k * Y[0] * (1.0 - Y[2] - Y[1] - Y[3] - Y[4]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                        m[1] = ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1] - Y[3] - Y[4]) - Y[1] * g43 - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + g54 * Y[4]
+                        m[2] = Y[1] * g43 - Y[2] * (g32 + g31) - 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - 0.5 * g32 * Y[5] * Y[2] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[2] - Y[4]) / num4 * Fp_t(t, -num4 * Lp) / Nwion
+                        m[3] = g32 * Y[2] + 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - g21 * Y[3]
+                        m[4] = sa_wip * Nwion * (Y[2] - Y[4]) / num4 * Fp_t(t, -num4 * Lp) / Nwion - (g54 + g51) * Y[4]
+                        if (shutter == 2 || shutter == 3) {
+                            m[8] = Math.exp(-(ssh * (Nsh - 2.0 * Y[6] - Y[7] + (Y[6] - Y[7]) / SIG)) * Lpsh)
+                            m[5] = Lac * b * (Y[2] - m0 * Y[3]) * Y[5] + (S0 - Y[5]) / tc_t(t, m[8])
+                            m[7] = ssh / SIG * (Y[5] / 2.0 * TM * TM) * Iss * (Y[6] - Y[7]) - Y[7] / spt42
+                            m[6] = ssh * (Y[5] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[6] - Y[7]) - Y[6] / spt - m[7]
+                        } else {
+                            m[5] = Lac * b * (Y[2] - m0 * Y[3]) * Y[5] - (Y[5] - S0) / tc_t(t)
+                        }
+                    } else {
+                        val num5 = a * (1.0 - 2.0 * Y[0]) + sa_wip * Nwion * (Y[2] - Y[3])
+                        m[0] = a * (1.0 - 2.0 * Y[0]) / num5 * Fp_t(t, -num5 * Lp) / Nsion - k * Y[0] * (1.0 - Y[2] - Y[1]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                        m[1] = ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1]) - Y[1] * (g31 + g32) - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + g43 * Y[3]
+                        m[2] = g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - 0.5 * g21 * Y[4] * Y[2] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(t, -num5 * Lp) / Nwion
+                        m[3] = sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(t, -num5 * Lp) / Nwion - (g43 + g41) * Y[3]
+                        if (shutter == 2 || shutter == 3) {
+                            m[7] = Math.exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
+                            m[4] = Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] + (S0 - Y[4]) / tc_t(t, m[7])
+                            m[6] = ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            m[5] = ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
+                        } else {
+                            m[4] = Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - (Y[4] - S0) / tc_t(t)
+                        }
+                    }
+                } else {
+                    if (levels == 1) {
+                        val num6 = a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) + sa_wip * Nwion * (Y[1] - Y[3])
+                        m[0] = a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) / num6 * Fp_t(t, -num6 * Lp) / Nwion - g43 / HL * Y[0] + g54 * Y[3]
+                        m[1] = g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[4] - g32 * Y[4] * Y[1] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(t, -num6 * Lp) / Nwion
+                        m[2] = lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[4] + q * g21 * (1.0 - Y[0] - Y[1])
+                        m[3] = sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(t, -num6 * Lp) / Nwion - (g54 + g51) * Y[3]
+                        if (shutter == 2 || shutter == 3) {
+                            m[7] = exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] + (S0 - Y[4]) / tc_t(t, m[7])
+                            m[6] = ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            m[5] = ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
+                        } else {
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] - (Y[4] - S0 * lb) / tc_t(t)
+                        }
+                    } else {
+                        val num7 = a * (1.0 - 2.0 * Y[0] - Y[1]) + sa_wip * Nwion * (Y[1] - Y[2])
+                        m[0] = a * (1.0 - 2.0 * Y[0] - Y[1]) / num7 * Fp_t(t, -num7 * Lp) / Nwion - (g32 + g31) * Y[0] + g43 * Y[2]
+                        m[1] = g32 * Y[0] - g21 * Y[1] - Y[3] * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * g21 - g21 * Y[3] * Y[1] * sa_wi / se_1_06 + g43 * Y[2] - sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(t, -num7 * Lp) / Nwion
+                        m[2] = sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(t, -num7 * Lp) / Nwion - (g43 + g41) * Y[2]
+                        if (shutter == 2 || shutter == 3) {
+                            m[6] = exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                            m[3] = Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] + (S0 - Y[3]) / tc_t(t, m[6])
+                            m[5] = ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
+                            m[4] = ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+
+                        } else {
+                            m[3] = Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(t)
+                        }
+                    }
+                }
+            }
+
+            "Yb" -> {
+                if (Y[2] / (1.0 - Y[1] - Y[0]) < q)
+                    Y[2] = q * (1.0 - Y[1] - Y[0])
+                m[0] = g43 * (1.0 - 2.0 * Y[0] - Y[1] - Y[2]) * Fp_t(t) - g43 * Y[0]
+                m[1] = g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                m[2] = lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                if (shutter == 2 || shutter == 3) {
+                    m[6] = exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                    m[3] = Lac * b * (Y[1] - m0 * Y[2]) * Y[3] + (S0 * lb - Y[3]) / tc_t(t, m[6])
+                    m[5] = ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
+                    m[4] = ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+                } else {
+                    m[3] = Lac * b * (Y[1] - m0 * Y[2]) * Y[3] - (Y[3] - S0 * lb) / tc_t(t)
+                }
+                m[2] += q * (1.0 - m[0] - m[1] - m[2])
+            }
+        }
+    }
+
+    fun DAmp(Y: DoubleArray, m: DoubleArray, t: Double) {
+        val length = Y.size
+        for (index in 0 until length) {
+            if (Y[index] < 0.0)
+                Y[index] = 0.0
+        }
+        when (host) {
+            "Er" -> {
+                m[0] =
+                    0.5 * g_31 * (1.0 - 2.0 * Y[0]) * Fp_t(t) - k * Y[0] * (1.0 - Y[2] - Y[1]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                m[1] =
+                    ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1]) - Y[1] * (g31 + g32) - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + 0.5 * Fp_t(
+                        t
+                    ) * g_31 * (1.0 - Y[2] - 2.0 * Y[1])
+                m[2] =
+                    g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3]
+                if (shutter == 2 || shutter == 3) {
+                    m[6] = exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                    m[3] = Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(
+                        t,
+                        m[6]
+                    )
+                    m[5] =
+                        ssh / SIG * (Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[5] / spt42
+                    m[4] =
+                        ssh * (Nsh - 2.0 * Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[4] / spt - m[5]
+                } else {
+                    m[3] =
+                        Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[3] - Y[3] / tc_t(t) + S0 / tc_t(
+                            t
+                        )
+                }
+            }
+
+            "Nd" -> {
+                m[0] = g43 * (1.0 - 2.0 * Y[0] - Y[1] - Y[2]) * Fp_t(t) - g43 / HL * Y[0]
+                m[1] = g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                m[2] =
+                    lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[3] + q * g21 * (1.0 - Y[0] - Y[1])
+                m[3] = 0.0
+            }
+
+            "General" -> {
+                if (is_sensitizer == true) {
+                    if (levels == 1) {
+                        val num4 = a * (1.0 - 2.0 * Y[0]) + sa_wip * Nwion * (Y[2] - Y[4])
+                        m[0] = a * (1.0 - 2.0 * Y[0]) / num4 * Fp_t(
+                            t,
+                            -num4 * Lp
+                        ) / Nsion - k * Y[0] * (1.0 - Y[2] - Y[1] - Y[3] - Y[4]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                        m[1] =
+                            ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1] - Y[3] - Y[4]) - Y[1] * g43 - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + g54 * Y[4]
+                        m[2] =
+                            Y[1] * g43 - Y[2] * (g32 + g31) - 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - 0.5 * g32 * Y[5] * Y[2] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[2] - Y[4]) / num4 * Fp_t(
+                                t,
+                                -num4 * Lp
+                            ) / Nwion
+                        m[3] = g32 * Y[2] + 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - g21 * Y[3]
+                        m[4] = sa_wip * Nwion * (Y[2] - Y[4]) / num4 * Fp_t(
+                            t,
+                            -num4 * Lp
+                        ) / Nwion - (g54 + g51) * Y[4]
+                        if (shutter == 2 || shutter == 3) {
+                            m[8] =
+                                exp(-(ssh * (Nsh - 2.0 * Y[6] - Y[7] + (Y[6] - Y[7]) / SIG)) * Lpsh)
+                            m[5] = Lac * b * (Y[2] - m0 * Y[3]) * Y[5] + (S0 - Y[5]) / tc_t(t, m[8])
+                            m[7] =
+                                ssh / SIG * (Y[5] / 2.0 * TM * TM) * Iss * (Y[6] - Y[7]) - Y[7] / spt42
+                            m[6] =
+                                ssh * (Y[5] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[6] - Y[7]) - Y[6] / spt - m[7]
+                        } else {
+                            m[5] = Lac * b * (Y[2] - m0 * Y[3]) * Y[5] - (Y[5] - S0) / tc_t(t)
+                        }
+                    } else {
+                        val num5 = a * (1.0 - 2.0 * Y[0]) + sa_wip * Nwion * (Y[2] - Y[3])
+                        m[0] = a * (1.0 - 2.0 * Y[0]) / num5 * Fp_t(
+                            t,
+                            -num5 * Lp
+                        ) / Nsion - k * Y[0] * (1.0 - Y[2] - Y[1]) - g_31 * Y[0] + A0 * k * Y[1] * (1.0 - Y[0])
+                        m[1] =
+                            ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1]) - Y[1] * (g31 + g32) - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + g43 * Y[3]
+                        m[2] =
+                            g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - 0.5 * g21 * Y[4] * Y[2] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(
+                                t,
+                                -num5 * Lp
+                            ) / Nwion
+                        m[3] = sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(
+                            t,
+                            -num5 * Lp
+                        ) / Nwion - (g43 + g41) * Y[3]
+                        if (shutter == 2 || shutter == 3) {
+                            m[7] =
+                                exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
+                            m[4] =
+                                Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] + (S0 - Y[4]) / tc_t(
+                                    t,
+                                    m[7]
+                                )
+                            m[6] =
+                                ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            m[5] =
+                                ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
+                        } else {
+                            m[4] =
+                                Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - (Y[4] - S0) / tc_t(
+                                    t
+                                )
+                        }
+                    }
+                } else {
+                    if (levels == 1) {
+                        val num6 =
+                            a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) + sa_wip * Nwion * (Y[1] - Y[3])
+                        m[0] = a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) / num6 * Fp_t(
+                            t,
+                            -num6 * Lp
+                        ) / Nwion - g43 / HL * Y[0] + g54 * Y[3]
+                        m[1] =
+                            g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[4] - g32 * Y[4] * Y[1] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(
+                                t,
+                                -num6 * Lp
+                            ) / Nwion
+                        m[2] =
+                            lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[4] + q * g21 * (1.0 - Y[0] - Y[1])
+                        m[3] = sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(
+                            t,
+                            -num6 * Lp
+                        ) / Nwion - (g54 + g51) * Y[3]
+                        if (shutter == 2 || shutter == 3) {
+                            m[7] =
+                                Math.exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] + (S0 - Y[4]) / tc_t(t, m[7])
+                            m[6] =
+                                ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            m[5] =
+                                ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
+                        } else {
+                            m[4] = Lac * b * (Y[1] - m0 * Y[2]) * Y[4] - (Y[4] - S0 * lb) / tc_t(t)
+                        }
+                    } else {
+                        val num7 = a * (1.0 - 2.0 * Y[0] - Y[1]) + sa_wip * Nwion * (Y[1] - Y[2])
+                        m[0] = a * (1.0 - 2.0 * Y[0] - Y[1]) / num7 * Fp_t(
+                            t,
+                            -num7 * Lp
+                        ) / Nwion - (g32 + g31) * Y[0] + g43 * Y[2]
+                        m[1] =
+                            g32 * Y[0] - g21 * Y[1] - Y[3] * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * g21 - g21 * Y[3] * Y[1] * sa_wi / se_1_06 + g43 * Y[2] - sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(
+                                t,
+                                -num7 * Lp
+                            ) / Nwion
+                        m[2] = sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(
+                            t,
+                            -num7 * Lp
+                        ) / Nwion - (g43 + g41) * Y[2]
+                        if (shutter == 2 || shutter == 3) {
+                            m[6] =
+                                exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                            m[3] =
+                                Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] + (S0 - Y[3]) / tc_t(
+                                    t,
+                                    m[6]
+                                )
+                            m[5] =
+                                ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
+                            m[4] =
+                                ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+                        } else {
+                            m[3] =
+                                Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(
+                                    t
+                                )
+                        }
+                    }
+                }
+            }
+
+            "Yb" -> {
+                if (Y[2] / (1.0 - Y[1] - Y[0]) < q)
+                    Y[2] = q * (1.0 - Y[1] - Y[0])
+                m[0] = g43 * (1.0 - 2.0 * Y[0] - Y[1] - Y[2]) * Fp_t(t) - g43 * Y[0]
+                m[1] = g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                m[2] = lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[3]
+                if (shutter == 2 || shutter == 3) {
+                    m[6] = exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                    m[3] = Lac * b * (Y[1] - m0 * Y[2]) * Y[3] + (S0 * lb - Y[3]) / tc_t(t, m[6])
+                    m[5] =
+                        ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
+                    m[4] =
+                        ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+                } else
+                    m[3] = Lac * b * (Y[1] - m0 * Y[2]) * Y[3] - (Y[3] - S0 * lb) / tc_t(t)
+                m[2] += q * (1.0 - m[0] - m[1] - m[2])
             }
         }
     }
@@ -564,7 +1001,7 @@ class DiffFunc(private val laser: Laser) {
             if (Y[index] < 0.0)
                 Y[index] = 0.0
         }
-        when (laser.laserMedium.host) {
+        when (host) {
             "Er" -> {
                 m[0] =
                     0.5 * this.g_31 * (1.0 - 2.0 * Y[0]) * this.Fp_t(t) - this.k * Y[0] * (1.0 - Y[2] - Y[1]) - this.g_31 * Y[0] + this.A0 * this.k * Y[1] * (1.0 - Y[0])
@@ -574,7 +1011,7 @@ class DiffFunc(private val laser: Laser) {
                     ) * this.g_31 * (1.0 - Y[2] - 2.0 * Y[1])
                 m[2] =
                     this.g32 * Y[1] - this.g21 * Y[2] - 0.5 * this.g21 * (Y[2] - this.m0 * (1.0 - Y[2] - Y[1])) * Y[3]
-                if (laser.shutter == 2 || laser.shutter == 3) {
+                if (shutter == 2 || shutter == 3) {
                     m[6] =
                         exp(-(this.ssh * (this.Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / this.SIG)) * this.Lpsh)
                     m[3] =
@@ -583,9 +1020,9 @@ class DiffFunc(private val laser: Laser) {
                             m[6]
                         )
                     m[5] =
-                        this.ssh / this.SIG * (Y[4] - Y[5]) / (this.ssh * (this.Nsh - 2.0 * Y[4] - Y[5]) + this.ssh / this.SIG * (Y[4] - Y[5])) / this.Lpsh * laser.TM * laser.TM * Y[3] * laser.iss * (1.0 - m[6]) - Y[5] / this.spt42
+                        this.ssh / this.SIG * (Y[4] - Y[5]) / (this.ssh * (this.Nsh - 2.0 * Y[4] - Y[5]) + this.ssh / this.SIG * (Y[4] - Y[5])) / this.Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[5] / this.spt42
                     m[4] =
-                        this.ssh * (this.Nsh - 2.0 * Y[4] - Y[5]) / (this.ssh * (this.Nsh - 2.0 * Y[4] - Y[5]) + this.ssh / this.SIG * (Y[4] - Y[5])) / this.Lpsh * this.laser.TM * this.laser.TM * Y[3] * laser.iss * (1.0 - m[6]) - Y[4] / this.spt - m[5]
+                        this.ssh * (this.Nsh - 2.0 * Y[4] - Y[5]) / (this.ssh * (this.Nsh - 2.0 * Y[4] - Y[5]) + this.ssh / this.SIG * (Y[4] - Y[5])) / this.Lpsh * this.TM * this.TM * Y[3] * Iss * (1.0 - m[6]) - Y[4] / this.spt - m[5]
                 } else {
                     m[3] =
                         this.Lac * this.b * (Y[2] - this.m0 * (1.0 - Y[2] - Y[1])) * Y[3] - Y[3] / this.tc_t(
@@ -595,17 +1032,13 @@ class DiffFunc(private val laser: Laser) {
             }
 
             "Nd" -> {
-                val a = a
-                val num1 = Y[0]
-                val num2 = Y[1]
-                val num3 = Y[2]
                 m[0] =
                     g43 * (1.0 - 2.0 * Y[0] - Y[1] - Y[2]) * Fp_t(t) - g43 / HL * Y[0]
                 m[1] =
                     g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[3]
                 m[2] =
                     lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[3] + q * g21 * (1.0 - Y[0] - Y[1])
-                if (laser.shutter == 2 || laser.shutter == 3) {
+                if (shutter == 2 || shutter == 3) {
                     m[6] =
                         exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
                     m[3] =
@@ -614,9 +1047,9 @@ class DiffFunc(private val laser: Laser) {
                             m[6]
                         )
                     m[5] =
-                        ssh / SIG * (Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * laser.TM * laser.TM * Y[3] * laser.iss * (1.0 - m[6]) - Y[5] / spt42
+                        ssh / SIG * (Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[5] / spt42
                     m[4] =
-                        ssh * (Nsh - 2.0 * Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * laser.TM * laser.TM * Y[3] * laser.iss * (1.0 - m[6]) - Y[4] / spt - m[5]
+                        ssh * (Nsh - 2.0 * Y[4] - Y[5]) / (ssh * (Nsh - 2.0 * Y[4] - Y[5]) + ssh / SIG * (Y[4] - Y[5])) / Lpsh * TM * TM * Y[3] * Iss * (1.0 - m[6]) - Y[4] / spt - m[5]
                 } else {
                     m[3] =
                         Lac * b * (Y[1] - m0 * Y[2]) * Y[3] - (Y[3] - S0 * lb) / tc_t(
@@ -626,8 +1059,8 @@ class DiffFunc(private val laser: Laser) {
             }
 
             "General" -> {
-                if (laser.laserMedium.is_sensitizer == true) {
-                    if (laser.laserMedium.levels == 1) {
+                if (is_sensitizer == true) {
+                    if (levels == 1) {
                         val num4 =
                             a * (1.0 - 2.0 * Y[0]) + sa_wip * Nwion * (1.0 - 2.0 * Y[1] - Y[2] - Y[3] - Y[4])
                         m[0] = a * (1.0 - 2.0 * Y[0]) / num4 * Fp_t(
@@ -640,12 +1073,12 @@ class DiffFunc(private val laser: Laser) {
                                 -num4 * Lp
                             ) / Nsion
                         m[2] =
-                            Y[1] * g43 - Y[2] * (g32 + g31) - 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - 0.5 * g32 * Y[5] * (Y[2] - Y[4]) * laser.laserMedium.sa_wi!! / laser.laserMedium.se?.toDouble()!!
+                            Y[1] * g43 - Y[2] * (g32 + g31) - 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - 0.5 * g32 * Y[5] * (Y[2] - Y[4]) * sa_wi / se_1_06
                         m[3] =
                             g32 * Y[2] + 0.5 * Y[5] * (Y[2] - m0 * Y[3]) * g32 - g21 * Y[3]
                         m[4] =
-                            0.5 * g32 * Y[5] * (Y[2] - Y[4]) * laser.laserMedium.sa_wi!! / laser.laserMedium.se?.toDouble()!! - (g54 + g51) * Y[4]
-                        if (laser.shutter == 2 || laser.shutter == 3) {
+                            0.5 * g32 * Y[5] * (Y[2] - Y[4]) * sa_wi / se_1_06 - (g54 + g51) * Y[4]
+                        if (shutter == 2 || shutter == 3) {
                             m[8] =
                                 exp(-(ssh * (Nsh - 2.0 * Y[6] - Y[7] + (Y[6] - Y[7]) / SIG)) * Lpsh)
                             m[5] =
@@ -654,12 +1087,12 @@ class DiffFunc(private val laser: Laser) {
                                     m[8]
                                 )
                             m[7] =
-                                ssh / SIG * (Y[3] / 2.0 * laser.TM * laser.TM) * laser.iss * (Y[6] - Y[7]) - Y[7] / spt42
+                                ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[6] - Y[7]) - Y[7] / spt42
                             m[6] =
-                                ssh * (Y[3] / 2.0 * laser.TM * laser.TM) * laser.iss * (Nsh - 2.0 * Y[6] - Y[7]) - Y[6] / spt - m[7]
+                                ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[6] - Y[7]) - Y[6] / spt - m[7]
                         }
                         m[5] =
-                            Lac * b * (Y[2] - m0 * Y[3] + (Y[2] - Y[4]) * laser.laserMedium.sa_wi / laser.laserMedium.se?.toDouble()!!) * Y[5] - (Y[5] - S0) / tc_t(
+                            Lac * b * (Y[2] - m0 * Y[3] + (Y[2] - Y[4]) * sa_wi / se_1_06) * Y[5] - (Y[5] - S0) / tc_t(
                                 t
                             )
                     }
@@ -671,7 +1104,7 @@ class DiffFunc(private val laser: Laser) {
                     m[1] =
                         ksi0 * k * Y[0] * (1.0 - Y[2] - Y[1]) - Y[1] * (g31 + g32) - ksi0 * A0 * k * Y[1] * (1.0 - Y[0]) + g43 * Y[3]
                     m[2] =
-                        g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - 0.5 * g21 * Y[4] * Y[2] * laser.laserMedium.sa_wi!! / laser.laserMedium.se?.toDouble()!! - sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(
+                        g32 * Y[1] - g21 * Y[2] - 0.5 * g21 * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - 0.5 * g21 * Y[4] * Y[2] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[2] - Y[3]) / num5 * Fp_t(
                             t,
                             -num5 * Lp
                         ) / Nwion
@@ -679,7 +1112,7 @@ class DiffFunc(private val laser: Laser) {
                         t,
                         -num5 * Lp
                     ) / Nwion - (g43 + g41) * Y[3]
-                    if (laser.shutter == 2 || laser.shutter == 3) {
+                    if (shutter == 2 || shutter == 3) {
                         m[7] =
                             exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
                         m[4] =
@@ -688,88 +1121,87 @@ class DiffFunc(private val laser: Laser) {
                                 m[7]
                             )
                         m[6] =
-                            ssh / SIG * (Y[4] / 2.0 * laser.TM * laser.TM) * laser.iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
                         m[5] =
-                            ssh * (Y[4] / 2.0 * laser.TM * laser.TM) * laser.iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
+                            ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
                     }
                     m[4] =
                         Lac * b * (Y[2] - m0 * (1.0 - Y[2] - Y[1])) * Y[4] - (Y[4] - S0) / tc_t(
                             t
                         )
-                }
-                if (laser.laserMedium.levels == 1) {
-                    val num6 =
-                        a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) + sa_wip * Nwion * (Y[1] - Y[3])
-                    m[0] =
-                        a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) / num6 * Fp_t(
-                            t,
-                            -num6 * Lp
-                        ) / Nwion - g43 / HL * Y[0] + g54 * Y[3]
-                    m[1] =
-                        g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[4] - g32 * Y[4] * Y[1] * laser.laserMedium.sa_wi!! / laser.laserMedium.se?.toDouble()!! - sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(
-                            t,
-                            -num6 * Lp
-                        ) / Nwion
-                    m[2] =
-                        lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[4] + q * g21 * (1.0 - Y[0] - Y[1])
-                    m[3] = sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(
-                        t,
-                        -num6 * Lp
-                    ) / Nwion - (g54 + g51) * Y[3]
-                    if (laser.shutter == 2 || laser.shutter == 3) {
-                        m[7] =
-                            exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
-                        m[4] =
-                            Lac * b * (Y[1] - m0 * Y[2]) * Y[4] + (S0 - Y[4]) / tc_t(
+                } else {
+                    if (levels == 1) {
+                        val num6 =
+                            a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) + sa_wip * Nwion * (Y[1] - Y[3])
+                        m[0] =
+                            a * (1.0 - 2.0 * Y[0] - Y[1] - Y[2] - Y[3]) / num6 * Fp_t(
                                 t,
-                                m[7]
-                            )
-                        m[6] =
-                            ssh / SIG * (Y[4] / 2.0 * laser.TM * laser.TM) * laser.iss * (Y[5] - Y[6]) - Y[6] / spt42
-                        m[5] =
-                            ssh * (Y[4] / 2.0 * laser.TM * laser.TM) * laser.iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
-
-                    }
-                    m[4] =
-                        Lac * b * (Y[1] - m0 * Y[2]) * Y[4] - (Y[4] - S0 * lb) / tc_t(
-                            t
-                        )
-
-                }
-                val num7 =
-                    a * (1.0 - 2.0 * Y[0] - Y[1]) + sa_wip * Nwion * (Y[1] - Y[2])
-                m[0] = a * (1.0 - 2.0 * Y[0] - Y[1]) / num7 * Fp_t(
-                    t,
-                    -num7 * Lp
-                ) / Nwion - (g32 + g31) * Y[0] + g43 * Y[2]
-                m[1] =
-                    g32 * Y[0] - g21 * Y[1] - Y[3] * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * g21 - g21 * Y[3] * Y[1] * laser.laserMedium.sa_wi!! / laser.laserMedium.se?.toDouble()!! + g43 * Y[2] - sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(
-                        t,
-                        -num7 * Lp
-                    ) / Nwion
-                m[2] = sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(
-                    t,
-                    -num7 * Lp
-                ) / Nwion - (g43 + g41) * Y[2]
-                if (laser.shutter == 2 || laser.shutter == 3) {
-                    m[6] =
-                        exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
-                    m[3] =
-                        Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] + (S0 - Y[3]) / tc_t(
+                                -num6 * Lp
+                            ) / Nwion - g43 / HL * Y[0] + g54 * Y[3]
+                        m[1] =
+                            g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m0 * Y[2]) * Y[4] - g32 * Y[4] * Y[1] * sa_wi / se_1_06 - sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(
+                                t,
+                                -num6 * Lp
+                            ) / Nwion
+                        m[2] =
+                            lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m0 * Y[2]) * Y[4] + q * g21 * (1.0 - Y[0] - Y[1])
+                        m[3] = sa_wip * Nwion * (Y[1] - Y[3]) / num6 * Fp_t(
                             t,
-                            m[6]
-                        )
-                    m[5] =
-                        ssh / SIG * (Y[3] / 2.0 * laser.TM * laser.TM) * laser.iss * (Y[4] - Y[5]) - Y[5] / spt42
-                    m[4] =
-                        ssh * (Y[3] / 2.0 * laser.TM * laser.TM) * laser.iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+                            -num6 * Lp
+                        ) / Nwion - (g54 + g51) * Y[3]
+                        if (shutter == 2 || shutter == 3) {
+                            m[7] =
+                                exp(-(ssh * (Nsh - 2.0 * Y[5] - Y[6] + (Y[5] - Y[6]) / SIG)) * Lpsh)
+                            m[4] =
+                                Lac * b * (Y[1] - m0 * Y[2]) * Y[4] + (S0 - Y[4]) / tc_t(
+                                    t,
+                                    m[7]
+                                )
+                            m[6] =
+                                ssh / SIG * (Y[4] / 2.0 * TM * TM) * Iss * (Y[5] - Y[6]) - Y[6] / spt42
+                            m[5] =
+                                ssh * (Y[4] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[5] - Y[6]) - Y[5] / spt - m[6]
 
+                        }
+                        m[4] =
+                            Lac * b * (Y[1] - m0 * Y[2]) * Y[4] - (Y[4] - S0 * lb) / tc_t(
+                                t
+                            )
+
+                    } else {
+                        val num7 =
+                            a * (1.0 - 2.0 * Y[0] - Y[1]) + sa_wip * Nwion * (Y[1] - Y[2])
+                        m[0] = a * (1.0 - 2.0 * Y[0] - Y[1]) / num7 * Fp_t(
+                            t,
+                            -num7 * Lp
+                        ) / Nwion - (g32 + g31) * Y[0] + g43 * Y[2]
+                        m[1] =
+                            g32 * Y[0] - g21 * Y[1] - Y[3] * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * g21 - g21 * Y[3] * Y[1] * sa_wi / se_1_06 + g43 * Y[2] - sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(
+                                t,
+                                -num7 * Lp
+                            ) / Nwion
+                        m[2] = sa_wip * Nwion * (Y[1] - Y[2]) / num7 * Fp_t(
+                            t,
+                            -num7 * Lp
+                        ) / Nwion - (g43 + g41) * Y[2]
+                        if (shutter == 2 || shutter == 3) {
+                            m[6] =
+                                exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
+                            m[3] =
+                                Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] + (S0 - Y[3]) / tc_t(
+                                    t,
+                                    m[6]
+                                )
+                            m[5] =
+                                ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
+                            m[4] =
+                                ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+
+                        } else{
+                            m[3] = Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(t)
+                        }
+                    }
                 }
-                m[3] =
-                    Lac * b * (Y[1] - m0 * (1.0 - Y[0] - Y[1])) * Y[3] - (Y[3] - S0) / tc_t(
-                        t
-                    )
-
             }
 
             "Yb" -> {
@@ -781,7 +1213,7 @@ class DiffFunc(private val laser: Laser) {
                     g43 * Y[0] - (g32 + g31) * Y[1] - g32 * (Y[1] - m[2] * Y[2]) * Y[3]
                 m[2] =
                     lb * g32 * Y[1] - g21 * Y[2] + g32 * (Y[1] - m[2] * Y[2]) * Y[3]
-                if (laser.shutter == 2 || laser.shutter == 3) {
+                if (shutter == 2 || shutter == 3) {
                     m[6] =
                         exp(-(ssh * (Nsh - 2.0 * Y[4] - Y[5] + (Y[4] - Y[5]) / SIG)) * Lpsh)
                     m[3] =
@@ -790,9 +1222,9 @@ class DiffFunc(private val laser: Laser) {
                             m[6]
                         )
                     m[5] =
-                        ssh / SIG * (Y[3] / 2.0 * laser.TM * laser.TM) * laser.iss * (Y[4] - Y[5]) - Y[5] / spt42
+                        ssh / SIG * (Y[3] / 2.0 * TM * TM) * Iss * (Y[4] - Y[5]) - Y[5] / spt42
                     m[4] =
-                        ssh * (Y[3] / 2.0 * laser.TM * laser.TM) * laser.iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
+                        ssh * (Y[3] / 2.0 * TM * TM) * Iss * (Nsh - 2.0 * Y[4] - Y[5]) - Y[4] / spt - m[5]
                 } else {
                     m[3] =
                         Lac * b * (Y[1] - m[2] * Y[2]) * Y[3] - (Y[3] - S0 * lb) / tc_t(
@@ -801,20 +1233,6 @@ class DiffFunc(private val laser: Laser) {
                 }
                 m[2] += q * (1.0 - m[0] - m[1] - m[2])
             }
-        }
-    }
-
-    fun ArrCpy(inA: DoubleArray, outA: DoubleArray) {
-        val length = inA.size
-        for (index in 0 until length) {
-            outA[index] = inA[index]
-        }
-    }
-
-    fun ArrConMult(k: Double, m: DoubleArray) {
-        val length = m.size
-        for (index in 0 until length) {
-            m[index] = k * m[index]
         }
     }
 
@@ -950,75 +1368,96 @@ class DiffFunc(private val laser: Laser) {
         this.D(tmp, m4, t)
     }
 
-    fun RkAmp(laser: Laser) {
-        val y0: DoubleArray = when (laser.laserMedium.host) {
-            "Nd" -> {
-                if (laser.shutter == 2 || laser.shutter == 3) {
-                    DoubleArray(7)
-                } else {
-                    DoubleArray(4)
-                }
-            }
-
-            "Er" -> {
-                if (laser.shutter == 2 || laser.shutter == 3) {
-                    DoubleArray(7)
-                } else {
-                    DoubleArray(4)
-                }
-            }
-
-            "General" -> {
-                if (laser.laserMedium.levels != 1) {
-                    if (laser.laserMedium.is_sensitizer == false) {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
-                            DoubleArray(7)
-                        } else {
-                            DoubleArray(4)
-                        }
-                    } else {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
-                            DoubleArray(8)
-                        } else {
-                            DoubleArray(5)
-                        }
-                    }
-                } else {
-                    if (laser.laserMedium.is_sensitizer == false) {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
-                            DoubleArray(8)
-                        } else {
-                            DoubleArray(5)
-                        }
-                    } else {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
-                            DoubleArray(9)
-                        } else {
-                            DoubleArray(6)
-                        }
-                    }
-                }
-            }
-
-            "Yb" -> {
-                if (laser.shutter == 2 || laser.shutter == 3) {
-                    DoubleArray(7)
-                } else {
-                    DoubleArray(4)
-                }
-            }
-
-            else -> {
-                DoubleArray(0)
-            }
-        }
+    private fun KAmp(
+        Y: DoubleArray,
+        h: Double,
+        t: Double,
+        m1: DoubleArray,
+        m2: DoubleArray,
+        m3: DoubleArray,
+        m4: DoubleArray,
+        tmp: DoubleArray
+    ) {
+        this.DAmp(Y, m1, t)
+        this.arrCpy(m1, tmp)
+        this.arrConMult(h / 2.0, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmp(tmp, m2, t)
+        this.arrCpy(m2, tmp)
+        this.arrConMult(h / 2.0, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmp(tmp, m3, t)
+        this.arrCpy(m3, tmp)
+        this.arrConMult(h, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmp(tmp, m4, t)
     }
 
-    fun Rk(): DiffResult {
+    private fun KAmpNoRelaxation(
+        Y: DoubleArray,
+        h: Double,
+        t: Double,
+        m1: DoubleArray,
+        m2: DoubleArray,
+        m3: DoubleArray,
+        m4: DoubleArray,
+        tmp: DoubleArray
+    ) {
+        this.DAmpNoRelaxation(Y, m1, t)
+        this.arrCpy(m1, tmp)
+        this.arrConMult(h / 2.0, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmpNoRelaxation(tmp, m2, t)
+        this.arrCpy(m2, tmp)
+        this.arrConMult(h / 2.0, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmpNoRelaxation(tmp, m3, t)
+        this.arrCpy(m3, tmp)
+        this.arrConMult(h, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmpNoRelaxation(tmp, m4, t)
+    }
+
+    private fun KAmpRelaxationOnly(
+        Y: DoubleArray,
+        h: Double,
+        t: Double,
+        m1: DoubleArray,
+        m2: DoubleArray,
+        m3: DoubleArray,
+        m4: DoubleArray,
+        tmp: DoubleArray
+    ) {
+        this.DAmpRelaxationOnly(Y, m1, t)
+        this.arrCpy(m1, tmp)
+        this.arrConMult(h / 2.0, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmpRelaxationOnly(tmp, m2, t)
+        this.arrCpy(m2, tmp)
+        this.arrConMult(h / 2.0, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmpRelaxationOnly(tmp, m3, t)
+        this.arrCpy(m3, tmp)
+        this.arrConMult(h, tmp)
+        this.msum(Y, tmp, tmp)
+        this.DAmpRelaxationOnly(tmp, m4, t)
+    }
+
+    private fun getLastColumn(inArr: Array<DoubleArray>): DoubleArray {
+        val length1 = inArr.size
+        val length2 = inArr[0].size
+        val lastColumn = DoubleArray(length1)
+        for (index in 0 until length1) {
+            lastColumn[index] = inArr[index][length2 - 1]
+        }
+        return lastColumn
+    }
+
+    fun RkAmp(): DiffResult {
         val diffResult = DiffResult()
-        val y0: DoubleArray = when (laser.laserMedium.host) {
+        val y0: DoubleArray = when (host) {
             "Nd" -> {
-                if (laser.shutter == 2 || laser.shutter == 3) {
+                if (shutter == 2 || shutter == 3) {
                     DoubleArray(7)
                 } else {
                     DoubleArray(4)
@@ -1026,7 +1465,7 @@ class DiffFunc(private val laser: Laser) {
             }
 
             "Er" -> {
-                if (laser.shutter == 2 || laser.shutter == 3) {
+                if (shutter == 2 || shutter == 3) {
                     DoubleArray(7)
                 } else {
                     DoubleArray(4)
@@ -1034,29 +1473,29 @@ class DiffFunc(private val laser: Laser) {
             }
 
             "General" -> {
-                if (laser.laserMedium.levels != 1) {
-                    if (laser.laserMedium.is_sensitizer == false) {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
+                if (levels != 1) {
+                    if (is_sensitizer == false) {
+                        if (shutter == 2 || shutter == 3) {
                             DoubleArray(7)
                         } else {
                             DoubleArray(4)
                         }
                     } else {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
+                        if (shutter == 2 || shutter == 3) {
                             DoubleArray(8)
                         } else {
                             DoubleArray(5)
                         }
                     }
                 } else {
-                    if (laser.laserMedium.is_sensitizer == false) {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
+                    if (is_sensitizer == false) {
+                        if (shutter == 2 || shutter == 3) {
                             DoubleArray(8)
                         } else {
                             DoubleArray(5)
                         }
                     } else {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
+                        if (shutter == 2 || shutter == 3) {
                             DoubleArray(9)
                         } else {
                             DoubleArray(6)
@@ -1066,7 +1505,7 @@ class DiffFunc(private val laser: Laser) {
             }
 
             "Yb" -> {
-                if (laser.shutter == 2 || laser.shutter == 3) {
+                if (shutter == 2 || shutter == 3) {
                     DoubleArray(7)
                 } else {
                     DoubleArray(4)
@@ -1080,13 +1519,11 @@ class DiffFunc(private val laser: Laser) {
 
         val length1: Int = y0.size
         val num1 = 0.0
-        val tpp: Double = laser.tpp
-        val length2: Int = ((tpp - num1) / (this.dt1 * 0.001)).toInt()
+        val tpp: Double = tpp
+        val length2: Int = ((tpp - num1) / (dt1 * 0.001)).toInt()
         var num2: Int = 0
-        val num3: Double = this.dt1 * 0.001
-        val num4: Double = (laser.configuration.roc!! - laser.Ffrom) / (laser.Fto - laser.Ffrom)
 
-        when (laser.laserMedium.host) {
+        when (host) {
             "Nd" -> {
                 val numArray1 = doubleArrayOf(
                     2.47384207521793E-19,
@@ -1095,7 +1532,7 @@ class DiffFunc(private val laser: Laser) {
                 )
                 var num6 = 1.0
                 for (index in numArray1.indices) {
-                    y0[index] = exp(-numArray1[index] / (1.38E-23 * laser.laserMedium.ot!!))
+                    y0[index] = exp(-numArray1[index] / (1.38E-23 * ot))
                     num6 += y0[index]
                 }
                 for (index in numArray1.indices) {
@@ -1112,7 +1549,7 @@ class DiffFunc(private val laser: Laser) {
                 )
                 var num7 = 1.0
                 for (index in numArray2.indices) {
-                    y0[index] = exp(-numArray2[index] / (1.38E-23 * laser.laserMedium.ot!!))
+                    y0[index] = exp(-numArray2[index] / (1.38E-23 * ot))
                     num7 += y0[index]
                 }
                 for (index in numArray2.indices) {
@@ -1124,8 +1561,8 @@ class DiffFunc(private val laser: Laser) {
             "General" -> {
                 val num8 = 6.626068E-34
                 val num9 = 299800000.0
-                if (laser.laserMedium.is_sensitizer == true) {
-                    if (laser.laserMedium.levels == 1) {
+                if (is_sensitizer == true) {
+                    if (levels == 1) {
                         val numArray3 = doubleArrayOf(
                             laser.laserMedium.e2s?.toDouble()!!,
                             laser.laserMedium.e4w?.toDouble()!!,
@@ -1139,7 +1576,7 @@ class DiffFunc(private val laser: Laser) {
                         var num10 = 1.0
                         for (index in numArray3.indices) {
                             y0[index] =
-                                exp(-numArray3[index] / (1.38E-23 * laser.laserMedium.ot!!))
+                                exp(-numArray3[index] / (1.38E-23 * ot))
                             num10 += y0[index]
                         }
                         for (index in numArray3.indices) {
@@ -1159,7 +1596,7 @@ class DiffFunc(private val laser: Laser) {
                         var num11 = 1.0
                         for (index in numArray4.indices) {
                             y0[index] =
-                                Math.exp(-numArray4[index] / (1.38E-23 * laser.laserMedium.ot!!))
+                                exp(-numArray4[index] / (1.38E-23 * ot))
                             num11 += y0[index]
                         }
                         for (index in numArray4.indices) {
@@ -1168,7 +1605,7 @@ class DiffFunc(private val laser: Laser) {
                         y0[4] = this.S0
                     }
                 } else {
-                    if (laser.laserMedium.levels == 1) {
+                    if (levels == 1) {
                         val numArray5 = doubleArrayOf(
                             laser.laserMedium.e4w?.toDouble()!!,
                             laser.laserMedium.e3w?.toDouble()!!,
@@ -1181,7 +1618,7 @@ class DiffFunc(private val laser: Laser) {
                         var num12 = 1.0
                         for (index in numArray5.indices) {
                             y0[index] =
-                                exp(-numArray5[index] / (1.38E-23 * laser.laserMedium.ot!!))
+                                exp(-numArray5[index] / (1.38E-23 * ot))
                             num12 += y0[index]
                         }
                         for (index in numArray5.indices) {
@@ -1200,7 +1637,7 @@ class DiffFunc(private val laser: Laser) {
                         var num13 = 1.0
                         for (index in numArray6.indices) {
                             y0[index] =
-                                exp(-numArray6[index] / (1.38E-23 * laser.laserMedium.ot!!))
+                                exp(-numArray6[index] / (1.38E-23 * ot))
                             num13 += y0[index]
                         }
                         for (index in numArray6.indices) {
@@ -1219,7 +1656,7 @@ class DiffFunc(private val laser: Laser) {
                 )
                 var num14 = 1.0
                 for (index in numArray7.indices) {
-                    y0[index] = exp(-numArray7[index] / (1.38E-23 * laser.laserMedium.ot!!))
+                    y0[index] = exp(-numArray7[index] / (1.38E-23 * ot))
                     num14 += y0[index]
                 }
                 for (index in numArray7.indices) {
@@ -1234,7 +1671,358 @@ class DiffFunc(private val laser: Laser) {
             }
         }
 
-        if (laser.shutter == 2 || laser.shutter == 3) {
+        if (shutter == 2 || shutter == 3) {
+            y0[length1 - 3] = 0.0
+            y0[length1 - 2] = 0.0
+            y0[length1 - 1] = laser.qSwitch.spt0!!
+        }
+
+        var M = Array(length1 + 1) { DoubleArray(length2) }
+        val m1 = DoubleArray(length1 + 1) { if (it == 0) num1 else y0[it - 1] }
+        M = this.setColumn(M, m1, 0)
+
+        val m2 = DoubleArray(length1 + 1)
+        val numArray8 = DoubleArray(length1)
+        val newSS = DoubleArray(length1)
+        var num15 = -1
+        var num16 = dt1 * 0.001
+        var j = 0
+        var num17 = num16
+        if (shutter == 1 && AQStype != 2 && AQStype != 3) {
+            num17 *= 10.0
+        }
+        val num18 = Lo / 29979.2458 / 10.0
+        var num19 = minOf(Lo / 29979.2458, num16)
+        var t = M[0][0]
+        var M_r: Array<DoubleArray>? = null
+        //val snum = snum
+        val tmp = DoubleArray(length1)
+        val numArray9 = DoubleArray(length1)
+        val numArray10 = DoubleArray(length1)
+        val numArray11 = DoubleArray(length1)
+        val numArray12 = DoubleArray(length1)
+        val numArray13 = DoubleArray(length1)
+        val numArray14 = DoubleArray(length1)
+
+        while (t < tpp) {
+            if (shutter != 0) {
+                val index1: Int = if (shutter != 1) length1 - 3 else length1
+                if (M[index1][j] > S0 * 5000.0 && shutter != 1 || shutter == 1 && Ts(t) != sT0) {
+                    if (num16 != num18 && ThresholdCheck(newSS, t, m2[length1])) {
+                        num16 = num18
+                        M_r = NonZeroMatrixAppend(M, M_r)
+                        M = emptyArray()
+                        var length3 = ((tp - t) / num16).toInt() + 1000
+                        if (length3 > 1000000)
+                            length3 = 1000000
+                        M = Array(length1 + 1) { DoubleArray(length3) }
+                        for (index2 in 0 until length1 + 1)
+                            M[index2][0] = M_r[index2][M_r[0].size - 1]
+                        j = 0
+                    }
+                } else if (num16 != num17) {
+                    num16 = num17
+                    M_r = NonZeroMatrixAppend(M, M_r)
+                    M = emptyArray()
+                    val length4 = ((tp - t) / num16).toInt() + 1000
+                    M = Array(length1 + 1) { DoubleArray(length4) }
+                    for (index3 in 0 until length1 + 1)
+                        M[index3][0] = M_r[index3][M_r[0].size - 1]
+                    j = 0
+                }
+            }
+            val num21 = t + num16
+            ColumnTo1DArray(M, newSS, j, 1, length1)
+            while (t < num21) {
+                val num22 = num19
+                KAmp(newSS, num19, t, numArray9, numArray10, numArray12, numArray13, tmp)
+                arrConMult(2.0, numArray10)
+                msum(numArray10, numArray9, numArray11)
+                arrConMult(2.0, numArray12)
+                msum(numArray13, numArray12, numArray14)
+                msum(numArray11, numArray14, numArray8)
+                arrConMult(num19 / 6.0, numArray8)
+                num19 = if (shutter == 2 || shutter == 3) {
+                    val num25 =
+                        adaptstep(num19, num16, numArray8[length1 - 4], newSS[length1 - 4])
+                    val num26 = min(adaptstep_N(num25, num16, numArray8[1], newSS[1]), num25)
+                    min(adaptstep_N(num26, num16, numArray8[0], newSS[0]), num26)
+                } else {
+                    if (host != "Yb") {
+                        min(
+                            adaptstep(num19, num16, numArray8[length1 - 1], newSS[length1 - 1]),
+                            adaptstep(num19, num16, numArray8[length1 - 2], newSS[length1 - 2])
+                        )
+                    } else {
+                        min(
+                            adaptstep(num19, num16, numArray8[length1 - 1], newSS[length1 - 1]),
+                            adaptstep(num19, num16, numArray8[length1 - 3], newSS[length1 - 3])
+                        )
+                    }
+                }
+                if (num22 <= num19) {
+                    msum(newSS, numArray8, newSS)
+                    if ((host == "General") && (shutter == 2 || shutter == 3)) {
+                        if (newSS[length1 - 5] < 0.0) newSS[length1 - 5] = 0.0
+                    } else if (newSS[length1 - 2] < 0.0) newSS[length1 - 2] = 0.0
+                    if (host == "Yb:Host" && newSS[2] / (1.0 - newSS[1] - newSS[0]) < q)
+                        newSS[2] = q * (1.0 - newSS[1] - newSS[0])
+                    t += num19
+                }
+            }
+
+            m2[0] = t
+            for (index in 1 until length1 + 1)
+                m2[index] = if (newSS[index - 1] <= 0.0) 0.0 else newSS[index - 1]
+            if (shutter == 2 || shutter == 3)
+                m2[length1] =
+                    exp(-(ssh * (Nsh - 2.0 * m2[4] - m2[5] + (m2[4] - m2[5]) / SIG)) * Lpsh)
+            if (j == 1000) {
+                M = setColumn(M, m2, j + 1)
+            }
+
+
+            if (num2 > 10000) {
+                var num28 = 0
+                while (num28 < 10000)
+                    ++num28
+            }
+
+            if (num15 == -1) {
+                if (ThresholdCheck(newSS, t, m2[length1]))
+                    num15 = j
+                diffResult.ith = num15
+            }
+
+            ++j
+        }
+        val inArr = NonZeroMatrixAppend(M, M_r)
+        laser.ampInitialValues = getLastColumn(inArr)
+
+        return diffResult
+    }
+
+    fun Rk(): DiffResult {
+        val diffResult = DiffResult()
+        val y0: DoubleArray = when (host) {
+            "Nd" -> {
+                if (shutter == 2 || shutter == 3) {
+                    DoubleArray(7)
+                } else {
+                    DoubleArray(4)
+                }
+            }
+
+            "Er" -> {
+                if (shutter == 2 || shutter == 3) {
+                    DoubleArray(7)
+                } else {
+                    DoubleArray(4)
+                }
+            }
+
+            "General" -> {
+                if (levels != 1) {
+                    if (is_sensitizer == false) {
+                        if (shutter == 2 || shutter == 3) {
+                            DoubleArray(7)
+                        } else {
+                            DoubleArray(4)
+                        }
+                    } else {
+                        if (shutter == 2 || shutter == 3) {
+                            DoubleArray(8)
+                        } else {
+                            DoubleArray(5)
+                        }
+                    }
+                } else {
+                    if (is_sensitizer == false) {
+                        if (shutter == 2 || shutter == 3) {
+                            DoubleArray(8)
+                        } else {
+                            DoubleArray(5)
+                        }
+                    } else {
+                        if (shutter == 2 || shutter == 3) {
+                            DoubleArray(9)
+                        } else {
+                            DoubleArray(6)
+                        }
+                    }
+                }
+            }
+
+            "Yb" -> {
+                if (shutter == 2 || shutter == 3) {
+                    DoubleArray(7)
+                } else {
+                    DoubleArray(4)
+                }
+            }
+
+            else -> {
+                DoubleArray(0)
+            }
+        }
+
+        val length1: Int = y0.size
+        val num1 = 0.0
+        val tpp: Double = tpp
+        val length2: Int = ((tpp - num1) / (dt1 * 0.001)).toInt()
+        var num2: Int = 0
+        val num3: Double = dt1 * 0.001
+        val num4: Double = (Roc - Ffrom) / (Fto - Ffrom)
+
+        when (host) {
+            "Nd" -> {
+                val numArray1 = doubleArrayOf(
+                    2.47384207521793E-19,
+                    2.28516644012424E-19,
+                    3.99697220603622E-20
+                )
+                var num6 = 1.0
+                for (index in numArray1.indices) {
+                    y0[index] = exp(-numArray1[index] / (1.38E-23 * ot))
+                    num6 += y0[index]
+                }
+                for (index in numArray1.indices) {
+                    y0[index] /= num6
+                }
+                y0[3] = this.S0
+            }
+
+            "Er" -> {
+                val numArray2 = doubleArrayOf(
+                    2.11329E-19,
+                    2.11329E-19,
+                    1.2899E-19
+                )
+                var num7 = 1.0
+                for (index in numArray2.indices) {
+                    y0[index] = exp(-numArray2[index] / (1.38E-23 * ot))
+                    num7 += y0[index]
+                }
+                for (index in numArray2.indices) {
+                    y0[index] /= num7
+                }
+                y0[3] = this.S0
+            }
+
+            "General" -> {
+                val num8 = 6.626068E-34
+                val num9 = 299800000.0
+                if (is_sensitizer == true) {
+                    if (levels == 1) {
+                        val numArray3 = doubleArrayOf(
+                            laser.laserMedium.e2s?.toDouble()!!,
+                            laser.laserMedium.e4w?.toDouble()!!,
+                            laser.laserMedium.e3w?.toDouble()!!,
+                            laser.laserMedium.e2w?.toDouble()!!,
+                            laser.laserMedium.e3w.toDouble() + laser.laserMedium.e2s.toDouble()
+                        )
+                        for (index in numArray3.indices) {
+                            numArray3[index] = num8 * num9 * numArray3[index] * 100.0
+                        }
+                        var num10 = 1.0
+                        for (index in numArray3.indices) {
+                            y0[index] =
+                                exp(-numArray3[index] / (1.38E-23 * ot))
+                            num10 += y0[index]
+                        }
+                        for (index in numArray3.indices) {
+                            y0[index] = y0[index] / num10
+                        }
+                        y0[5] = this.S0
+                    } else {
+                        val numArray4 = doubleArrayOf(
+                            laser.laserMedium.e2s?.toDouble()!!,
+                            laser.laserMedium.e3w?.toDouble()!!,
+                            laser.laserMedium.e2w?.toDouble()!!,
+                            laser.laserMedium.e2w.toDouble() + laser.laserMedium.e2s.toDouble()
+                        )
+                        for (index in numArray4.indices) {
+                            numArray4[index] = num8 * num9 * numArray4[index] * 100.0
+                        }
+                        var num11 = 1.0
+                        for (index in numArray4.indices) {
+                            y0[index] =
+                                Math.exp(-numArray4[index] / (1.38E-23 * ot))
+                            num11 += y0[index]
+                        }
+                        for (index in numArray4.indices) {
+                            y0[index] = y0[index] / num11
+                        }
+                        y0[4] = this.S0
+                    }
+                } else {
+                    if (levels == 1) {
+                        val numArray5 = doubleArrayOf(
+                            laser.laserMedium.e4w?.toDouble()!!,
+                            laser.laserMedium.e3w?.toDouble()!!,
+                            laser.laserMedium.e2w?.toDouble()!!,
+                            laser.laserMedium.e3w.toDouble() + laser.laserMedium.e4w.toDouble()
+                        )
+                        for (index in numArray5.indices) {
+                            numArray5[index] = num8 * num9 * numArray5[index] * 100.0
+                        }
+                        var num12 = 1.0
+                        for (index in numArray5.indices) {
+                            y0[index] =
+                                exp(-numArray5[index] / (1.38E-23 * ot))
+                            num12 += y0[index]
+                        }
+                        for (index in numArray5.indices) {
+                            y0[index] = y0[index] / num12
+                        }
+                        y0[4] = this.S0
+                    } else {
+                        val numArray6 = doubleArrayOf(
+                            laser.laserMedium.e3w?.toDouble()!!,
+                            laser.laserMedium.e2w?.toDouble()!!,
+                            laser.laserMedium.e2w.toDouble() + laser.laserMedium.e3w.toDouble()
+                        )
+                        for (index in numArray6.indices) {
+                            numArray6[index] = num8 * num9 * numArray6[index] * 100.0
+                        }
+                        var num13 = 1.0
+                        for (index in numArray6.indices) {
+                            y0[index] =
+                                exp(-numArray6[index] / (1.38E-23 * ot))
+                            num13 += y0[index]
+                        }
+                        for (index in numArray6.indices) {
+                            y0[index] = y0[index] / num13
+                        }
+                        y0[3] = this.S0
+                    }
+                }
+            }
+
+            "Yb" -> {
+                val numArray7 = doubleArrayOf(
+                    2.11045E-19,
+                    2.05145E-19,
+                    1.21574E-20
+                )
+                var num14 = 1.0
+                for (index in numArray7.indices) {
+                    y0[index] = exp(-numArray7[index] / (1.38E-23 * ot))
+                    num14 += y0[index]
+                }
+                for (index in numArray7.indices) {
+                    y0[index] = y0[index] / num14
+                }
+                laser.laserMedium.q = y0[2]
+                this.q = y0[2]
+                y0[3] = this.S0
+            }
+
+            else -> {
+            }
+        }
+
+        if (shutter == 2 || shutter == 3) {
             y0[length1 - 3] = 0.0
             y0[length1 - 2] = 0.0
             y0[length1 - 1] = laser.qSwitch.spt0!!
@@ -1255,7 +2043,7 @@ class DiffFunc(private val laser: Laser) {
         var num16 = this.dt1 * 0.001
         var j = 0
         var num17 = num16
-        if (laser.shutter == 1 && laser.qSwitch.AQStype != 2 && laser.qSwitch.AQStype != 3) {
+        if (shutter == 1 && AQStype != 2 && AQStype != 3) {
             num17 *= 10.0
         }
         val num18 = this.Lo / 29979.2458 / 10.0
@@ -1263,7 +2051,7 @@ class DiffFunc(private val laser: Laser) {
         var t = M[0][0]
         var flag = false
         var M_r: Array<DoubleArray>? = null
-        //val snum = Main.Laser1.snum
+        //val snum = Main.snum
         var tmp = DoubleArray(length1)
         var numArray9 = DoubleArray(length1)
         var numArray10 = DoubleArray(length1)
@@ -1272,9 +2060,9 @@ class DiffFunc(private val laser: Laser) {
         var numArray13 = DoubleArray(length1)
         var numArray14 = DoubleArray(length1)
         while (t < tpp) {
-            if (laser.shutter != 0) {
-                val index1: Int = if (laser.shutter != 1) length1 - 3 else length1
-                if (M[index1][j] > S0 * 5000.0 && laser.shutter != 1 || laser.shutter == 1 && Ts(t) != sT0) {
+            if (shutter != 0) {
+                val index1: Int = if (shutter != 1) length1 - 3 else length1
+                if (M[index1][j] > S0 * 5000.0 && shutter != 1 || shutter == 1 && Ts(t) != sT0) {
                     if (num16 != num18 && this.ThresholdCheck(newSS, t, m2[length1])) {
                         num16 = num18
                         M_r = NonZeroMatrixAppend(M, M_r)
@@ -1302,19 +2090,19 @@ class DiffFunc(private val laser: Laser) {
             while (t < num21) {
                 val num22 = num19
                 K(newSS, num19, t, numArray9, numArray10, numArray12, numArray13, tmp)
-                ArrConMult(2.0, numArray10)
+                arrConMult(2.0, numArray10)
                 msum(numArray10, numArray9, numArray11)
-                ArrConMult(2.0, numArray12)
+                arrConMult(2.0, numArray12)
                 msum(numArray13, numArray12, numArray14)
                 msum(numArray11, numArray14, numArray8)
-                ArrConMult(num19 / 6.0, numArray8)
-                num19 = if (laser.shutter == 2 || laser.shutter == 3) {
+                arrConMult(num19 / 6.0, numArray8)
+                num19 = if (shutter == 2 || shutter == 3) {
                     val num25 =
                         adaptstep(num19, num16, numArray8[length1 - 4], newSS[length1 - 4])
                     val num26 = min(adaptstep_N(num25, num16, numArray8[1], newSS[1]), num25)
                     min(adaptstep_N(num26, num16, numArray8[0], newSS[0]), num26)
                 } else {
-                    if (laser.laserMedium.host != "Yb") {
+                    if (host != "Yb") {
                         min(
                             adaptstep(num19, num16, numArray8[length1 - 1], newSS[length1 - 1]),
                             adaptstep(num19, num16, numArray8[length1 - 2], newSS[length1 - 2])
@@ -1329,8 +2117,8 @@ class DiffFunc(private val laser: Laser) {
 
                 if (num22 <= num19) {
                     msum(newSS, numArray8, newSS)
-                    if (laser.laserMedium.host == "General") {
-                        if (laser.shutter == 2 || laser.shutter == 3) {
+                    if (host == "General") {
+                        if (shutter == 2 || shutter == 3) {
                             if (newSS[length1 - 5] < 0.0) {
                                 newSS[length1 - 5] = 0.0
                             }
@@ -1338,7 +2126,7 @@ class DiffFunc(private val laser: Laser) {
                             newSS[length1 - 2] = 0.0
                         }
                     }
-                    if (laser.laserMedium.host == "Yb" && newSS[2] / (1.0 - newSS[1] - newSS[0]) < q) {
+                    if (host == "Yb" && newSS[2] / (1.0 - newSS[1] - newSS[0]) < q) {
                         newSS[2] = q * (1.0 - newSS[1] - newSS[0])
                     }
                     t += num19
@@ -1348,18 +2136,12 @@ class DiffFunc(private val laser: Laser) {
             for (index in 1 until length1 + 1) {
                 m2[index] = if (newSS[index - 1] <= 0.0) 0.0 else newSS[index - 1]
             }
-            if (laser.shutter == 2 || laser.shutter == 3) {
+            if (shutter == 2 || shutter == 3) {
                 m2[length1] =
                     exp(-(ssh * (Nsh - 2.0 * m2[4] - m2[5] + (m2[4] - m2[5]) / SIG)) * Lpsh)
             }
 
             if (j == 1000) {
-                if (this.step_ch(snum)) {
-                    M = setColumn(M, m2, j + 1)
-                } else {
-                    val num27 = "Some error occurred."
-                }
-            } else {
                 M = setColumn(M, m2, j + 1)
             }
             if (num2 > 10000) {
@@ -1385,8 +2167,278 @@ class DiffFunc(private val laser: Laser) {
         } else {
             val SS = this.NonZeroMatrixAppend(M, M_r)
             M = emptyArray()
-            diffResult.Input(SS)
+            diffResult.Input(SS, this)
         }
+        return diffResult
+    }
+
+    fun RkAmpNoRelaxation(y0_0: DoubleArray, simTime: Double): DiffResult {
+
+        val diffResult = DiffResult()
+        val numArray1 = DoubleArray(y0_0.size - 1)
+        val length1 = numArray1.size
+        for (index in 0 until length1) {
+            numArray1[index] = y0_0[index + 1]
+        }
+        val num1 = 0.0
+        val num2 = simTime
+        val length2 = ((num2 - num1) / (dt1 * 0.001 * 0.001)).toInt()
+        var num3 = 0
+        val num4 = dt1 * 0.001
+        val num5 = (Roc - Ffrom) / (Fto - Ffrom)
+        var M = Array(length1 + 1) { DoubleArray(length2) }
+        val m1 = DoubleArray(length1 + 1)
+        m1[0] = num1
+        for (index in 1 until length1 + 1) {
+            m1[index] = numArray1[index - 1]
+        }
+        M = setColumn(M, m1, 0)
+        val m2 = DoubleArray(length1 + 1)
+        val numArray2 = DoubleArray(length1)
+        val newSS = DoubleArray(length1)
+        var num6 = -1
+        var num7 = dt1 * 0.001 * 0.001
+        var j = 0
+        var num8 = num7
+        if (shutter == 1 && AQStype != 2 && AQStype != 3) {
+            num8 *= 10.0
+        }
+        val num9 = Lo / 29979.2458 / 10.0
+        var num10 = min(Lo / 29979.2458, num7)
+        var t = M[0][0]
+        var M_r: Array<DoubleArray>? = null
+        //val snum = snum
+        val tmp = DoubleArray(length1)
+        val numArray3 = DoubleArray(length1)
+        val numArray4 = DoubleArray(length1)
+        val numArray5 = DoubleArray(length1)
+        val numArray6 = DoubleArray(length1)
+        val numArray7 = DoubleArray(length1)
+        val numArray8 = DoubleArray(length1)
+
+        while (t < tpp) {
+            if (shutter != 0) {
+                val index1: Int = if (shutter != 1) length1 - 3 else length1
+                if (M[index1][j] > S0 * 5000.0 && shutter != 1 || shutter == 1 && Ts(t) != sT0) {
+                    if (num7 != num9 && ThresholdCheck(newSS, t, m2[length1])) {
+                        num7 = num9
+                        M_r = NonZeroMatrixAppend(M, M_r)
+                        M = emptyArray()
+                        var length3 = ((tp - t) / num7).toInt() + 1000
+                        if (length3 > 1000000)
+                            length3 = 1000000
+                        M = Array(length1 + 1) { DoubleArray(length3) }
+                        for (index2 in 0 until length1 + 1)
+                            M[index2][0] = M_r[index2][M_r[0].size - 1]
+                        j = 0
+                    }
+                } else if (num7 != num8) {
+                    num7 = num8
+                    M_r = NonZeroMatrixAppend(M, M_r)
+                    M = emptyArray()
+                    val length4 = ((tp - t) / num7).toInt() + 1000
+                    M = Array(length1 + 1) { DoubleArray(length4) }
+                    for (index3 in 0 until length1 + 1)
+                        M[index3][0] = M_r[index3][M_r[0].size - 1]
+                    j = 0
+                }
+            }
+            val num12 = t + num7
+            ColumnTo1DArray(M, newSS, j, 1, length1)
+            while (t < num12) {
+                val num13 = num10
+                KAmpNoRelaxation(newSS, num10, t, numArray3, numArray4, numArray6, numArray7, tmp)
+                arrConMult(2.0, numArray4)
+                msum(numArray4, numArray3, numArray5)
+                arrConMult(2.0, numArray6)
+                msum(numArray7, numArray6, numArray8)
+                msum(numArray5, numArray8, numArray2)
+                arrConMult(num10 / 6.0, numArray8)
+                num10 = if (shutter == 2 || shutter == 3) {
+                    val num16 =
+                        adaptstep(num10, num7, numArray8[length1 - 4], newSS[length1 - 4])
+                    val num17 = min(adaptstep_N(num16, num7, numArray8[1], newSS[1]), num16)
+                    min(adaptstep_N(num17, num7, numArray8[0], newSS[0]), num17)
+                } else {
+                    if (host != "Yb") {
+                        min(
+                            adaptstep(num10, num7, numArray8[length1 - 1], newSS[length1 - 1]),
+                            adaptstep(num10, num7, numArray8[length1 - 2], newSS[length1 - 2])
+                        )
+                    } else {
+                        min(
+                            adaptstep(num10, num7, numArray8[length1 - 1], newSS[length1 - 1]),
+                            adaptstep(num10, num7, numArray8[length1 - 3], newSS[length1 - 3])
+                        )
+                    }
+                }
+                if (num13 <= num10) {
+                    msum(newSS, numArray8, newSS)
+                    if ((host == "General") && (shutter == 2 || shutter == 3)) {
+                        if (newSS[length1 - 5] < 0.0) newSS[length1 - 5] = 0.0
+                    } else if (newSS[length1 - 2] < 0.0) newSS[length1 - 2] = 0.0
+                    if (host == "Yb" && newSS[2] / (1.0 - newSS[1] - newSS[0]) < q)
+                        newSS[2] = q * (1.0 - newSS[1] - newSS[0])
+                    t += num10
+                }
+            }
+
+            m2[0] = t
+            for (index in 1 until length1 + 1)
+                m2[index] = if (newSS[index - 1] <= 0.0) 0.0 else newSS[index - 1]
+            if (shutter == 2 || shutter == 3)
+                m2[length1] =
+                    exp(-(ssh * (Nsh - 2.0 * m2[4] - m2[5] + (m2[4] - m2[5]) / SIG)) * Lpsh)
+
+            M = setColumn(M, m2, j + 1)
+
+            if (num3 > 10000) {
+                var num19 = 0
+                while (num19 < 10000)
+                    ++num19
+            }
+            if (num6 == -1) {
+                if (ThresholdCheck(newSS, t, m2[length1]))
+                    num6 = j
+                diffResult.ith = num6
+            }
+            ++j
+        }
+        val inArr: Array<DoubleArray> = NonZeroMatrixAppend(M, M_r)
+        laser.ampInitialValues = getLastColumn(inArr)
+        return diffResult
+    }
+
+    fun RkAmpRelaxationOnly(y0_0: DoubleArray, simTime: Double): DiffResult {
+
+        val diffResult = DiffResult()
+        val numArray1 = DoubleArray(y0_0.size - 1)
+        val length1 = numArray1.size
+        for (index in 0 until length1)
+            numArray1[index] = y0_0[index + 1]
+        var num1 = 0.0
+        val num2 = simTime
+        val length2 = ((num2 - num1) / (dt1 * 0.001 * 0.001)).toInt()
+        var num3 = 0
+        var M = Array(length1 + 1) { DoubleArray(length2) }
+        val m1 = DoubleArray(length1 + 1)
+        m1[0] = num1
+        for (index in 1 until length1 + 1)
+            m1[index] = numArray1[index - 1]
+        setColumn(M, m1, 0)
+        val m2 = DoubleArray(length1 + 1)
+        val numArray2 = DoubleArray(length1)
+        val newSS = DoubleArray(length1)
+        var num6 = -1
+        var num7 = dt1 * 0.001 * 0.001
+        var j = 0
+        var num8 = num7
+        if (shutter == 1 && AQStype != 2 && AQStype != 3)
+            num8 *= 10.0
+        val num9 = Lo / 29979.2458 / 10.0
+        var num10 = min(Lo / 29979.2458, num7)
+        var t = M[0][0]
+        var M_r: Array<DoubleArray>? = null
+        //val snum = snum
+        val tmp = DoubleArray(length1)
+        val numArray3 = DoubleArray(length1)
+        val numArray4 = DoubleArray(length1)
+        val numArray5 = DoubleArray(length1)
+        val numArray6 = DoubleArray(length1)
+        val numArray7 = DoubleArray(length1)
+        val numArray8 = DoubleArray(length1)
+
+        while (t < tpp) {
+            if (shutter != 0) {
+                val index1: Int = if (shutter != 1) length1 - 3 else length1
+                if (M[index1][j] > S0 * 5000.0 && shutter != 1 || shutter == 1 && Ts(t) != sT0) {
+                    if (num7 != num9 && ThresholdCheck(newSS, t, m2[length1])) {
+                        num7 = num9
+                        M_r = NonZeroMatrixAppend(M, M_r)
+                        M = emptyArray()
+                        var length3 = ((num2 - t) / num7).toInt() + 1000
+                        if (length3 > 1000000) length3 = 1000000
+                        M = Array(length1 + 1) { DoubleArray(length3) }
+                        for (index2 in 0 until length1 + 1) {
+                            M[index2][0] = M_r[index2][M_r[0].size - 1]
+                        }
+                        j = 0
+                    }
+                } else if (num7 != num8) {
+                    num7 = num8
+                    M_r = NonZeroMatrixAppend(M, M_r)
+                    M = emptyArray()
+                    var length4 = ((num2 - t) / num7).toInt() + 1000
+                    M = Array(length1 + 1) { DoubleArray(length4) }
+                    for (index3 in 0 until length1 + 1) {
+                        M[index3][0] = M_r[index3][M_r[0].size - 1]
+                    }
+                    j = 0
+                }
+            }
+            val num12 = t + num7
+            ColumnTo1DArray(M, newSS, j, 1, length1)
+            while (t < num12) {
+                val num13 = num10
+                KAmpRelaxationOnly(newSS, num10, t, numArray3, numArray4, numArray6, numArray7, tmp)
+                arrConMult(2.0, numArray4)
+                msum(numArray4, numArray3, numArray5)
+                arrConMult(2.0, numArray6)
+                msum(numArray7, numArray6, numArray8)
+                msum(numArray5, numArray8, numArray2)
+                arrConMult(num10 / 6.0, numArray2)
+                num10 = if (shutter == 2 || shutter == 3) {
+                    val num16 = adaptstep(num10, num7, numArray8[length1 - 4], newSS[length1 - 4])
+                    val num17 = min(adaptstep_N(num16, num7, numArray8[1], newSS[1]), num16)
+
+                    min(adaptstep_N(num17, num7, numArray8[0], newSS[0]), num17)
+                } else {
+                    if (host != "Yb") {
+                        min(
+                            adaptstep(num10, num7, numArray2[length1 - 1], newSS[length1 - 1]),
+                            adaptstep(num10, num7, numArray2[length1 - 2], newSS[length1 - 2])
+                        )
+                    } else {
+                        min(
+                            adaptstep(num10, num7, numArray2[length1 - 1], newSS[length1 - 1]),
+                            adaptstep(num10, num7, numArray2[length1 - 3], newSS[length1 - 3])
+                        )
+                    }
+                }
+                if (num13 <= num10) {
+                    msum(newSS, numArray2, newSS)
+                    if ((host == "General") && (shutter == 2 || shutter == 3)) {
+                        if (newSS[length1 - 5] < 0.0) newSS[length1 - 5] = 0.0
+                    } else if (newSS[length1 - 2] < 0.0) newSS[length1 - 2] = 0.0
+                    if (host == "Yb" && newSS[2] / (1.0 - newSS[1] - newSS[0]) < q)
+                        newSS[2] = q * (1.0 - newSS[1] - newSS[0])
+                    t += num10
+                }
+            }
+
+            m2[0] = t
+            for (index in 1 until length1 + 1)
+                m2[index] = if (newSS[index - 1] <= 0.0) 0.0 else newSS[index - 1]
+            if (shutter == 2 || shutter == 3)
+                m2[length1] =
+                    exp(-(ssh * (Nsh - 2.0 * m2[4] - m2[5] + (m2[4] - m2[5]) / SIG)) * Lpsh)
+
+            M = setColumn(M, m2, j + 1)
+
+            if (num3 > 10000) {
+                var num19 = 0
+                while (num19 < 10000)
+                    ++num19
+            }
+            if (num6 == -1) {
+                if (ThresholdCheck(newSS, t, m2[length1]))
+                    num6 = j
+                diffResult.ith = num6
+            }
+            ++j
+        }
+        val inArr: Array<DoubleArray> = NonZeroMatrixAppend(M, M_r)
+        laser.ampInitialValues = getLastColumn(inArr)
         return diffResult
     }
 }

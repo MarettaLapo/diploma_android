@@ -136,12 +136,12 @@ data class LaserMediumEntity (
     //Constant in temperature emission coefficient
     val c: Double?,
     ){
-    constructor() : this(null,null,null,null,null,
-        null,null,null,null,null,null,null,null,
-        null,null,null, null, null, null,null,null,
-        null,null,null,null,null,null,null,null,null
-        ,null,null,null,null,null,null,null,null,null,null
-        ,null,null)
-//    @Ignore var ks: Double? = null
-//    @Ignore var sp: Double? = null
+//    constructor() : this(null,null,null,null,null,
+//        null,null,null,null,null,null,null,null,
+//        null,null,null, null, null, null,null,null,
+//        null,null,null,null,null,null,null,null,null
+//        ,null,null,null,null,null,null,null,null,null,null
+//        ,null,null)
+    @Ignore var ks: Double? = null
+    @Ignore var sp: Double? = null
 }

@@ -17,6 +17,6 @@ data class OptimizationEntity (
     @ColumnInfo(name = "number_of_points") val numberOfPoints: Int?,
     @ColumnInfo(name = "is_use") val isUse: Boolean?,
 ){
-    constructor() : this(null,null,null,null,null,
-        null,null)
+//    constructor() : this(null,null,null,null,null,
+//        null,null)
 }

@@ -84,6 +84,6 @@ data class SaveEntity(
     @ColumnInfo(name = "type") val type: String?,
     @ColumnInfo(name = "date") val date: String?,
 ){
-    constructor() : this(null,null,null,null,null,
-        null,null,null,null,null)
+//    constructor() : this(null,null,null,null,null,
+//        null,null,null,null,null)
 }

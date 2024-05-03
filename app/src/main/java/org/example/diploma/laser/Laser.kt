@@ -18,10 +18,6 @@ data class Laser(
     val optimization: OptimizationEntity,
     val amplifier: AmplifierEntity
 ) {
-    constructor() : this(
-        LaserMediumEntity(), ConfigurationEntity(), PumpEntity(),
-        QSwitchEntity(), OptimizationEntity(), AmplifierEntity()
-    )
 
     val vc: Double = 29979.2458
     val h: Double = 6.62606896E-28
@@ -51,7 +47,7 @@ data class Laser(
     var FOM_1_32 = 10.0
     var FOM_1_44 = 10.0
 
-    private val ampPulseTicks: Int = 100
+    val ampPulseTicks: Int = 100
 
     val ts = 10.0
 
@@ -61,6 +57,12 @@ data class Laser(
 
     val Fto = 0.999
 
+    lateinit var ampDgauss: DoubleArray
+    lateinit var ampDgauss2: Array<DoubleArray>
+    lateinit var ampInitialValues: DoubleArray
+    lateinit var ampPassT: DoubleArray
+
+    val ampT0 = 1.0
     val Fn = 12
     val ampDt: Double
         get() = if (this.amplifier.waveform == 0) {

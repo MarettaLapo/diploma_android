@@ -90,8 +90,8 @@ data class QSwitchEntity (
     val absCoef: Double?
 )
 {
-    constructor() : this(null,null,null,null,null,
-        null,null,null,null,null,null,null,null,
-        null,null,null, null, null, null,null,null,
-        null,null,null)
+//    constructor() : this(null,null,null,null,null,
+//        null,null,null,null,null,null,null,null,
+//        null,null,null, null, null, null,null,null,
+//        null,null,null)
 }

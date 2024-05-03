@@ -66,9 +66,9 @@ class SelectLaserMediumFragment : Fragment() {
             adapter.notifyDataSetChanged()
         }
 
-        lifecycleScope.launch {
-            Log.d("hehe", viewModel.getCombinedDataFlow().value.toString())
-        }
+//        lifecycleScope.launch {
+//            Log.d("hehe", viewModel.getCombinedDataFlow().value.toString())
+//        }
 
         return binding!!.root
     }

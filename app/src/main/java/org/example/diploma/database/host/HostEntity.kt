@@ -86,7 +86,7 @@ data class HostEntity (
     val optimizationId: Long?,
 )
 {
-    constructor() : this(null,null,null,null,null,
-        null,null,null,null)
+//    constructor() : this(null,null,null,null,null,
+//        null,null,null,null)
 }
 
