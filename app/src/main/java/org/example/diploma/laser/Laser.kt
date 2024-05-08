@@ -15,10 +15,11 @@ data class Laser(
     val configuration: ConfigurationEntity,
     val pump: PumpEntity,
     val qSwitch: QSwitchEntity,
+    val amplifier: AmplifierEntity,
     val optimization: OptimizationEntity,
-    val amplifier: AmplifierEntity
 ) {
 
+    var timestamp = 0L
     val vc: Double = 29979.2458
     val h: Double = 6.62606896E-28
 
@@ -64,6 +65,11 @@ data class Laser(
 
     val ampT0 = 1.0
     val Fn = 12
+
+    val pav: Double
+        get() = p0 * (-(pump.rp!! * exp(laserMedium.ac!! * lp) + 1.0) * (exp(-laserMedium.ac * lp) - 1.0)
+                / (laserMedium.ac * lp))
+
     val ampDt: Double
         get() = if (this.amplifier.waveform == 0) {
             this.amplifier.ampPulseDuration!! * 3.0 * 0.001 / ampPulseTicks.toDouble()
@@ -99,11 +105,11 @@ data class Laser(
     val g54: Double
         get() = 1.0 / this.laserMedium.t54!!
 
-    val g32_1_44: Double
-        get() = 1.0 / this.T32_1_44;
+//    val g32_1_44: Double
+//        get() = 1.0 / this.T32_1_44;
 
-    val g32_1_32: Double
-        get() = 1.0 / this.T32_1_32;
+//    val g32_1_32: Double
+//        get() = 1.0 / this.T32_1_32;
 
     val g21_1_32: Double
         get() = 1.0 / this.laserMedium.t21!!;
@@ -111,11 +117,11 @@ data class Laser(
     val g21_1_44: Double
         get() = 1.0 / this.laserMedium.t21!!;
 
-    val n2_1_44: Double
-        get() = this.N2_1_44 / this.laserMedium.nd?.toDouble()!!;
+//    val n2_1_44: Double
+//        get() = this.N2_1_44 / this.laserMedium.nd?.toDouble()!!;
 
-    val n2_1_32: Double
-        get() = this.N2_1_32 / this.laserMedium.nd?.toDouble()!!;
+//    val n2_1_32: Double
+//        get() = this.N2_1_32 / this.laserMedium.nd?.toDouble()!!;
 
     //Ks
     val ks: Double

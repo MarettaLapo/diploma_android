@@ -1,6 +1,6 @@
 package org.example.diploma.database.host
 
-import androidx.databinding.Bindable
+
 import androidx.lifecycle.LiveData
 import androidx.room.ColumnInfo
 import androidx.room.Dao

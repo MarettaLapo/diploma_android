@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.example.diploma.database.optimization.OptimizationEntity
 import org.example.diploma.database.pump.PumpEntity
 
@@ -22,5 +24,5 @@ interface QSwitchDao {
     suspend fun update(qSwitch: QSwitchEntity)
 
     @Query("Select * from qSwitches where id ==:qSwitchId")
-    fun getQSwitchData(qSwitchId: Long?): LiveData<QSwitchEntity>
+    fun getQSwitchData(qSwitchId: Long?): Flow<QSwitchEntity>
 }

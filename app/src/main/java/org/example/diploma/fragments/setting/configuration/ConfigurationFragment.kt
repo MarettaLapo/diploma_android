@@ -39,8 +39,6 @@ class ConfigurationFragment : Fragment() {
         // Inflate the layout for this fragment
 
         binding = FragmentConfigurationBinding.inflate(inflater, container, false)
-        binding!!.lifecycleOwner = this
-        binding!!.viewModel = viewModel
         return binding!!.root
     }
 

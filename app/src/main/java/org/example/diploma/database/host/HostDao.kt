@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface HostDao {
@@ -23,5 +25,5 @@ interface HostDao {
     fun getHostData(hostId: Long): LiveData<HostEntity>
 
     @Query("Select * from hosts")
-    fun getAllHosts(): LiveData<List<HostEntity>>
+    fun getAllHosts(): Flow<List<HostEntity>>
 }

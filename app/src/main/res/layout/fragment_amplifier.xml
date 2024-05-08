@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Use this"
-            android:checked="@{viewModel.amplifierData.isUse}"/>
+            android:checked="@{viewModel.laserDataFlow.amplifier.isUse}"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="300dp"

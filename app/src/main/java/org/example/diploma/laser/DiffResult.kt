@@ -299,14 +299,14 @@ class DiffResult() {
         when (diffFunc.host) {
             "Er" -> {
                 Est = if (!diffFunc.cyl) {
-                    0.5 * (2.0 * n2[stsi] + n3[stsi] - 1.0) * diffFunc.Ner * diffFunc.E0ph * diffFunc.la * diffFunc.Lb * diffFunc.Ld
+                    0.5 * (2.0 * n2[stsi] + n3[stsi] - 1.0) * diffFunc.Ner * diffFunc.E0ph * diffFunc.la * diffFunc.lb * diffFunc.Ld
                 } else {
                     0.5 * (2.0 * n2[stsi] + n3[stsi] - 1.0) * diffFunc.Ner * diffFunc.E0ph * diffFunc.la * Math.PI * diffFunc.DIA * diffFunc.DIA / 4.0
                 }
             }
             "Nd" -> {
                 Est = if (!diffFunc.cyl) {
-                    (n3[stsi] - n2[stsi]) * diffFunc.Nd * diffFunc.E0ph * diffFunc.la * diffFunc.Lb * diffFunc.Ld
+                    (n3[stsi] - n2[stsi]) * diffFunc.Nd * diffFunc.E0ph * diffFunc.la * diffFunc.lb * diffFunc.Ld
                 } else {
                     (n3[stsi] - n2[stsi]) * diffFunc.Nd * diffFunc.E0ph * diffFunc.la * Math.PI * diffFunc.DIA * diffFunc.DIA / 4.0
                 }
@@ -314,13 +314,13 @@ class DiffResult() {
             "General" -> {
                 Est = if (diffFunc.levels != 1) {
                     if (!diffFunc.cyl) {
-                        0.5 * (2.0 * n2[stsi] - 1.0 + n3[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * diffFunc.Lb * diffFunc.Ld
+                        0.5 * (2.0 * n2[stsi] - 1.0 + n3[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * diffFunc.lb * diffFunc.Ld
                     } else {
                         0.5 * (2.0 * n2[stsi] - 1.0 + n3[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * Math.PI * diffFunc.DIA * diffFunc.DIA / 4.0
                     }
                 } else {
                     if (!diffFunc.cyl) {
-                        (n3[stsi] - n2[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * diffFunc.Lb * diffFunc.Ld
+                        (n3[stsi] - n2[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * diffFunc.lb * diffFunc.Ld
                     } else {
                         (n3[stsi] - n2[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * Math.PI * diffFunc.DIA * diffFunc.DIA / 4.0
                     }
@@ -328,7 +328,7 @@ class DiffResult() {
             }
             "Yb" -> {
                 Est = if (!diffFunc.cyl) {
-                    (n3[stsi] - n2[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * diffFunc.Lb * diffFunc.Ld
+                    (n3[stsi] - n2[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * diffFunc.lb * diffFunc.Ld
                 } else {
                     (n3[stsi] - n2[stsi]) * diffFunc.Nwion * diffFunc.E0ph * diffFunc.la * Math.PI * diffFunc.DIA * diffFunc.DIA / 4.0
                 }

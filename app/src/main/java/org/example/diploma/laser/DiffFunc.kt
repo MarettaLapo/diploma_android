@@ -112,7 +112,6 @@ class DiffFunc(val laser: Laser) {
     var Hc: Double = laser.pump.hc!!
 
     var Ld: Double = laser.configuration.ld!!
-    var Lb: Double = laser.configuration.lb!!
     var DIA: Double = laser.configuration.dia!!
 
     var P0: Double = laser.p0
@@ -208,7 +207,7 @@ class DiffFunc(val laser: Laser) {
 
     fun Fp_t(x: Double, alpha: Double): Double {
         val Fp = if (!cyl) {
-            Wp * Hc * (-(Rp * exp(alpha) + 1.0) * (exp(alpha) - 1.0)) / (la * Lb * Ld * Epph) * 1E-06
+            Wp * Hc * (-(Rp * exp(alpha) + 1.0) * (exp(alpha) - 1.0)) / (la * lb * Ld * Epph) * 1E-06
         } else {
             Wp * Hc * (-(Rp * exp(alpha) + 1.0) * (exp(alpha) - 1.0)) / (la * (Math.PI * DIA * DIA / 4.0) * Epph) * 1E-06
         }

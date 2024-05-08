@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import org.example.diploma.R
 import org.example.diploma.databinding.FragmentSavedSettingsBinding
-import org.example.diploma.databinding.FragmentSettingBinding
 
 
 class SavedSettingsFragment : Fragment() {

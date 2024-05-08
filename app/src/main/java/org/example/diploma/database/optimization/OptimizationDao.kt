@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.pump.PumpEntity
 
@@ -26,5 +28,5 @@ interface OptimizationDao {
     fun getInitialOptimization(): LiveData<OptimizationEntity>
 
     @Query("Select * from optimizations where id ==:optimizationId")
-    fun getOptimizationData(optimizationId: Long?): LiveData<OptimizationEntity>
+    fun getOptimizationData(optimizationId: Long?): Flow<OptimizationEntity>
 }

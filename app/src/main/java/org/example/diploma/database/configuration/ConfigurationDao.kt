@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.host.HostEntity
 
@@ -23,6 +25,6 @@ interface ConfigurationDao {
     suspend fun update(configuration: ConfigurationEntity)
 
     @Query("Select * from configurations where id ==:configurationId")
-    fun getConfigurationData(configurationId: Long?): LiveData<ConfigurationEntity>
+    fun getConfigurationData(configurationId: Long?): Flow<ConfigurationEntity>
 
 }

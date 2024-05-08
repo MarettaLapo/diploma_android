@@ -89,9 +89,7 @@ data class QSwitchEntity (
     @ColumnInfo(name = "abs_coef")
     val absCoef: Double?
 )
-{
 //    constructor() : this(null,null,null,null,null,
 //        null,null,null,null,null,null,null,null,
 //        null,null,null, null, null, null,null,null,
 //        null,null,null)
-}

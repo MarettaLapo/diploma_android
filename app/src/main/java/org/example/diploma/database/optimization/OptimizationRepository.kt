@@ -1,13 +1,15 @@
 package org.example.diploma.database.optimization
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.example.diploma.database.amplifier.AmplifierEntity
 
 class OptimizationRepository(private val optimizationDao: OptimizationDao) {
 
     val initialOptimization: LiveData<OptimizationEntity> = optimizationDao.getInitialOptimization()
 
-    fun getOptimizationData(optimizationId: Long?): LiveData<OptimizationEntity> =
+    fun getOptimizationData(optimizationId: Long?): Flow<OptimizationEntity> =
         optimizationDao.getOptimizationData(optimizationId)
 
     suspend fun insert(optimization: OptimizationEntity) {

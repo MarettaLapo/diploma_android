@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.host.HostEntity
 
@@ -23,6 +25,6 @@ interface LaserMediumDao {
     suspend fun update(laserMedium: LaserMediumEntity)
 
     @Query("Select * from laserMediums where id ==:laserMediumId")
-    fun getLaserMediumData(laserMediumId: Long?): LiveData<LaserMediumEntity>
+    fun getLaserMediumData(laserMediumId: Long?): Flow<LaserMediumEntity>
 
 }

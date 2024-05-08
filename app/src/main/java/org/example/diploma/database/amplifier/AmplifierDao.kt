@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface AmplifierDao {
@@ -23,5 +25,5 @@ interface AmplifierDao {
     fun getAll(): LiveData<List<AmplifierEntity>>
 
     @Query("Select * from amplifiers where id ==:amplifierId")
-    fun getAmplifierData(amplifierId: Long?): LiveData<AmplifierEntity>
+    fun getAmplifierData(amplifierId: Long?): Flow<AmplifierEntity>
 }

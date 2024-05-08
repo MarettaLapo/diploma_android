@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.example.diploma.database.laserMedium.LaserMediumEntity
 
 
@@ -23,5 +25,5 @@ interface PumpDao {
     suspend fun update(pump: PumpEntity)
 
     @Query("Select * from pumps where id ==:pumpId")
-    fun getPumpData(pumpId: Long?): LiveData<PumpEntity>
+    fun getPumpData(pumpId: Long?): Flow<PumpEntity>
 }
