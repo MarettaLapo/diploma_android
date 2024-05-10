@@ -1,90 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="org.example.diploma.MainViewModel" />
-    </data>
 
-    <LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#FEF7FF">
+
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:text="Use this" />
 
-        <com.google.android.material.checkbox.MaterialCheckBox
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Amplifier length (cm)"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ampLength_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Use this"
-            android:checked="@{viewModel.laserDataFlow.amplifier.isUse}"/>
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Amplifier length (cm)"
-            app:endIconMode="clear_text">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Waveform"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ampLength_edit_text"
-                android:text="@{viewModel.amplifierData.ampLength != null ? String.valueOf(viewModel.amplifierData.ampLength) : ``}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <RadioGroup
+        android:id="@+id/currencySwitchers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <RadioGroup
-            android:id="@+id/currencySwitchers"
+        <RadioButton
+            android:id="@+id/radio_button1"
+
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/radio_button1"
-
-                android:text="Gaussian"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="@{viewModel.amplifierData.waveform == 1}"
-                android:tag="USD"
-                />
-
-            <RadioButton
-                android:id="@+id/radio_button2"
-
-                android:text="Sinc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="@{viewModel.amplifierData.waveform == 0}"
-                android:tag="EUR"
-                />
-        </RadioGroup>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:hint="Pulse full energy (mJ)"
-            app:endIconMode="clear_text">
+            android:layout_weight="1"
+            android:tag="USD"
+            android:text="Gaussian" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ampPulseEnergy_edit_text"
-                android:text="@{viewModel.amplifierData.ampPulseEnergy != null ? String.valueOf(viewModel.amplifierData.ampPulseEnergy) : ``}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <RadioButton
+            android:id="@+id/radio_button2"
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Pulse width (ns)"
-            app:endIconMode="clear_text">
+            android:layout_weight="1"
+            android:tag="EUR"
+            android:text="Sinc" />
+    </RadioGroup>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/lc_edit_text"
-                android:text="@{viewModel.amplifierData.ampPulseDuration != null ? String.valueOf(viewModel.amplifierData.ampPulseDuration) : ``}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Pulse full energy (mJ)"
+        app:endIconMode="clear_text">
 
-    </LinearLayout>
-</layout>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ampPulseEnergy_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Pulse width (ns)"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lc_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
