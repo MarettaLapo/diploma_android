@@ -1,33 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout >
 
-    <data>
-        <variable
-            name="viewModel"
-            type="org.example.diploma.MainViewModel" />
-    </data>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".fragments.setting.laserMedium.LaserMediumFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.setting.laserMedium.LaserMediumFragment"
+    android:id="@+id/linMain"
+    android:orientation="vertical">
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Pump pulse duration, us"
-            app:endIconMode="clear_text">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tp_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.laserMediumData.ks != null ? String.valueOf(viewModel.laserMediumData.ks) : ``}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-</layout>
+</LinearLayout>

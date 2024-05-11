@@ -9,7 +9,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.example.diploma.R
-import org.example.diploma.adapters.ResultAdapter
 import org.example.diploma.adapters.SettingAdapter
 import org.example.diploma.databinding.FragmentResultBinding
 import org.example.diploma.databinding.FragmentSettingBinding
@@ -17,7 +16,7 @@ import org.example.diploma.databinding.FragmentSettingBinding
 
 class ResultFragment : Fragment() {
 
-    private lateinit var adapter: ResultAdapter
+    //private lateinit var adapter: ResultAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var resultsTab: TabLayout
 
@@ -37,9 +36,9 @@ class ResultFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = ResultAdapter(this)
+        //adapter = ResultAdapter(this)
         viewPager = binding!!.resultPager
-        viewPager.adapter = adapter
+        //viewPager.adapter = adapter
         resultsTab = binding!!.resultsTab
         TabLayoutMediator(resultsTab, viewPager) { tab, position ->
             tab.text = "TAB ${(position + 1)}"

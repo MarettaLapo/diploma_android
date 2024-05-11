@@ -47,7 +47,6 @@ class PumpFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentPumpBinding.inflate(inflater, container, false)
-
         return binding!!.root
     }
 
@@ -69,6 +68,26 @@ class PumpFragment : Fragment() {
                     binding!!.favInput.setText(laser.fav.toString())
                     binding!!.pformInput.setText(laser.pump.pformText)
                     binding!!.fFormInput.setText(laser.fform.toString())
+
+                    if(laser.pump.scheme == 0){
+                        binding!!.schemeTypePump.check(binding!!.schemeType1.id)
+                    }
+                    else{
+                        binding!!.schemeTypePump.check(binding!!.schemeType2.id)
+                    }
+
+                    if(laser.pump.ptypeId == 0){
+                        binding!!.typePump.check(binding!!.type1.id)
+                    }
+                    else{
+                        if(laser.shutter == 0){
+                            binding!!.typePump.check(binding!!.type2.id)
+                        }
+                        else{
+                            // TODO: дописать оповещение про Q-Switch 
+                        }
+                        
+                    }
                 }
                 lastTimestampDisplayed = laser.timestamp
             }

@@ -37,8 +37,6 @@ class OptimizationFragment : Fragment() {
         // Inflate the layout for this fragment
 
         binding = FragmentOptimizationBinding.inflate(inflater, container, false)
-        binding!!.lifecycleOwner = this
-        binding!!.viewModel = viewModel
         return binding!!.root
     }
 

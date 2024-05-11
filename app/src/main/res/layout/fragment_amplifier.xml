@@ -12,7 +12,8 @@
     <com.google.android.material.checkbox.MaterialCheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Use this" />
+        android:text="Use this"
+        android:id="@+id/checks"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -41,20 +42,18 @@
 
         <RadioButton
             android:id="@+id/radio_button1"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:tag="USD"
+            android:tag="Gaussian"
             android:text="Gaussian" />
 
         <RadioButton
             android:id="@+id/radio_button2"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:tag="EUR"
+            android:tag="Sinc"
             android:text="Sinc" />
     </RadioGroup>
 

@@ -7,7 +7,8 @@
     android:background="#FEF7FF"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".fragments.setting.pump.PumpWaveformFragment">
+    tools:context=".fragments.setting.pump.PumpWaveformFragment"
+    android:id="@+id/lin">
 
     <TextView
         android:layout_width="match_parent"
@@ -16,7 +17,7 @@
         android:textSize="20sp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Input intensity, W/cm^2"
         app:endIconMode="clear_text">
@@ -30,7 +31,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Pump pulse duraption, W/cm^2"
         app:endIconMode="clear_text">
@@ -43,7 +44,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Pump power, W"
         app:endIconMode="clear_text">
@@ -56,7 +57,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
 
         android:layout_height="wrap_content"
         android:hint="Pump energy, J"
@@ -71,7 +72,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Effective pump flow, W/cm^2"
         app:endIconMode="clear_text">

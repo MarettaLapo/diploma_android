@@ -43,7 +43,7 @@
                         android:id="@+id/la_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FEF7FF" />
+                        android:background="#FEF7FF"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -57,7 +57,7 @@
                         android:id="@+id/ld_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FEF7FF" />
+                        android:background="#FEF7FF"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -71,11 +71,12 @@
                         android:id="@+id/lb_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FEF7FF" />
+                        android:background="#FEF7FF"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="?attr/textInputFilledStyle"
+                    android:id="@+id/diaText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="DIA, cm"
@@ -85,7 +86,7 @@
                         android:id="@+id/dia_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FEF7FF" />
+                        android:background="#FEF7FF"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -94,8 +95,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/schema_aqs_cyl_end"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:id="@+id/imageScheme"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/viewText"/>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -212,7 +218,8 @@
                         android:id="@+id/tm_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FEF7FF"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 

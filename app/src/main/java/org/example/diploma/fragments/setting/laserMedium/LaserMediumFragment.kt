@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.card.MaterialCardView
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
 import org.example.diploma.R
@@ -37,9 +38,13 @@ class LaserMediumFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentLaserMediumBinding.inflate(inflater, container, false)
-        binding!!.lifecycleOwner = this
-        binding!!.viewModel = viewModel
         return binding!!.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val main = binding!!.linMain
+        val mat = MaterialCardView(requireContext())
     }
 
     override fun onDestroyView() {

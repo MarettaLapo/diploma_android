@@ -42,13 +42,4 @@ data class ConfigurationEntity (
 
     //"DIA, cm="
     val dia: Double?,
-    ){
-//    constructor() : this(null,null,null,null,null,
-//        null,null,null,null,null,null)
-
-    //Lasing area, cm^2
-    @Ignore var ag: Double? = null
-
-    //Telescope magnification
-    @Ignore var tm: Double? = 1.0
-}
+    )

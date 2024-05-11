@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
@@ -69,6 +71,26 @@ class PumpWaveformFragment : DialogFragment() {
                     binding!!.wpEditText.setText(viewModel.laserDataFlow.value.pump.wp.toString())
                     binding!!.epEditText.setText(viewModel.laserDataFlow.value.ep.toString())
                     binding!!.pEditText.setText(viewModel.laserDataFlow.value.p.toString())
+
+                    if(laser.pump.pformId == 0){
+                        binding!!.pumpWaveform.check(binding!!.waveform1.id)
+                    }
+                    else{
+                        binding!!.pumpWaveform.check(binding!!.waveform2.id)
+                        val textInputLayout1 = TextInputLayout(requireContext())
+                        val editText1 = TextInputEditText(requireContext())
+                        editText1.hint = "t1, us"
+                        textInputLayout1.addView(editText1)
+
+                        // Создание второго TextInputLayout
+                        val textInputLayout2 = TextInputLayout(requireContext())
+                        val editText2 = TextInputEditText(requireContext())
+                        editText2.hint = "t2, us"
+                        textInputLayout2.addView(editText2)
+
+                        binding!!.lin.addView(textInputLayout1)
+                        binding!!.lin.addView(textInputLayout2)
+                    }
                 }
                 lastTimestampDisplayed = laser.timestamp
             }

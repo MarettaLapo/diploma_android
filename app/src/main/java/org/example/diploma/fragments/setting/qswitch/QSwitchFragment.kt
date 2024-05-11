@@ -40,8 +40,6 @@ class QSwitchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentQSwitchBinding.inflate(inflater, container, false)
-        binding!!.lifecycleOwner = this
-        binding!!.viewModel = viewModel
 
 //        val spinner1 = binding!!.modesSpinner
 //        val spinner2 = binding!!.frontTypesSpinner
