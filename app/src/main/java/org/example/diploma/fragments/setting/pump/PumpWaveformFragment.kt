@@ -72,7 +72,7 @@ class PumpWaveformFragment : DialogFragment() {
                     binding!!.epEditText.setText(viewModel.laserDataFlow.value.ep.toString())
                     binding!!.pEditText.setText(viewModel.laserDataFlow.value.p.toString())
 
-                    if(laser.pump.pformId == 0){
+                    if(laser.pump.pformId == 1){
                         binding!!.pumpWaveform.check(binding!!.waveform1.id)
                     }
                     else{

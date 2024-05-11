@@ -55,7 +55,7 @@ class MainViewModel(
 //    lateinit var qSwitchData: LiveData<QSwitchEntity>
 //    lateinit var amplifierData: LiveData<AmplifierEntity>
 //    lateinit var optimizationData: LiveData<OptimizationEntity>
-var laserDataFlow: MutableStateFlow<Laser>
+    val laserDataFlow: MutableStateFlow<Laser>
     init {
         // Инициализируем laserDataFlow при создании экземпляра MainViewModel
         val defaultLaser = Laser(
@@ -182,6 +182,7 @@ var laserDataFlow: MutableStateFlow<Laser>
             val amplifierData = amplifierRepository.getAmplifierData(host.amplifierId)
 
             val optimizationData = optimizationRepository.getOptimizationData(host.optimizationId)
+
 
             val laserMedium = laserMediumData.firstOrNull()
             val configuration = configurationData.firstOrNull()

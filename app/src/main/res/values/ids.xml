@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ne" type="id"/>
+    <item name="l0" type="id"/>
+    <item name="m" type="id"/>
+    <item name="ot" type="id"/>
+    <item name="lb" type="id"/>
+    <item name="hl" type="id"/>
+    <item name="ks" type="id"/>
+    <item name="ac" type="id"/>
+    <item name="k" type="id"/>
+    <item name="a" type="id"/>
+    <item name="s0p" type="id"/>
+    <item name="se" type="id"/>
+    <item name="nsion" type="id"/>
+    <item name="nwion" type="id"/>
+    <item name="sa_wi" type="id"/>
+    <item name="sa_wip" type="id"/>
+</resources>

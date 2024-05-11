@@ -1,5 +1,6 @@
 package org.example.diploma.laser
 
+import kotlinx.coroutines.flow.StateFlow
 import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.configuration.ConfigurationEntity
 import org.example.diploma.database.laserMedium.LaserMediumEntity
@@ -69,6 +70,9 @@ data class Laser(
     val pav: Double
         get() = p0 * (-(pump.rp!! * exp(laserMedium.ac!! * lp) + 1.0) * (exp(-laserMedium.ac * lp) - 1.0)
                 / (laserMedium.ac * lp))
+//    get() {
+//        pump.rp
+//    }
 
     val ampDt: Double
         get() = if (this.amplifier.waveform == 0) {

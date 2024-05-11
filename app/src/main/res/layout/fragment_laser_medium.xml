@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.setting.laserMedium.LaserMediumFragment"
-    android:id="@+id/linMain"
-    android:orientation="vertical">
+    android:orientation="vertical"
 
+    tools:context=".fragments.setting.laserMedium.LaserMediumFragment">
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/linMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+
+    </LinearLayout>
+</ScrollView>
