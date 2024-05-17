@@ -17,9 +17,9 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="257dp"
-            android:src="@drawable/pump_rect_end" />
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="280dp" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -34,8 +34,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="Pump scheme type" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="18sp"
+                    android:text="Pump scheme type"
+                     />
 
                 <RadioGroup
                     android:id="@+id/scheme_type_pump"
@@ -45,18 +49,18 @@
 
                     <RadioButton
                         android:id="@+id/scheme_type1"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:tag="USD"
                         android:text="Side" />
 
                     <RadioButton
                         android:id="@+id/scheme_type2"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:tag="EUR"
                         android:text="End" />
@@ -66,7 +70,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:text="Pump type" />
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Pump type"
+                    android:textSize="18sp" />
 
                 <RadioGroup
                     android:id="@+id/type_pump"
@@ -76,18 +83,18 @@
 
                     <RadioButton
                         android:id="@+id/type1"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:tag="USD"
                         android:text="Pulsed pump" />
 
                     <RadioButton
                         android:id="@+id/type2"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:tag="EUR"
                         android:text="CW pump" />
@@ -145,8 +152,8 @@
                         android:id="@+id/ep_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -160,8 +167,8 @@
                         android:id="@+id/lp_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -189,19 +196,20 @@
                         android:id="@+id/ap_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="#E6E0E9">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/ehe"
                         style="?attr/textInputFilledStyle"
-                        android:layout_width="300dp"
+                        android:layout_width="270dp"
                         android:layout_height="wrap_content"
                         android:hint="Effective pump flow"
                         app:endIconMode="clear_text"
@@ -212,15 +220,17 @@
                             android:id="@+id/p_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:focusable="false" />
+                            android:focusable="false"
+                            android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/but_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="pump"
+                        android:layout_marginStart="15dp"
+                        android:background="#E6E0E9"
+                        android:src="@drawable/rule_empty"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/ehe"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -237,8 +247,8 @@
                         android:id="@+id/fav_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -258,16 +268,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="Pump form" />
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Pump form"
+                    android:textSize="18sp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="#E6E0E9">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayout"
                         style="?attr/textInputFilledStyle"
-                        android:layout_width="300dp"
+                        android:layout_width="270dp"
                         android:layout_height="wrap_content"
                         android:hint="Pump form type"
                         app:endIconMode="clear_text"
@@ -279,14 +293,17 @@
                             android:id="@+id/pform_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="#FEF7FF" />
+                            android:focusable="false"
+                            android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/but_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="pump"
+                        android:layout_marginStart="15dp"
+                        android:background="#E6E0E9"
+                        android:src="@drawable/rule_empty"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/textInputLayout"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -305,8 +322,8 @@
                         android:id="@+id/fForm_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 

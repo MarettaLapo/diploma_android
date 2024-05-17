@@ -80,10 +80,10 @@ class ExpandableListAdapter(
         title?.setOnClickListener {
             fab.show()
         }
-        fab.setOnClickListener {
-            view: View ->
-            Navigation.findNavController(view).navigate(R.id.action_selectLaserMediumFragment_to_settingFragment)
-        }
+//        fab.setOnClickListener {
+//            view: View ->
+//            Navigation.findNavController(view).navigate(R.id.action_selectLaserMediumFragment_to_settingFragment)
+//        }
 
         return convertView
     }

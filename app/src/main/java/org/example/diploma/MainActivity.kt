@@ -1,17 +1,24 @@
 package org.example.diploma
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import org.example.diploma.databinding.MainActivityBinding
+import org.example.diploma.fragments.pages.MainPageFragment
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
-    private lateinit var binding: MainActivityBinding
-    private lateinit var drawerLayout: DrawerLayout
+    private  var binding: MainActivityBinding? = null
+    private lateinit var navController: NavController
 
 
 
@@ -20,25 +27,36 @@ class MainActivity : AppCompatActivity() {
 
 
         binding = MainActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding!!.root)
 
-//        wordViewModel.initialAmplifier.observe(this) { words ->
-//            // Update the cached copy of the words in the adapter.
-//            Log.d("catt", words.ampLength.toString())
-//        }
-
-        val toolbar = binding.toolbar;
+        val toolbar = binding!!.toolbar;
         setSupportActionBar(toolbar);
-        drawerLayout = binding.drawerLayout
+        val bottom = binding!!.bottomNavigation
 
-        val navController = this.findNavController(R.id.appNavHostFragment)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
-        NavigationUI.setupWithNavController(binding.navView, navController)
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.mainPageFragment,
+                R.id.savedSettingsFragment)
+        )
 
+        navController = this.findNavController(R.id.appNavHostFragment)
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(bottom, navController);
+
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = this.findNavController(R.id.appNavHostFragment)
-        return NavigationUI.navigateUp(navController, drawerLayout)
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    fun setToolbarTitle(title: String) {
+        if(binding != null){
+            val textView = binding!!.textView6
+            textView.text = title
+        }
+
     }
 }

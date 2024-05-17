@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -40,13 +42,19 @@ class SelectLaserMediumFragment : Fragment() {
     }
 
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentSelectLaserMediumBinding.inflate(inflater, container, false)
+        return binding!!.root
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val rv = binding!!.recyclerView
         val adapter = SelectMediumAdapter()
         rv.layoutManager = LinearLayoutManager(requireActivity())
@@ -62,11 +70,7 @@ class SelectLaserMediumFragment : Fragment() {
 
             }
         })
-//
-//        viewModel.allHosts.observe(viewLifecycleOwner) {
-//            adapter.setListHosts(ArrayList(it))
-//            adapter.notifyDataSetChanged()
-//        }
+
         lifecycleScope.launch {
             viewModel.allHosts.collect { hosts ->
                 adapter.setListHosts(ArrayList(hosts))
@@ -74,11 +78,9 @@ class SelectLaserMediumFragment : Fragment() {
             }
         }
 
-//        lifecycleScope.launch {
-//            Log.d("hehe", viewModel.getCombinedDataFlow().value.toString())
-//        }
-
-        return binding!!.root
+        val activity = activity as AppCompatActivity
+        val headline = activity.findViewById<TextView>(R.id.textView6)
+        headline.text = "Выбор среды"
     }
 
     override fun onDestroyView() {

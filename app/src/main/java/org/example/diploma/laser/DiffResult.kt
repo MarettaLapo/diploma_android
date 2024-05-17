@@ -11,20 +11,20 @@ class DiffResult() {
 
     var n: Int = 0
     var completed: Boolean = false
-    lateinit var resultMatrix: Array<DoubleArray>
-    lateinit var t: DoubleArray
-    lateinit var n2: DoubleArray
-    lateinit var n3: DoubleArray
+    var resultMatrix: Array<DoubleArray> = emptyArray()
+    var t: DoubleArray = doubleArrayOf()
+    var n2: DoubleArray = doubleArrayOf()
+    var n3: DoubleArray = doubleArrayOf()
     private var n1Index: Int = 0
     private var n2Index: Int = 0
     private var n3Index: Int = 0
     private var sinIndex: Int = 0
-    lateinit var Sin: DoubleArray
-    lateinit var Sout: DoubleArray
-    lateinit var T_Sh: DoubleArray
-    lateinit var U: DoubleArray
-    lateinit var Loss: DoubleArray
-    lateinit var P: DoubleArray
+    var Sin: DoubleArray = doubleArrayOf()
+    var Sout: DoubleArray = doubleArrayOf()
+    var T_Sh: DoubleArray = doubleArrayOf()
+    var U: DoubleArray = doubleArrayOf()
+    var Loss: DoubleArray = doubleArrayOf()
+    var P: DoubleArray = doubleArrayOf()
     lateinit var f: DoubleArray
     lateinit var fx: DoubleArray
     lateinit var f2d: Array<DoubleArray>
@@ -59,6 +59,7 @@ class DiffResult() {
         resultMatrix = SS
         val length1 = SS.size
         val length2 = SS[0].size
+        Log.d("laser", "lol")
         n = length2
         t = DoubleArray(length2)
         n3 = DoubleArray(length2)
@@ -80,7 +81,7 @@ class DiffResult() {
 
             "General" -> {
                 if (diffFunc.levels == 1) {
-                    if (diffFunc.is_sensitizer == true) {
+                    if (diffFunc.is_sensitizer) {
                         n3Index = 3
                         n2Index = 4
                         sinIndex = 6

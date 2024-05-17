@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import org.example.diploma.MainActivity
 import org.example.diploma.R
 import org.example.diploma.database.AppApplication
 import org.example.diploma.databinding.FragmentMainPageBinding
@@ -57,9 +61,12 @@ class MainPageFragment : Fragment() {
             Navigation.findNavController(view)
                 .navigate(R.id.action_mainPageFragment_to_referenceInformationFragment)
         }
-
-
         return binding!!.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (activity as? MainActivity)?.setToolbarTitle("Главная страница")
     }
 
 

@@ -12,7 +12,6 @@ class HostRepository(private val hostDao: HostDao) {
     fun getAllHosts(): Flow<List<HostEntity>> = hostDao.getAllHosts()
 
 
-
     suspend fun insert(host: HostEntity) {
         hostDao.insert(host)
     }

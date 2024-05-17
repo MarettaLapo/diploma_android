@@ -71,9 +71,11 @@ class PumpFragment : Fragment() {
 
                     if(laser.pump.scheme == 0){
                         binding!!.schemeTypePump.check(binding!!.schemeType1.id)
+                        binding!!.image.setImageResource(R.drawable.pump_rect_side)
                     }
                     else{
                         binding!!.schemeTypePump.check(binding!!.schemeType2.id)
+                        binding!!.image.setImageResource(R.drawable.pump_rect_end)
                     }
 
                     if(laser.pump.ptypeId == 0){

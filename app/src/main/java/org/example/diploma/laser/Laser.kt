@@ -86,28 +86,44 @@ data class Laser(
 
     //g_31
     val g31Yb: Double
-        get() = 1.0 / this.laserMedium.t31Yb!!
+        get() = 1.0 / (this.laserMedium.t31Yb ?: 1.0)
 
     val g31: Double
-        get() = 1.0 / this.laserMedium.t31!!
+        get() = 1.0 / (this.laserMedium.t31 ?: 1.0)
 
     val g32: Double
-        get() = 1.0 / this.laserMedium.t32!!
+        get() = 1.0 / (this.laserMedium.t32 ?: 1.0)
 
     val g21: Double
-        get() = 1.0 / this.laserMedium.t21!!
+        get() = 1.0 / (this.laserMedium.t21 ?: 1.0)
 
     val g43: Double
-        get() = 1.0 / this.laserMedium.t43!!
+    get() = if (this.laserMedium.t43 != null) {
+        1.0 / this.laserMedium.t43
+    } else {
+        0.0
+    }
 
     val g41: Double
-        get() = 1.0 / this.laserMedium.t41!!
+        get() = if (this.laserMedium.t41 != null) {
+            1.0 / this.laserMedium.t41
+        } else {
+            0.0
+        }
 
     val g51: Double
-        get() = 1.0 / this.laserMedium.t51!!
+        get() = if (this.laserMedium.t51 != null) {
+            1.0 / this.laserMedium.t51
+        } else {
+            0.0
+        }
 
     val g54: Double
-        get() = 1.0 / this.laserMedium.t54!!
+        get() = if (this.laserMedium.t54 != null) {
+            1.0 / this.laserMedium.t54
+        } else {
+            0.0
+        }
 
 //    val g32_1_44: Double
 //        get() = 1.0 / this.T32_1_44;
@@ -367,13 +383,13 @@ data class Laser(
         ) + 2.0 * this.configuration.ga!! * this.configuration.la!!)
 
     val n2: Double
-        get() = this.laserMedium.n2?.toDouble()!! / this.laserMedium.nd?.toDouble()!!
+        get() = (this.laserMedium.n2?.toDouble() ?: 1.0) / (this.laserMedium.nd?.toDouble() ?: 1.0)
 
     val n3: Double
-        get() = this.laserMedium.n3?.toDouble()!! / this.laserMedium.nd?.toDouble()!!
+        get() = (this.laserMedium.n3?.toDouble() ?: 1.0) / (this.laserMedium.nd?.toDouble() ?: 1.0)
 
     val n4: Double
-        get() = this.laserMedium.n4?.toDouble()!! / this.laserMedium.nd?.toDouble()!!
+        get() = (this.laserMedium.n4?.toDouble() ?: 1.0) / (this.laserMedium.nd?.toDouble() ?: 1.0)
 
     val pformt: Array<DoubleArray>
         get() {

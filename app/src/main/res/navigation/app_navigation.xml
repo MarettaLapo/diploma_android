@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_mainPageFragment_to_referenceInformationFragment"
             app:destination="@id/referenceInformationFragment" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_savedSettingsFragment"
+            app:destination="@id/savedSettingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/usageExamplesFragment"
@@ -53,4 +56,17 @@
         android:name="org.example.diploma.fragments.setting.ResultFragment"
         android:label="@string/results"
         tools:layout="@layout/fragment_result" />
+
+    <fragment
+        android:id="@+id/savedSettingsFragment"
+        android:name="org.example.diploma.fragments.pages.SavedSettingsFragment"
+        android:label="fragment_saved_settings"
+        tools:layout="@layout/fragment_saved_settings" >
+        <action
+            android:id="@+id/action_savedSettingsFragment_to_mainPageFragment"
+            app:destination="@id/mainPageFragment" />
+        <action
+            android:id="@+id/action_savedSettingsFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
 </navigation>

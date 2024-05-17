@@ -16,4 +16,18 @@
     <item name="nwion" type="id"/>
     <item name="sa_wi" type="id"/>
     <item name="sa_wip" type="id"/>
+    <item name="ner" type="id" />
+    <item name="t32" type="id" />
+    <item name="t31" type="id" />
+    <item name="t21" type="id" />
+    <item name="t31Yb" type="id" />
+    <item name="nyb" type="id" />
+    <item name="nd" type="id" />
+    <item name="nd_proc" type="id" />
+    <item name="t43" type="id" />
+    <item name="se32" type="id" />
+    <item name="se44" type="id" />
+    <item name="button" type="id" />
+    <item name="button2" type="id" />
+    <item name="button3" type="id" />
 </resources>

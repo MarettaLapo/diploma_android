@@ -6,9 +6,9 @@ import kotlin.math.ln
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
+import android.util.Log
 
 class DiffFunc(val laser: Laser) {
-
     var Isp = laser.isp
     val Ffrom = laser.Ffrom
     val Fto = laser.Fto
@@ -83,28 +83,15 @@ class DiffFunc(val laser: Laser) {
     var ga: Double = laser.configuration.ga!!
     var la: Double = laser.configuration.la!!
 
-    var levels = laser.laserMedium.levels!!
-    var is_sensitizer = laser.laserMedium.is_sensitizer
+    var levels = laser.laserMedium.levels ?: 1
+    var is_sensitizer = laser.laserMedium.is_sensitizer ?: false
 
     var se_1_06: Double = laser.laserMedium.se?.toDouble()!!
 
     //не надо
 //    var AveragePhotonAmpLength: Double = laser.laserMedium.AveragePhotonAmpLength
 //
-    var Nd: Double = laser.laserMedium.nd?.toDouble()!!
-//    var amp_1_06: Double = Nd * AveragePhotonAmpLength * se_1_06
-//    var amp_1_32: Double = Nd * AveragePhotonAmpLength * se_1_32
-//    var amp_1_44: Double = Nd * AveragePhotonAmpLength * se_1_44
-//    var g32_1_32: Double = laser.g32_1_32
-//    var g32_1_44: Double = laser.g32_1_44
-//    var g21_1_32: Double = laser.g21_1_32
-//    var g21_1_44: Double = laser.g21_1_44
-//    var lb_1_32: Double = laser.lb_1_32
-//    var lb_1_44: Double = laser.lb_1_44
-//    var n2_1_32: Double = laser.n2_1_32
-//    var n2_1_44: Double = laser.n2_1_44
-//    var FOM_1_32: Double = laser.FOM_1_32
-//    var FOM_1_44: Double = laser.FOM_1_44
+    var Nd: Double = laser.laserMedium.nd?.toDouble() ?: 1.0
 
     var cyl: Boolean = laser.configuration.isCylinder!!
 
@@ -568,7 +555,6 @@ class DiffFunc(val laser: Laser) {
                     else -> false
                 }
             }
-
             else -> {
                 false
             }
@@ -1864,7 +1850,7 @@ class DiffFunc(val laser: Laser) {
                 DoubleArray(0)
             }
         }
-
+        Log.d("laser", "ya tyt")
         val length1: Int = y0.size
         val num1 = 0.0
         val tpp: Double = tpp
@@ -2021,6 +2007,8 @@ class DiffFunc(val laser: Laser) {
             }
         }
 
+        Log.d("laser", "ya tyt2")
+
         if (shutter == 2 || shutter == 3) {
             y0[length1 - 3] = 0.0
             y0[length1 - 2] = 0.0
@@ -2058,6 +2046,7 @@ class DiffFunc(val laser: Laser) {
         var numArray12 = DoubleArray(length1)
         var numArray13 = DoubleArray(length1)
         var numArray14 = DoubleArray(length1)
+        Log.d("laser", "ya tyt3")
         while (t < tpp) {
             if (shutter != 0) {
                 val index1: Int = if (shutter != 1) length1 - 3 else length1
@@ -2086,7 +2075,9 @@ class DiffFunc(val laser: Laser) {
             }
             val num21 = t + num16
             ColumnTo1DArray(M, newSS, j, 1, length1)
-            while (t < num21) {
+            Log.d("laser", "ya tyt4")
+
+            while (t < num21){
                 val num22 = num19
                 K(newSS, num19, t, numArray9, numArray10, numArray12, numArray13, tmp)
                 arrConMult(2.0, numArray10)
@@ -2131,6 +2122,7 @@ class DiffFunc(val laser: Laser) {
                     t += num19
                 }
             }
+            Log.d("laser", "ya tyt5")
             m2[0] = t
             for (index in 1 until length1 + 1) {
                 m2[index] = if (newSS[index - 1] <= 0.0) 0.0 else newSS[index - 1]
@@ -2151,6 +2143,7 @@ class DiffFunc(val laser: Laser) {
             }
 
             if (num15 == -1) {
+                Log.d("laser", "num15$num15 j$j")
                 if (ThresholdCheck(newSS, t, m2[length1])) {
                     num15 = j
                 }
@@ -2163,7 +2156,9 @@ class DiffFunc(val laser: Laser) {
 
         if (!flag) {
             val num30 = "No lasing threshold"
+            Log.d("laser", "flag false")
         } else {
+            Log.d("laser", "flag true")
             val SS = this.NonZeroMatrixAppend(M, M_r)
             M = emptyArray()
             diffResult.Input(SS, this)

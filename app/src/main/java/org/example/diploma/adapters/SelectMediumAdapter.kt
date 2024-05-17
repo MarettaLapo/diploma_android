@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.example.diploma.R
 import org.example.diploma.database.host.HostEntity
 import org.example.diploma.databinding.LayoutChildBinding
+import org.example.diploma.databinding.LayoutSavingBinding
+import org.example.diploma.databinding.LayoutSelectBinding
 
 class SelectMediumAdapter :RecyclerView.Adapter<SelectMediumAdapter.MediumViewHolder>() {
 
@@ -18,7 +20,7 @@ class SelectMediumAdapter :RecyclerView.Adapter<SelectMediumAdapter.MediumViewHo
         this.hosts = data
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediumViewHolder {
-        view = LayoutInflater.from(parent.context).inflate(R.layout.layout_child, parent, false)
+        view = LayoutInflater.from(parent.context).inflate(R.layout.layout_select, parent, false)
         return MediumViewHolder(view)
     }
 
@@ -44,13 +46,15 @@ class SelectMediumAdapter :RecyclerView.Adapter<SelectMediumAdapter.MediumViewHo
     }
 
     class MediumViewHolder(item: View) : RecyclerView.ViewHolder(item){
-        val binding = LayoutChildBinding.bind(item)
+        val binding = LayoutSelectBinding.bind(item)
         fun bind(host: HostEntity) = with(binding){
-            tvTitle.text = host.type
+            when(host.host){
+                "Er" -> idIVCourseImage.setImageResource(R.drawable.yber)
+                "Nd" -> idIVCourseImage.setImageResource(R.drawable.nd)
+                "Yb" -> idIVCourseImage.setImageResource(R.drawable.yb_host)
+                else -> idIVCourseImage.setImageResource(R.drawable.general_withsensetizer_3level)
+            }
+            textt.text = host.host + ": " + host.type
         }
     }
-
-//    interface CustomItemClickListener{
-//        fun OnItemClickListener(host: HostEntity)
-//    }
 }

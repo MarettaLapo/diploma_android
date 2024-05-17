@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+import org.example.diploma.database.host.HostEntity
 
 @Dao
 interface SaveDao {
@@ -21,4 +23,7 @@ interface SaveDao {
 
     @Query("Select * from saves where id ==:saveId")
     fun getSaveData(saveId: Long): LiveData<SaveEntity>
+
+    @Query("Select * from saves")
+    fun getAllSaves(): Flow<List<SaveEntity>>
 }

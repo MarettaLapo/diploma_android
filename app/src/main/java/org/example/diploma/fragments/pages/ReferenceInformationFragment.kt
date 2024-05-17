@@ -5,12 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.example.diploma.database.AppApplication
 import org.example.diploma.databinding.FragmentReferenceInformationBinding
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
+import org.example.diploma.R
 
 /**
  * A simple [Fragment] subclass.
@@ -31,6 +34,12 @@ class ReferenceInformationFragment : Fragment() {
         return binding!!.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val activity = activity as AppCompatActivity
+        val headline  = activity.findViewById<TextView>(R.id.textView6)
+        headline.text = "Справочная информация"
+    }
 
     
     override fun onDestroyView() {

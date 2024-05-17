@@ -8,7 +8,9 @@
     <string name="selection_medium">Выбор среды</string>
     <string name="settings">Настройка лазера</string>
     <string name="results">Результат симуляции</string>
+    <string name="saving">Сохранения</string>
     <string name="cavity_length_cm">Cavity length, cm</string>
+
 
     <string-array name="modes_array">
         <item>Single</item>

@@ -29,6 +29,7 @@ import org.example.diploma.database.pump.PumpEntity
 import org.example.diploma.database.pump.PumpRepository
 import org.example.diploma.database.qSwitch.QSwitchEntity
 import org.example.diploma.database.qSwitch.QSwitchRepository
+import org.example.diploma.database.save.SaveEntity
 import org.example.diploma.database.save.SaveRepository
 import org.example.diploma.laser.DiffFunc
 import org.example.diploma.laser.DiffResult
@@ -168,7 +169,48 @@ class MainViewModel(
 
     val allHosts = hostRepository.getAllHosts()
 
+    val allSaves = saveRepository.getAllSaves()
+
     fun selectedHost(host: HostEntity) {
+        viewModelScope.launch {
+            val laserMediumData = laserMediumRepository.getLaserMediumData(host.laserMediumId)
+
+            val configurationData =
+                configurationRepository.getConfigurationData(host.configurationId)
+
+            val pumpData = pumpRepository.getPumpData(host.pumpId)
+
+            val qSwitchData = qSwitchRepository.getQSwitchData(host.qSwitchId)
+
+            val amplifierData = amplifierRepository.getAmplifierData(host.amplifierId)
+
+            val optimizationData = optimizationRepository.getOptimizationData(host.optimizationId)
+
+
+            val laserMedium = laserMediumData.firstOrNull()
+            val configuration = configurationData.firstOrNull()
+            val pump = pumpData.firstOrNull()
+            val qSwitch = qSwitchData.firstOrNull()
+            val amplifier = amplifierData.firstOrNull()
+            val optimization = optimizationData.firstOrNull()
+
+            // Создаем объект Laser с полученными данными
+            val newLaser = Laser(
+                laserMedium!!,
+                configuration!!,
+                pump!!,
+                qSwitch!!,
+                amplifier!!,
+                optimization!!
+            )
+            newLaser.timestamp = System.currentTimeMillis()
+
+            // Устанавливаем новое значение MutableStateFlow
+//            initializeLaserDataFlow(newLaser)
+            laserDataFlow.value = newLaser
+        }
+    }
+    fun selectedSave(host: SaveEntity) {
         viewModelScope.launch {
             val laserMediumData = laserMediumRepository.getLaserMediumData(host.laserMediumId)
 
@@ -231,78 +273,82 @@ class MainViewModel(
 
         var diffResult = DiffResult()
 
-        if (laser.amplifier.isUse == true) {
-            diffResult = diffFunc.RkAmp()
-            laser.ampDgauss = DoubleArray(laser.ampPulseTicks)
-            when (laser.amplifier.waveform) {
-                0 -> DiscreteGaussian(
-                    laser.ampDgauss,
-                    laser.amplifier.ampPulseDuration!!,
-                    laser.amplifier.ampPulseEnergy!!
-                )
+        diffResult = diffFunc.Rk()
 
-                1 -> DiscreteSinc(
-                    laser.ampDgauss,
-                    laser.amplifier.ampPulseDuration!!,
-                    laser.amplifier.ampPulseEnergy!!
-                )
+        Log.d("laser", diffResult.n.toString())
+//        if (laser.amplifier.isUse == true) {
+//            diffResult = diffFunc.RkAmp()
+//            laser.ampDgauss = DoubleArray(laser.ampPulseTicks)
+//            when (laser.amplifier.waveform) {
+//                0 -> DiscreteGaussian(
+//                    laser.ampDgauss,
+//                    laser.amplifier.ampPulseDuration!!,
+//                    laser.amplifier.ampPulseEnergy!!
+//                )
+//
+//                1 -> DiscreteSinc(
+//                    laser.ampDgauss,
+//                    laser.amplifier.ampPulseDuration!!,
+//                    laser.amplifier.ampPulseEnergy!!
+//                )
+//
+//                else -> Log.d("err", "jeje")
+//            }
+//            val length = laser.ampInitialValues.size
+//            val ampPulseTicks = laser.ampPulseTicks
+//            val P = DoubleArray(ampPulseTicks)
+//            System.arraycopy(laser.ampDgauss, 0, P, 0, ampPulseTicks)
+//            this.PtoS(P, laser.e0ph, laser.iss, laser.ag)
+//            val ampNumOfPasses = 1
+//            val simTime: Double = when (laser.amplifier.waveform) {
+//                0 -> laser.amplifier.ampPulseDuration!! * 0.001 * 3.0 / ampPulseTicks.toDouble()
+//                1 -> laser.amplifier.ampPulseDuration!! * 0.001 * 2.258 / ampPulseTicks.toDouble()
+//                else -> laser.amplifier.ampPulseDuration!! * 0.001 * 3.0 / ampPulseTicks.toDouble()
+//            }
+//
+//            val numArray = Array(length) { DoubleArray(ampPulseTicks) }
+//            laser.ampDgauss2 = Array(ampPulseTicks) { DoubleArray(ampNumOfPasses) }
+//
+//            for (index1 in 0 until ampNumOfPasses) {
+//                for (index2 in 0 until laser.ampPulseTicks) {
+//                    laser.ampInitialValues[0] = 0.0
+//                    laser.ampInitialValues[4] = P[index2]
+//                    diffResult = diffFunc.RkAmpNoRelaxation(
+//                        laser.ampInitialValues,
+//                        laser.laserMedium.ne!! * laser.configuration.la!! / 29979.2458
+//                    )
+//                    diffResult = diffFunc.RkAmpRelaxationOnly(laser.ampInitialValues, simTime)
+//                    for (index3 in 0 until length) {
+//                        numArray[index3][index2] = laser.ampInitialValues[index3]
+//                    }
+//                }
+//
+//                for (index4 in 0 until ampPulseTicks) {
+//                    if (ampNumOfPasses > 1) {
+//                        laser.ampDgauss2[index4][index1] =
+//                            numArray[4][index4] * laser.ampPassT[index1]
+//                        P[index4] = numArray[4][index4] * (1.0 - laser.ampPassT[index1])
+//                    } else {
+//                        laser.ampDgauss2[index4][index1] = numArray[4][index4]
+//                    }
+//                }
+//
+//                if ((laser.amplifier.ampLength!! + (laser.laserMedium.ne!! - 1.0) * laser.configuration.la!!) / 29979.2458 - simTime * laser.ampPulseTicks.toDouble() > 0.0) {
+//                    diffResult = diffFunc.RkAmpRelaxationOnly(
+//                        laser.ampInitialValues, (laser.amplifier.ampLength + (
+//                                laser.laserMedium.ne - 1.0) * laser.configuration.la
+//                                ) / 29979.2458 - simTime * laser.ampPulseTicks.toDouble()
+//                    )
+//                }
+//            }
+//        } else {
+//            if (laser.optimization.isUse == false) {
+//                diffResult = diffFunc.Rk()
+//            } else {
+//                // TODO: доделать optimization
+//            }
+//        }
 
-                else -> Log.d("err", "jeje")
-            }
-            val length = laser.ampInitialValues.size
-            val ampPulseTicks = laser.ampPulseTicks
-            val P = DoubleArray(ampPulseTicks)
-            System.arraycopy(laser.ampDgauss, 0, P, 0, ampPulseTicks)
-            this.PtoS(P, laser.e0ph, laser.iss, laser.ag)
-            val ampNumOfPasses = 1
-            val simTime: Double = when (laser.amplifier.waveform) {
-                0 -> laser.amplifier.ampPulseDuration!! * 0.001 * 3.0 / ampPulseTicks.toDouble()
-                1 -> laser.amplifier.ampPulseDuration!! * 0.001 * 2.258 / ampPulseTicks.toDouble()
-                else -> laser.amplifier.ampPulseDuration!! * 0.001 * 3.0 / ampPulseTicks.toDouble()
-            }
-
-            val numArray = Array(length) { DoubleArray(ampPulseTicks) }
-            laser.ampDgauss2 = Array(ampPulseTicks) { DoubleArray(ampNumOfPasses) }
-
-            for (index1 in 0 until ampNumOfPasses) {
-                for (index2 in 0 until laser.ampPulseTicks) {
-                    laser.ampInitialValues[0] = 0.0
-                    laser.ampInitialValues[4] = P[index2]
-                    diffResult = diffFunc.RkAmpNoRelaxation(
-                        laser.ampInitialValues,
-                        laser.laserMedium.ne!! * laser.configuration.la!! / 29979.2458
-                    )
-                    diffResult = diffFunc.RkAmpRelaxationOnly(laser.ampInitialValues, simTime)
-                    for (index3 in 0 until length) {
-                        numArray[index3][index2] = laser.ampInitialValues[index3]
-                    }
-                }
-
-                for (index4 in 0 until ampPulseTicks) {
-                    if (ampNumOfPasses > 1) {
-                        laser.ampDgauss2[index4][index1] =
-                            numArray[4][index4] * laser.ampPassT[index1]
-                        P[index4] = numArray[4][index4] * (1.0 - laser.ampPassT[index1])
-                    } else {
-                        laser.ampDgauss2[index4][index1] = numArray[4][index4]
-                    }
-                }
-
-                if ((laser.amplifier.ampLength!! + (laser.laserMedium.ne!! - 1.0) * laser.configuration.la!!) / 29979.2458 - simTime * laser.ampPulseTicks.toDouble() > 0.0) {
-                    diffResult = diffFunc.RkAmpRelaxationOnly(
-                        laser.ampInitialValues, (laser.amplifier.ampLength + (
-                                laser.laserMedium.ne - 1.0) * laser.configuration.la
-                                ) / 29979.2458 - simTime * laser.ampPulseTicks.toDouble()
-                    )
-                }
-            }
-        } else {
-            if (laser.optimization.isUse == false) {
-                diffResult = diffFunc.Rk()
-            } else {
-                // TODO: доделать optimization
-            }
-        }
     }
 
     //

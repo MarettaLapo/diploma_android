@@ -2,28 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/selectLaserMediumFragment"
-            android:title="@string/selection_medium">
+            android:id="@+id/mainPageFragment"
+            android:title="@string/main"
+            android:icon="@drawable/home">
         </item>
 
         <item
-            android:id="@+id/settingFragment"
-            android:title="@string/settings">
-        </item>
-
-        <item
-            android:id="@+id/resultFragment"
-            android:title="@string/results">
-        </item>
-
-        <item
-            android:id="@+id/referenceInformationFragment"
-            android:title="@string/ref_info">
-        </item>
-
-        <item
-            android:id="@+id/usageExamplesFragment"
-            android:title="@string/usage_examples">
+            android:id="@+id/savedSettingsFragment"
+            android:title="@string/saving"
+            android:icon="@drawable/save">
         </item>
     </group>
 </menu>
