@@ -1,20 +1,12 @@
 package org.example.diploma
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import org.example.diploma.database.CombinedData
-import org.example.diploma.database.Hehe
 import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.amplifier.AmplifierRepository
 import org.example.diploma.database.configuration.ConfigurationEntity

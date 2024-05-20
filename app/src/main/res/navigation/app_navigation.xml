@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/resultFragment"
-        android:name="org.example.diploma.fragments.setting.ResultFragment"
+        android:name="org.example.diploma.fragments.pages.ResultFragment"
         android:label="@string/results"
         tools:layout="@layout/fragment_result" />
 

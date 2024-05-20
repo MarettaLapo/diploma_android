@@ -54,7 +54,7 @@ class SavingAdapter : RecyclerView.Adapter<SavingAdapter.SavesViewHolder>() {
                 else -> idIVCourseImage.setImageResource(R.drawable.general_withsensetizer_4level)
             }
             binding.idTVCourseName.text = save.host + ": " + save.type
-            binding.idTVCourseRating.text = save.date ?: "hehe"
+            binding.idTVCourseRating.text = save.date ?: "16.05.2024"
         }
     }
 }

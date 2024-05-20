@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -120,9 +121,14 @@ class SettingFragment : Fragment() {
 
         additionButton.setOnClickListener {
             Log.d("laser", "hehe")
-
             bottomSheetDialog.show()
         }
+
+        calculationButton.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_settingFragment_to_resultFragment)
+        }
+
 
         val headline = activity.findViewById<TextView>(R.id.textView6)
         headline.text = "Настройка лазера"
