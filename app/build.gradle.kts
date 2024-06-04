@@ -118,4 +118,6 @@ dependencies {
     val koin_android_compose_version = "3.2.0"
     implementation("io.insert-koin:koin-androidx-compose:$koin_android_compose_version")
 
+    implementation("com.opencsv:opencsv:5.5.2")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

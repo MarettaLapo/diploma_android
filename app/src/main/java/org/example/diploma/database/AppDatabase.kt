@@ -14,12 +14,18 @@ import org.example.diploma.database.amplifier.AmplifierDao
 import org.example.diploma.database.amplifier.AmplifierEntity
 import org.example.diploma.database.configuration.ConfigurationDao
 import org.example.diploma.database.configuration.ConfigurationEntity
+import org.example.diploma.database.giantPulse.GiantPulseDao
+import org.example.diploma.database.giantPulse.GiantPulseEntity
 import org.example.diploma.database.host.HostDao
 import org.example.diploma.database.host.HostEntity
 import org.example.diploma.database.laserMedium.LaserMediumDao
 import org.example.diploma.database.laserMedium.LaserMediumEntity
+import org.example.diploma.database.laserOutput.LaserOutputDao
+import org.example.diploma.database.laserOutput.LaserOutputEntity
 import org.example.diploma.database.optimization.OptimizationDao
 import org.example.diploma.database.optimization.OptimizationEntity
+import org.example.diploma.database.output.OutputDao
+import org.example.diploma.database.output.OutputEntity
 import org.example.diploma.database.pump.PumpDao
 import org.example.diploma.database.pump.PumpEntity
 import org.example.diploma.database.qSwitch.QSwitchDao
@@ -38,6 +44,9 @@ import org.example.diploma.database.save.SaveEntity
         PumpEntity::class,
         QSwitchEntity::class,
         SaveEntity::class,
+        OutputEntity::class,
+        LaserOutputEntity::class,
+        GiantPulseEntity::class
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -58,6 +67,12 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun saveDao(): SaveDao
 
+    abstract fun outputDao(): OutputDao
+
+    abstract fun laserOutputDao(): LaserOutputDao
+
+    abstract fun giantPulseDao(): GiantPulseDao
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -67,7 +82,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "15"
+                    "21"
                 ).createFromAsset("app_database.db")
                     .build()
                 INSTANCE = instance

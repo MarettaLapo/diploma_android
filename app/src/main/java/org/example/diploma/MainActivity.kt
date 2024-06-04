@@ -2,11 +2,15 @@ package org.example.diploma
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
+import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -39,6 +43,25 @@ class MainActivity : AppCompatActivity(){
         )
 
         navController = this.findNavController(R.id.appNavHostFragment)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val fragContainer = findViewById<FragmentContainerView>(R.id.appNavHostFragment)
+            when (destination.id) {
+                R.id.settingFragment, R.id.resultFragment, R.id.allGraph-> {
+                    fragContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                        bottomMargin = 0
+                    }
+                    bottom.visibility = View.GONE
+                }
+                else -> {
+                    fragContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                        bottomMargin = 100
+                    }
+                    bottom.visibility = View.VISIBLE
+                }
+            }
+        }
+
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottom, navController);
 

@@ -8,8 +8,8 @@ import org.example.diploma.database.pump.PumpEntity
 class QSwitchRepository(private val qSwitchDao: QSwitchDao) {
 
     fun getQSwitchData(qSwitchId: Long?): Flow<QSwitchEntity> = qSwitchDao.getQSwitchData(qSwitchId)
-    suspend fun insert(qSwitch: QSwitchEntity) {
-        qSwitchDao.insert(qSwitch)
+    suspend fun insert(qSwitch: QSwitchEntity) : Long {
+        return qSwitchDao.insert(qSwitch)
     }
 
     suspend fun delete(qSwitch: QSwitchEntity){

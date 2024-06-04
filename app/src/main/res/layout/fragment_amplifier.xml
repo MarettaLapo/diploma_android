@@ -4,19 +4,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dp"
     android:background="#FEF7FF">
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Use this"
-        android:id="@+id/checks"/>
+        android:text="Amplifier"
+        android:textSize="20sp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/checks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:id="@+id/switch_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Use amplifier"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:hint="Amplifier length (cm)"
         app:endIconMode="clear_text">
@@ -24,6 +52,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ampLength_edit_text"
             android:layout_width="match_parent"
+            android:inputType="none"
+            android:focusable="false"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -31,7 +61,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Waveform"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:textSize="18sp"/>
 
     <RadioGroup
@@ -44,6 +76,7 @@
             android:id="@+id/radio_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:tag="Gaussian"
             android:text="Gaussian" />
@@ -53,30 +86,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
             android:tag="Sinc"
             android:text="Sinc" />
     </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:hint="Pulse full energy (mJ)"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ampPulseEnergy_edit_text"
+            android:inputType="none"
+            android:focusable="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Pulse width (ns)"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/lc_edit_text"
+            android:inputType="none"
+            android:focusable="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>

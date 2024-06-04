@@ -41,7 +41,9 @@
             android:id="@+id/tp_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FEF7FF" />
+            android:background="#FEF7FF"
+            android:inputType="none"
+            android:focusable="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -54,7 +56,9 @@
             android:id="@+id/wp_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FEF7FF" />
+            android:background="#FEF7FF"
+            android:inputType="none"
+            android:focusable="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -86,27 +90,4 @@
             android:focusable="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <RadioGroup
-        android:id="@+id/pump_waveform"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/waveform_1"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:tag="Rectangular"
-            android:text="Rectangular" />
-
-        <RadioButton
-            android:id="@+id/waveform_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:tag="Trapeze"
-            android:text="Trapeze" />
-    </RadioGroup>
 </LinearLayout>

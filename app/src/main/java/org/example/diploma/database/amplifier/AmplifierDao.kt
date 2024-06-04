@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Dao
 interface AmplifierDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(amplifier: AmplifierEntity)
+    suspend fun insert(amplifier: AmplifierEntity) : Long
 
     @Delete
     suspend fun delete(amplifier: AmplifierEntity)

@@ -3,9 +3,12 @@ package org.example.diploma.database
 import android.app.Application
 import org.example.diploma.database.amplifier.AmplifierRepository
 import org.example.diploma.database.configuration.ConfigurationRepository
+import org.example.diploma.database.giantPulse.GiantPulseRepository
 import org.example.diploma.database.host.HostRepository
 import org.example.diploma.database.laserMedium.LaserMediumRepository
+import org.example.diploma.database.laserOutput.LaserOutputRepository
 import org.example.diploma.database.optimization.OptimizationRepository
+import org.example.diploma.database.output.OutputRepository
 import org.example.diploma.database.pump.PumpRepository
 import org.example.diploma.database.qSwitch.QSwitchRepository
 import org.example.diploma.database.save.SaveRepository
@@ -28,6 +31,12 @@ class AppApplication: Application() {
     val amplifierRepository by lazy { AmplifierRepository(database.amplifierDao()) }
 
     val optimizationRepository by lazy { OptimizationRepository(database.optimizationDao()) }
+
+    val outputRepository by lazy { OutputRepository(database.outputDao()) }
+
+    val laserOutputRepository by lazy { LaserOutputRepository(database.laserOutputDao()) }
+
+    val giantPulseRepository by lazy { GiantPulseRepository(database.giantPulseDao()) }
 }
 
 //    override fun onCreate() {

@@ -16,7 +16,7 @@ import org.example.diploma.database.host.HostEntity
 interface ConfigurationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(configuration: ConfigurationEntity)
+    suspend fun insert(configuration: ConfigurationEntity) : Long
 
     @Delete
     suspend fun delete(configuration: ConfigurationEntity)

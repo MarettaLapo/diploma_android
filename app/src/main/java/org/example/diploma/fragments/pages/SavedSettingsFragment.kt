@@ -38,7 +38,10 @@ class SavedSettingsFragment : Fragment() {
             (activity?.applicationContext as AppApplication).optimizationRepository,
             (activity?.applicationContext as AppApplication).pumpRepository,
             (activity?.applicationContext as AppApplication).qSwitchRepository,
-            (activity?.applicationContext as AppApplication).saveRepository
+            (activity?.applicationContext as AppApplication).saveRepository,
+            (activity?.applicationContext as AppApplication).outputRepository,
+            (activity?.applicationContext as AppApplication).laserOutputRepository,
+            (activity?.applicationContext as AppApplication).giantPulseRepository,
         )
     }
 

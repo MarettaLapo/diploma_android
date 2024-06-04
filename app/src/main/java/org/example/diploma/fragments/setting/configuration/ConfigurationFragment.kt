@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
@@ -32,7 +33,10 @@ class ConfigurationFragment : Fragment() {
             (activity?.applicationContext as AppApplication).optimizationRepository,
             (activity?.applicationContext as AppApplication).pumpRepository,
             (activity?.applicationContext as AppApplication).qSwitchRepository,
-            (activity?.applicationContext as AppApplication).saveRepository
+            (activity?.applicationContext as AppApplication).saveRepository,
+            (activity?.applicationContext as AppApplication).outputRepository,
+            (activity?.applicationContext as AppApplication).laserOutputRepository,
+            (activity?.applicationContext as AppApplication).giantPulseRepository,
         )
     }
 
@@ -56,22 +60,7 @@ class ConfigurationFragment : Fragment() {
                     val ld = binding!!.ldEditText
                     val lb = binding!!.lbEditText
                     val dia = binding!!.diaEditText
-                    if (viewModel.laserDataFlow.value.configuration.isCylinder == true) {
-                        ld.focusable = View.NOT_FOCUSABLE
-                        ld.inputType = InputType.TYPE_NULL
 
-                        lb.focusable = View.NOT_FOCUSABLE
-                        lb.inputType = InputType.TYPE_NULL
-                        ld.setBackgroundColor(Color.parseColor("#E6E0E9"))
-                        lb.setBackgroundColor(Color.parseColor("#E6E0E9"))
-                    } else {
-                        dia.focusable = View.NOT_FOCUSABLE
-                        dia.inputType = InputType.TYPE_NULL
-                        dia.setBackgroundColor(Color.parseColor("#E6E0E9"))
-                    }
-
-                    binding!!.switchCompat.isChecked =
-                        viewModel.laserDataFlow.value.configuration.isCylinder!!
                     binding!!.laEditText.setText(viewModel.laserDataFlow.value.configuration.la.toString())
                     ld.setText(viewModel.laserDataFlow.value.configuration.ld.toString())
                     lb.setText(viewModel.laserDataFlow.value.configuration.lb.toString())
@@ -85,100 +74,125 @@ class ConfigurationFragment : Fragment() {
                     binding!!.agEditText.setText(viewModel.laserDataFlow.value.ag.toString())
                     binding!!.tmEditText.setText(viewModel.laserDataFlow.value.TM.toString())
 
-                    val im = binding!!.imageScheme
-                    if (viewModel.laserDataFlow.value.configuration.isCylinder == true) {
-                        if (viewModel.laserDataFlow.value.pump.scheme == 0) {
-                            when (viewModel.laserDataFlow.value.shutter) {
-                                0 -> im.setImageResource(
-                                    R.drawable.schema_free_cyl_side
-                                )
-
-                                1 ->
-                                    im.setImageResource(
-                                        R.drawable.schema_aqs_cyl_side
-                                    )
-
-                                2 -> im.setImageResource(
-                                    R.drawable.schema_pqs_cyl_side
-                                )
-
-                                else -> im.setImageResource(
-                                    R.drawable.schema_aqs_pqs_cyl_side
-                                )
-                            }
-                        } else {
-                            when (viewModel.laserDataFlow.value.shutter) {
-                                0 -> im.setImageResource(
-                                    R.drawable.schema_free_cyl_end
-                                )
-
-                                1 -> im.setImageResource(
-                                    R.drawable.schema_aqs_cyl_end
-                                )
-
-                                2 -> im.setImageResource(
-                                    R.drawable.schema_pqs_cyl_end
-                                )
-
-                                else -> im.setImageResource(
-                                    R.drawable.schema_aqs_pqs_cyl_end
-                                )
-                            }
-                        }
-
-                    } else {
-                        if (viewModel.laserDataFlow.value.pump.scheme == 0) {
-                            when (viewModel.laserDataFlow.value.shutter) {
-                                0 -> im.setImageResource(
-                                    R.drawable.schema_free_rect_side
-                                )
-
-                                1 -> im.setImageResource(
-                                    R.drawable.schema_aqs_rect_side
-                                )
-
-                                2 -> im.setImageResource(
-                                    R.drawable.schema_pqs_rect_side
-                                )
-
-                                else -> im.setImageResource(
-                                    R.drawable.schema_aqs_pqs_rect_side
-                                )
-                            }
-                        } else {
-                            when (viewModel.laserDataFlow.value.shutter) {
-                                0 -> im.setImageResource(
-                                    R.drawable.schema_free_rect_end
-                                )
-
-                                1 -> im.setImageResource(
-                                    R.drawable.schema_aqs_rect_end
-                                )
-
-                                2 -> im.setImageResource(
-                                    R.drawable.schema_pqs_rect_end
-                                )
-
-                                else -> im.setImageResource(
-                                    R.drawable.schema_aqs_pqs_rect_end
-                                )
-                            }
-                        }
-                    }
-
-                    if (viewModel.laserDataFlow.value.pump.scheme == 0) {
-                        binding!!.viewText.text = "Active element sidepump orientation."
-                    } else {
-                        binding!!.viewText.text = "Active element endpump orientation."
-                    }
-
-
                 }
 
                 lastTimestampDisplayed = laser.timestamp
             }
         }
 
+        lifecycleScope.launch {
+            combine(viewModel.isCylinder, viewModel.pumpScheme, viewModel.shutter){ isCylinder, scheme, shutter ->
+                Triple(isCylinder,scheme, shutter)
+            }.collect { (isCylinder, scheme, shutter) ->
+                val ld = binding!!.ldEditText
+                val lb = binding!!.lbEditText
+                val dia = binding!!.diaEditText
+
+                if (isCylinder) {
+                    ld.setBackgroundColor(Color.parseColor("#E6E0E9"))
+                    lb.setBackgroundColor(Color.parseColor("#E6E0E9"))
+                    dia.setBackgroundColor(Color.parseColor("#FEF7FF"))
+
+                } else {
+                    dia.setBackgroundColor(Color.parseColor("#E6E0E9"))
+                    ld.setBackgroundColor(Color.parseColor("#FEF7FF"))
+                    lb.setBackgroundColor(Color.parseColor("#FEF7FF"))
+                }
+
+                binding!!.switchCompat.isChecked = isCylinder
+
+                val im = binding!!.imageScheme
+                if (isCylinder) {
+                    if (scheme == 0) {
+                        when (shutter) {
+                            0 -> im.setImageResource(
+                                R.drawable.schema_free_cyl_side
+                            )
+
+                            1 ->
+                                im.setImageResource(
+                                    R.drawable.schema_aqs_cyl_side
+                                )
+
+                            2 -> im.setImageResource(
+                                R.drawable.schema_pqs_cyl_side
+                            )
+
+                            else -> im.setImageResource(
+                                R.drawable.schema_aqs_pqs_cyl_side
+                            )
+                        }
+                    } else {
+                        when (shutter) {
+                            0 -> im.setImageResource(
+                                R.drawable.schema_free_cyl_end
+                            )
+
+                            1 -> im.setImageResource(
+                                R.drawable.schema_aqs_cyl_end
+                            )
+
+                            2 -> im.setImageResource(
+                                R.drawable.schema_pqs_cyl_end
+                            )
+
+                            else -> im.setImageResource(
+                                R.drawable.schema_aqs_pqs_cyl_end
+                            )
+                        }
+                    }
+
+                } else {
+                    if (scheme == 0) {
+                        when (shutter) {
+                            0 -> im.setImageResource(
+                                R.drawable.schema_free_rect_side
+                            )
+
+                            1 -> im.setImageResource(
+                                R.drawable.schema_aqs_rect_side
+                            )
+
+                            2 -> im.setImageResource(
+                                R.drawable.schema_pqs_rect_side
+                            )
+
+                            else -> im.setImageResource(
+                                R.drawable.schema_aqs_pqs_rect_side
+                            )
+                        }
+                    } else {
+                        when (shutter) {
+                            0 -> im.setImageResource(
+                                R.drawable.schema_free_rect_end
+                            )
+
+                            1 -> im.setImageResource(
+                                R.drawable.schema_aqs_rect_end
+                            )
+
+                            2 -> im.setImageResource(
+                                R.drawable.schema_pqs_rect_end
+                            )
+
+                            else -> im.setImageResource(
+                                R.drawable.schema_aqs_pqs_rect_end
+                            )
+                        }
+                    }
+                }
+
+                if (scheme == 0) {
+                    binding!!.viewText.text = "Active element sidepump orientation."
+                } else {
+                    binding!!.viewText.text = "Active element endpump orientation."
+                }
+            }
+        }
+
+        binding!!.switchCompat.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.updateIsCylinder(isChecked)
+        }
     }
 
     override fun onDestroyView() {

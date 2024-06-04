@@ -75,7 +75,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -90,7 +91,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -105,7 +107,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -120,7 +123,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -135,7 +139,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -150,7 +155,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -165,7 +171,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -181,7 +188,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -248,6 +256,70 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Frequency, kHz"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/freq_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FEF7FF"
+                        android:inputType="none"
+                        android:focusable="false"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Period, us"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/period_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FEF7FF"
+                        android:inputType="none"
+                        android:focusable="false"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Off time: k"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/k_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FEF7FF"
+                        android:inputType="none"
+                        android:focusable="false"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Off time: b"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/b_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FEF7FF"
+                        android:inputType="none"
+                        android:focusable="false"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -309,7 +381,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -324,7 +397,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -339,7 +413,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -354,7 +429,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -369,7 +445,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -400,7 +477,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FEF7FF"
-                        android:inputType="number"/>
+                        android:inputType="none"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>

@@ -12,8 +12,8 @@ class AmplifierRepository(private val amplifierDao: AmplifierDao) {
     fun getAmplifierData(amplifierId: Long?): Flow<AmplifierEntity> =
         amplifierDao.getAmplifierData(amplifierId)
 
-    suspend fun insert(amplifier: AmplifierEntity) {
-        amplifierDao.insert(amplifier)
+    suspend fun insert(amplifier: AmplifierEntity) : Long {
+        return amplifierDao.insert(amplifier)
     }
 
     suspend fun delete(amplifier: AmplifierEntity) {

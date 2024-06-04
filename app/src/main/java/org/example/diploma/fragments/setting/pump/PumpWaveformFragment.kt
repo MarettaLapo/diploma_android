@@ -43,7 +43,10 @@ class PumpWaveformFragment : DialogFragment() {
             (activity?.applicationContext as AppApplication).optimizationRepository,
             (activity?.applicationContext as AppApplication).pumpRepository,
             (activity?.applicationContext as AppApplication).qSwitchRepository,
-            (activity?.applicationContext as AppApplication).saveRepository
+            (activity?.applicationContext as AppApplication).saveRepository,
+            (activity?.applicationContext as AppApplication).outputRepository,
+            (activity?.applicationContext as AppApplication).laserOutputRepository,
+            (activity?.applicationContext as AppApplication).giantPulseRepository,
         )
     }
 
@@ -72,25 +75,25 @@ class PumpWaveformFragment : DialogFragment() {
                     binding!!.epEditText.setText(viewModel.laserDataFlow.value.ep.toString())
                     binding!!.pEditText.setText(viewModel.laserDataFlow.value.p.toString())
 
-                    if(laser.pump.pformId == 0){
-                        binding!!.pumpWaveform.check(binding!!.waveform1.id)
-                    }
-                    else{
-                        binding!!.pumpWaveform.check(binding!!.waveform2.id)
-                        val textInputLayout1 = TextInputLayout(requireContext())
-                        val editText1 = TextInputEditText(requireContext())
-                        editText1.hint = "t1, us"
-                        textInputLayout1.addView(editText1)
-
-                        // Создание второго TextInputLayout
-                        val textInputLayout2 = TextInputLayout(requireContext())
-                        val editText2 = TextInputEditText(requireContext())
-                        editText2.hint = "t2, us"
-                        textInputLayout2.addView(editText2)
-
-                        binding!!.lin.addView(textInputLayout1)
-                        binding!!.lin.addView(textInputLayout2)
-                    }
+//                    if(laser.pump.pformId == 0){
+//                        binding!!.pumpWaveform.check(binding!!.waveform1.id)
+//                    }
+//                    else{
+//                        binding!!.pumpWaveform.check(binding!!.waveform2.id)
+//                        val textInputLayout1 = TextInputLayout(requireContext())
+//                        val editText1 = TextInputEditText(requireContext())
+//                        editText1.hint = "t1, us"
+//                        textInputLayout1.addView(editText1)
+//
+//                        // Создание второго TextInputLayout
+//                        val textInputLayout2 = TextInputLayout(requireContext())
+//                        val editText2 = TextInputEditText(requireContext())
+//                        editText2.hint = "t2, us"
+//                        textInputLayout2.addView(editText2)
+//
+//                        binding!!.lin.addView(textInputLayout1)
+//                        binding!!.lin.addView(textInputLayout2)
+//                    }
                 }
                 lastTimestampDisplayed = laser.timestamp
             }

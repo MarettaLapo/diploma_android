@@ -16,7 +16,7 @@ import org.example.diploma.database.host.HostEntity
 @Dao
 interface LaserMediumDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(laserMedium: LaserMediumEntity)
+    suspend fun insert(laserMedium: LaserMediumEntity) : Long
 
     @Delete
     suspend fun delete(laserMedium: LaserMediumEntity)

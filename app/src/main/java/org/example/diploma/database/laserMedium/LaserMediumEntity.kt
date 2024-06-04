@@ -14,6 +14,7 @@ data class LaserMediumEntity (
     val laserMediumId: Long?,
 
     val host: String?,
+    val type: String?,
 
     //"Operation temperature, K="
     val ot: Double?,

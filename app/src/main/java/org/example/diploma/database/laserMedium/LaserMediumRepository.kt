@@ -8,8 +8,8 @@ import org.example.diploma.database.amplifier.AmplifierEntity
 class LaserMediumRepository(private val laserMediumDao: LaserMediumDao) {
 
     fun getLaserMediumData(laserMediumId: Long?): Flow<LaserMediumEntity> = laserMediumDao.getLaserMediumData(laserMediumId)
-    suspend fun insert(laserMedium: LaserMediumEntity) {
-        laserMediumDao.insert(laserMedium)
+    suspend fun insert(laserMedium: LaserMediumEntity)  : Long{
+        return laserMediumDao.insert(laserMedium)
     }
 
     suspend fun delete(laserMedium: LaserMediumEntity){

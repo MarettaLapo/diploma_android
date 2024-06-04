@@ -50,12 +50,6 @@ import org.example.diploma.database.pump.PumpEntity
             parentColumns = ["id"],
             childColumns = ["amplifier_id"]
         )
-        ,
-        ForeignKey(
-            entity = OptimizationEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["optimization_id"]
-        )
     ]
 )
 
@@ -81,9 +75,6 @@ data class HostEntity (
 
     @ColumnInfo(name = "amplifier_id")
     val amplifierId: Long?,
-
-    @ColumnInfo(name = "optimization_id")
-    val optimizationId: Long?,
 )
 {
 //    constructor() : this(null,null,null,null,null,

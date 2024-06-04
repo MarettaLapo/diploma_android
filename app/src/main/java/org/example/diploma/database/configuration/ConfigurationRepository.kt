@@ -8,8 +8,8 @@ import org.example.diploma.database.amplifier.AmplifierEntity
 class ConfigurationRepository(private val configurationDao: ConfigurationDao) {
 
     fun getConfigurationData(configurationId: Long?): Flow<ConfigurationEntity> = configurationDao.getConfigurationData(configurationId)
-    suspend fun insert(configuration: ConfigurationEntity) {
-        configurationDao.insert(configuration)
+    suspend fun insert(configuration: ConfigurationEntity) : Long {
+        return configurationDao.insert(configuration)
     }
 
     suspend fun delete(configuration: ConfigurationEntity){

@@ -9,18 +9,24 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.marginBottom
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.launch
 import org.example.diploma.MainViewModel
 import org.example.diploma.MainViewModelFactory
 import org.example.diploma.R
@@ -28,14 +34,10 @@ import org.example.diploma.adapters.SettingAdapter
 import org.example.diploma.database.AppApplication
 import org.example.diploma.databinding.FragmentSettingBinding
 import org.example.diploma.databinding.MainActivityBinding
+import org.example.diploma.fragments.pages.BottomDialogFragment
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment(), NavigationListener {
     private lateinit var adapter: SettingAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var settingTab: TabLayout
@@ -53,7 +55,10 @@ class SettingFragment : Fragment() {
             (activity?.applicationContext as AppApplication).optimizationRepository,
             (activity?.applicationContext as AppApplication).pumpRepository,
             (activity?.applicationContext as AppApplication).qSwitchRepository,
-            (activity?.applicationContext as AppApplication).saveRepository
+            (activity?.applicationContext as AppApplication).saveRepository,
+            (activity?.applicationContext as AppApplication).outputRepository,
+            (activity?.applicationContext as AppApplication).laserOutputRepository,
+            (activity?.applicationContext as AppApplication).giantPulseRepository,
         )
     }
 
@@ -88,43 +93,32 @@ class SettingFragment : Fragment() {
         val saveButton = activity.findViewById<ImageButton>(R.id.button2)
         val additionButton = activity.findViewById<ImageButton>(R.id.button3)
 
+        val frag = activity.findViewById<FragmentContainerView>(R.id.appNavHostFragment)
+
+        frag.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = 0
+        }
+
         calculationButton.visibility = View.VISIBLE
         saveButton.visibility = View.VISIBLE
         additionButton.visibility = View.VISIBLE
 
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-
-// Создаем MaterialAlertDialogBuilder
-        val builder = MaterialAlertDialogBuilder(requireContext())
-
-// Устанавливаем заголовок
-        builder.setTitle("Заголовок")
-
-// Устанавливаем сообщение
-        builder.setMessage("Сообщение")
-
-// Добавляем кнопки
-        builder.setPositiveButton("Подтвердить") { dialog, which ->
-            // Обработка нажатия на кнопку "Подтвердить"
+        saveButton.setOnClickListener{
+            lifecycleScope.launch {
+                viewModel.save()
+                val toast = Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT)
+                toast.show()
+            }
         }
-
-        builder.setNegativeButton("Отмена") { dialog, which ->
-            // Обработка нажатия на кнопку "Отмена"
-        }
-
-// Получаем диалог из билдера и устанавливаем его в BottomSheetDialog
-        val dialog = builder.create()
-        bottomSheetDialog.setContentView(dialog.window!!.decorView.rootView)
-
-// Показываем BottomSheetDialog
-
 
         additionButton.setOnClickListener {
-            Log.d("laser", "hehe")
-            bottomSheetDialog.show()
+            val bottomSheetDialog = BottomDialogFragment()
+            bottomSheetDialog.setNavigationListener(this)
+            bottomSheetDialog.show(parentFragmentManager, "MyBottomSheetDialog")
         }
 
         calculationButton.setOnClickListener {
+            viewModel.selectedGraph()
             Navigation.findNavController(view)
                 .navigate(R.id.action_settingFragment_to_resultFragment)
         }
@@ -150,4 +144,23 @@ class SettingFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
+    override fun navigateToReferenceInformation() {
+        view?.let {
+            Navigation.findNavController(it)
+                .navigate(R.id.action_settingFragment_to_referenceInformationFragment)
+        }
+    }
+
+    override fun navigateToUsageExamplesFragment() {
+        view?.let {
+            Navigation.findNavController(it)
+                .navigate(R.id.action_settingFragment_to_usageExamplesFragment)
+        }
+    }
+}
+
+interface NavigationListener {
+    fun navigateToReferenceInformation()
+    fun navigateToUsageExamplesFragment()
 }

@@ -17,7 +17,6 @@ data class Laser(
     val pump: PumpEntity,
     val qSwitch: QSwitchEntity,
     val amplifier: AmplifierEntity,
-    val optimization: OptimizationEntity,
 ) {
 
     var timestamp = 0L

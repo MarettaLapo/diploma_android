@@ -15,7 +15,7 @@ import org.example.diploma.database.pump.PumpEntity
 @Dao
 interface QSwitchDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(qSwitch: QSwitchEntity)
+    suspend fun insert(qSwitch: QSwitchEntity) : Long
 
     @Delete
     suspend fun delete(qSwitch: QSwitchEntity)

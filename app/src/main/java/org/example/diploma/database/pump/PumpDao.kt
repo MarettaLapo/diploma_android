@@ -16,7 +16,7 @@ import org.example.diploma.database.laserMedium.LaserMediumEntity
 interface PumpDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(pump: PumpEntity)
+    suspend fun insert(pump: PumpEntity) : Long
 
     @Delete
     suspend fun delete(pump: PumpEntity)

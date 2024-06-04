@@ -14,6 +14,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:id="@+id/all_graph_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Остальные графики"/>
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
@@ -36,6 +50,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/up_card_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -52,10 +67,9 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tp_input"
+                        android:id="@+id/imax_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="406.193"
                         android:focusable="false"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -68,10 +82,9 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_1"
+                        android:id="@+id/efg_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0.0033"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,10 +96,9 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_2"
+                        android:id="@+id/hf_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0.273"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,16 +110,33 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_3"
+                        android:id="@+id/aop_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="823.140"
+                        android:background="#FEF7FF" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tm_up_layout"
+                    android:visibility="gone"
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First pulse delay after pump on, us"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tm_up_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:visibility="gone"
+            android:id="@+id/card_pulse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -129,17 +158,17 @@
                     android:textSize="18sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tm_down_inputlayout"
                     style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Peak pulse delay after Q-switch on, ns"
+                    android:hint="First monopulse delay after pump on, μs"
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_4"
+                        android:id="@+id/tm_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="26.676"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -151,10 +180,9 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_5"
+                        android:id="@+id/tg_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="15.493"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -166,10 +194,9 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_6"
+                        android:id="@+id/eqg_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0.00325"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -181,10 +208,9 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_7"
+                        android:id="@+id/hq_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0.271"
                         android:background="#FEF7FF" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -196,15 +222,68 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_8"
+                        android:id="@+id/est_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FEF7FF"
-                        android:text="0.00415"/>
+                        android:background="#FEF7FF"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
+            android:visibility="gone"
+            android:id="@+id/card_second_pulse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Second pulse"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Second pulse output energy, J"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eqg2_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FEF7FF" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contrast"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/contrast_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FEF7FF" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
 </ScrollView>

@@ -43,12 +43,6 @@ import org.example.diploma.database.qSwitch.QSwitchEntity
             onDelete = CASCADE
         ),
         ForeignKey(
-            entity = OptimizationEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["optimization_id"],
-            onDelete = CASCADE
-        ),
-        ForeignKey(
             entity = AmplifierEntity::class,
             parentColumns = ["id"],
             childColumns = ["amplifier_id"],
@@ -70,9 +64,6 @@ data class SaveEntity(
 
     @ColumnInfo(name = "q_switch_id")
     val qSwitchId: Long?,
-
-    @ColumnInfo(name = "optimization_id")
-    val optimizationId: Long?,
 
     @ColumnInfo(name = "configuration_id")
     val configurationId: Long?,

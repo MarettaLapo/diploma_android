@@ -30,6 +30,7 @@ class LaserMediumFragment : Fragment() {
 
     private var binding: FragmentLaserMediumBinding? = null
     private var lastTimestampDisplayed: Long = 0
+    private var currentHost: Int = 0
 
     private val viewModel: MainViewModel by activityViewModels {
         MainViewModelFactory(
@@ -40,7 +41,10 @@ class LaserMediumFragment : Fragment() {
             (activity?.applicationContext as AppApplication).optimizationRepository,
             (activity?.applicationContext as AppApplication).pumpRepository,
             (activity?.applicationContext as AppApplication).qSwitchRepository,
-            (activity?.applicationContext as AppApplication).saveRepository
+            (activity?.applicationContext as AppApplication).saveRepository,
+            (activity?.applicationContext as AppApplication).outputRepository,
+            (activity?.applicationContext as AppApplication).laserOutputRepository,
+            (activity?.applicationContext as AppApplication).giantPulseRepository,
         )
     }
 
@@ -58,9 +62,8 @@ class LaserMediumFragment : Fragment() {
         val main = binding!!.linMain
         lifecycleScope.launch {
             viewModel.laserDataFlow.collect { laser ->
-                if (laser.timestamp > lastTimestampDisplayed) {
-                    val host = laser.laserMedium.host
-                    Log.d("laser1", host.toString())
+                val host = laser.laserMedium.host
+                if (currentHost != 0) {
                     when (host) {
                         "Er" -> {
                             val cardViewEr = MaterialCardView(context).apply {
@@ -92,7 +95,6 @@ class LaserMediumFragment : Fragment() {
                                     )
                                 ) // Добавление LinearLayout в качестве дочернего элемента
                             }
-                            Log.d("laser1", "Er here")
                             main.addView(cardViewEr)
                             main.addView(cardViewYb)
                         }
@@ -112,7 +114,6 @@ class LaserMediumFragment : Fragment() {
                                     )
                                 ) // Добавление LinearLayout в качестве дочернего элемента
                             }
-                            Log.d("laser1", "Nd here")
                             main.addView(cardViewNd)
                         }
 
@@ -131,7 +132,6 @@ class LaserMediumFragment : Fragment() {
                                     )
                                 ) // Добавление LinearLayout в качестве дочернего элемента
                             }
-                            Log.d("laser1", "Yb here")
                             main.addView(cardViewYb)
                         }
 
@@ -150,7 +150,6 @@ class LaserMediumFragment : Fragment() {
                                     )
                                 ) // Добавление LinearLayout в качестве дочернего элемента
                             }
-                            Log.d("laser1", "here")
                             main.addView(cardViewGeneral)
                         }
 
@@ -172,7 +171,7 @@ class LaserMediumFragment : Fragment() {
                     }
                     main.addView(cardViewAddition)
                 }
-                lastTimestampDisplayed = laser.timestamp
+                currentHost++
             }
         }
     }
@@ -675,7 +674,6 @@ class LaserMediumFragment : Fragment() {
             "Operation temperature, K",
         ) // Список подсказок для TextInputLayout
         val editTextIdsGeneral = arrayOf(
-
             R.id.ne,
             R.id.l0,
             R.id.ac,
@@ -778,22 +776,11 @@ class LaserMediumFragment : Fragment() {
 
         return linearLayout
     }
-//    fun clearLayout(layout: ViewGroup) {
-//        // Удаляем все дочерние элементы из layout
-//        Log.d("laser1", "ya")
-//        while (layout.childCount > 0) {
-//            val child = layout.getChildAt(0)
-//            layout.removeView(child)
-//        }
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        clearLayout(binding!!.linMain)
-//    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding!!.linMain.removeAllViews()
         binding = null
     }
 }

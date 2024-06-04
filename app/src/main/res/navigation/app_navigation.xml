@@ -50,12 +50,22 @@
         <action
             android:id="@+id/action_settingFragment_to_resultFragment"
             app:destination="@id/resultFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_usageExamplesFragment"
+            app:destination="@id/usageExamplesFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_referenceInformationFragment"
+            app:destination="@id/referenceInformationFragment" />
     </fragment>
     <fragment
         android:id="@+id/resultFragment"
         android:name="org.example.diploma.fragments.pages.ResultFragment"
         android:label="@string/results"
-        tools:layout="@layout/fragment_result" />
+        tools:layout="@layout/fragment_result" >
+        <action
+            android:id="@+id/action_resultFragment_to_allGraph"
+            app:destination="@id/allGraph" />
+    </fragment>
 
     <fragment
         android:id="@+id/savedSettingsFragment"
@@ -69,4 +79,8 @@
             android:id="@+id/action_savedSettingsFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/allGraph"
+        android:name="org.example.diploma.fragments.pages.graph.AllGraph"
+        android:label="AllGraph" />
 </navigation>
