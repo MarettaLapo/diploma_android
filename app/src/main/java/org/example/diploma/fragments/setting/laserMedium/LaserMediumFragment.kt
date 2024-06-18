@@ -63,8 +63,8 @@ class LaserMediumFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.laserDataFlow.collect { laser ->
                 val host = laser.laserMedium.host
-                Log.d("hostError",currentHost.toString())
-                if (currentHost != 0 || viewModel.hh) {
+                //Log.d("hostError", host.toString())
+                if (host != null && viewModel.curHost == host) {
                     viewModel.hh = false
                     when (host) {
                         "Er" -> {

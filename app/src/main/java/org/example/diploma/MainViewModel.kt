@@ -83,8 +83,12 @@ class MainViewModel(
 
     var hh = false
 
+    var curHost = ""
+    var outId = 0
+
     var flag = false
-    var hehe = 0
+    var exitFlag = false
+    var hehe = 1
 
     init {
         // Инициализируем laserDataFlow при создании экземпляра MainViewModel
@@ -146,6 +150,14 @@ class MainViewModel(
     val allSaves = saveRepository.getAllSaves()
 
 
+    fun forceUpdate() {
+        // Emit текущих значений, чтобы заставить collect обновиться
+        Log.d("resultError", "я не обновляюсь")
+        output.value = output.value
+        laserOutput.value = laserOutput.value
+        giantPulse.value = giantPulse.value
+        hehe++
+    }
     fun selectedHost(host: HostEntity) {
         viewModelScope.launch {
             val laserMediumData = laserMediumRepository.getLaserMediumData(host.laserMediumId)
@@ -300,9 +312,7 @@ class MainViewModel(
 
             val lo = laserOutputRepository.getLaserOutputData(ou.laserOutputId).first()
             val gp = giantPulseRepository.getGiantPulseData(ou.giantPulseId).firstOrNull()
-
-            Log.d("outputError", ou.toString())
-
+            outId = ou.outputId!!.toInt()
             output.value = ou
             laserOutput.value = lo
             giantPulse.value = gp

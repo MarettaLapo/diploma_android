@@ -68,6 +68,7 @@ class SelectLaserMediumFragment : Fragment() {
             override fun onClick(position: Int, model: HostEntity, view: View) {
 
                 viewModel.selectedHost(model)
+                viewModel.curHost = model.host!!
                 Navigation.findNavController(view)
                     .navigate(R.id.action_selectLaserMediumFragment_to_settingFragment)
 

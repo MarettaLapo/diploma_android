@@ -18,7 +18,6 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.material.tabs.TabLayout
-import com.opencsv.CSVReader
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.example.diploma.MainViewModel
@@ -56,6 +55,7 @@ class ResultFragment : Fragment() {
     }
 
 
+    var heh = 0
     var uFile: String = ""
     var lossFile: String = ""
     var tshFile: String? = null
@@ -68,6 +68,7 @@ class ResultFragment : Fragment() {
     var del_tsh: Double? = null
     var del_p: Double = 0.0
 
+    var f = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,12 +86,6 @@ class ResultFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        val activity = activity as AppCompatActivity
-//        val headline = activity.findViewById<TextView>(R.id.textView6)
-//        if(headline != null){
-//            headline.text = "Результат симуляции"
-//        }
-
         lifecycleScope.launch {
             combine(
                 viewModel.output,
@@ -99,19 +94,23 @@ class ResultFragment : Fragment() {
             ) { output, laser, pulse ->
                 Triple(output, laser, pulse)
             }.collect { (output, laser, pulse) ->
-                Log.d("resultErrorHH", output.toString())
-                Log.d("resultErrorHH", viewModel.hehe.toString())
-                if (viewModel.hehe != 0) {
-                    Log.d("resultErrorHH", viewModel.flag.toString())
+                Log.d("resultError", viewModel.hehe.toString())
+                if (output.outputId == null || viewModel.hehe == 1){
+                    viewModel.forceUpdate()
+                    Log.d("resultError", viewModel.hehe.toString())
 
+                }
+                Log.d("resultError", "heh $heh")
+                if (heh == 1){
+                    viewModel.flag = false
+                }
+                if (output.outputId != null && viewModel.hehe == 2) {
                     uFile = output.u!!
                     output_powerFile = output.output_power!!
 
-                    if(output_powerFile.isNotEmpty() && uFile.isNotEmpty() && !viewModel.flag){
-
-
+                    //отрисовка графика
+                    if (output_powerFile.isNotEmpty() && uFile.isNotEmpty() && !viewModel.flag) {
                         val lineChart = binding!!.lineChart
-                        Log.d("resultHHHH", "вау я тут")
                         val data1Entries = readDataFromFile(output_powerFile)
                         val data2Entries = readDataFromFile(uFile)
 
@@ -123,11 +122,11 @@ class ResultFragment : Fragment() {
                             lineWidth = 2f// Или Mode.CUBIC_BEZIER для сглаживания
                         }
                         val dataSet2 = LineDataSet(data2Entries, "U*").apply {
-                                color = R.color.purple_700
-                                setDrawCircles(false)
-                                setDrawValues(false)
-                                mode = LineDataSet.Mode.LINEAR // Или Mode.CUBIC_BEZIER для сглаживания
-                            }
+                            color = R.color.purple_700
+                            setDrawCircles(false)
+                            setDrawValues(false)
+                            mode = LineDataSet.Mode.LINEAR // Или Mode.CUBIC_BEZIER для сглаживания
+                        }
 
                         // Добавление DataSet в LineData
                         val lineData = LineData(dataSet1, dataSet2)
@@ -150,7 +149,6 @@ class ResultFragment : Fragment() {
 
                         // Обновление графика
                         lineChart.invalidate()
-
                         viewModel.flag = true
                     }
 
@@ -162,8 +160,11 @@ class ResultFragment : Fragment() {
                     if (output.pump_type == 1) {
                         binding!!.upCardText.text = "CW pump mode"
                     }
-                    if (pulse?.giantPulseId == null && viewModel.hehe != 0) {
+
+                    //добавление доп. карточки
+                    if (pulse?.giantPulseId == null) {
                         binding!!.tmUpLayout.visibility = View.VISIBLE
+                        binding!!.cardPulse.visibility = View.GONE
                         binding!!.tmUpInput.setText(laser.tm.toString())
                     } else {
                         binding!!.cardPulse.visibility = View.VISIBLE
@@ -177,19 +178,16 @@ class ResultFragment : Fragment() {
                         binding!!.hqInput.setText(pulse?.hq.toString())
                         binding!!.estInput.setText(pulse?.est.toString())
 
-
                         if (output.shutter == 2) {
                             binding!!.cardSecondPulse.visibility = View.VISIBLE
                             binding!!.eqg2Input.setText(pulse?.eqg2.toString())
                             binding!!.contrastInput.setText(pulse?.contrast.toString())
                         }
                     }
+
                 }
-
-                viewModel.hehe++
-
+                heh++
             }
-
         }
 
         binding!!.allGraphButton.setOnClickListener {
@@ -245,7 +243,9 @@ class ResultFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d("resultError", "это я)")
+        viewModel.flag = false
+        viewModel.hehe = 1
         binding = null
     }
-
 }

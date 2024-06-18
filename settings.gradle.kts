@@ -1,21 +1,23 @@
 pluginManagement {
     repositories {
         google()
-        mavenCentral()
+        jcenter()
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
+//        maven { url 'https://jitpack.io' }
         maven {
             url = uri("https://jitpack.io")
         }
-        mavenCentral()
+        google()
+//        mavenCentral()
+        jcenter()
     }
 }
-
 rootProject.name = "Diploma"
 include(":app")
  
