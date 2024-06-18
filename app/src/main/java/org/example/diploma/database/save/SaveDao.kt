@@ -12,8 +12,8 @@ import org.example.diploma.database.host.HostEntity
 
 @Dao
 interface SaveDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(save: SaveEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(save: SaveEntity): Long
 
     @Delete
     suspend fun delete(save: SaveEntity)
@@ -24,6 +24,6 @@ interface SaveDao {
     @Query("Select * from saves where id ==:saveId")
     fun getSaveData(saveId: Long): LiveData<SaveEntity>
 
-    @Query("Select * from saves")
+    @Query("SELECT * FROM saves")
     fun getAllSaves(): Flow<List<SaveEntity>>
 }

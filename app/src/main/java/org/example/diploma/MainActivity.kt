@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity(){
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val fragContainer = findViewById<FragmentContainerView>(R.id.appNavHostFragment)
             when (destination.id) {
-                R.id.settingFragment, R.id.resultFragment, R.id.allGraph-> {
+                R.id.settingFragment, R.id.resultFragment, R.id.allGraph, R.id.referenceInformationFragment,
+                R.id.selectLaserMediumFragment-> {
                     fragContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                         bottomMargin = 0
                     }

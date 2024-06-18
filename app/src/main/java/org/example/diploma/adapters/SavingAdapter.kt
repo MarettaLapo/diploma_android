@@ -1,5 +1,6 @@
 package org.example.diploma.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,11 +41,14 @@ class SavingAdapter : RecyclerView.Adapter<SavingAdapter.SavesViewHolder>() {
     fun setOnClickListener(onClickListener: OnClickListener) {
         this.onClickListener = onClickListener
     }
+
+
     interface OnClickListener {
         fun onClick(position: Int, model: SaveEntity, view: View)
+        fun onDelete(model: SaveEntity)
     }
 
-    class SavesViewHolder(item: View) : RecyclerView.ViewHolder(item){
+    inner class SavesViewHolder(item: View) : RecyclerView.ViewHolder(item){
         val binding = LayoutSavingBinding.bind(item)
         fun bind(save: SaveEntity) = with(binding){
             when(save.host){
@@ -55,6 +59,12 @@ class SavingAdapter : RecyclerView.Adapter<SavingAdapter.SavesViewHolder>() {
             }
             binding.idTVCourseName.text = save.host + ": " + save.type
             binding.idTVCourseRating.text = save.date ?: "16.05.2024"
+
+            binding.deleteBut.setOnClickListener{
+                if (onClickListener != null) {
+                    onClickListener!!.onDelete(save)
+                }
+            }
         }
     }
 }

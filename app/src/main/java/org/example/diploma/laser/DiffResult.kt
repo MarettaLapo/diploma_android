@@ -6,9 +6,6 @@ import kotlin.math.ln
 
 class DiffResult() {
 
-//    var g_31: Double = laser.laserMedium.sa_wi!!
-//    var ith
-
     var n: Int = 0
     var completed: Boolean = false
     var resultMatrix: Array<DoubleArray> = emptyArray()
@@ -90,7 +87,7 @@ class DiffResult() {
                         n2Index = 3
                         sinIndex = 5
                     }
-                } else if (diffFunc.is_sensitizer == true) {
+                } else if (diffFunc.is_sensitizer) {
                     n3Index = 2
                     n2Index = 3
                     sinIndex = 5

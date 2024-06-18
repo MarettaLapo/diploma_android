@@ -63,7 +63,9 @@ class LaserMediumFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.laserDataFlow.collect { laser ->
                 val host = laser.laserMedium.host
-                if (currentHost != 0) {
+                Log.d("hostError",currentHost.toString())
+                if (currentHost != 0 || viewModel.hh) {
+                    viewModel.hh = false
                     when (host) {
                         "Er" -> {
                             val cardViewEr = MaterialCardView(context).apply {
@@ -292,7 +294,6 @@ class LaserMediumFragment : Fragment() {
         ) // Список идентификаторов для TextInputEditText
 
         val editTextValue = arrayOf(
-
             laser.laserMedium.nyb,
             laser.laserMedium.s0p,
             laser.laserMedium.t31Yb.toString(),
@@ -383,7 +384,7 @@ class LaserMediumFragment : Fragment() {
             "1.0",
             laser.laserMedium.s0p.toString(),
             laser.laserMedium.ac.toString(),
-            laser.laserMedium.ks.toString(),
+            laser.ks.toString(),
             laser.laserMedium.se.toString(),
             "1.450E-19",
             "3.800E-20",
@@ -456,7 +457,7 @@ class LaserMediumFragment : Fragment() {
             "Tau 21, us",
         ) // Список подсказок для TextInputLayout
         val editTextIds = arrayOf(
-            R.id.nd,
+            R.id.nwion,
             R.id.nd_proc,
             R.id.s0p,
             R.id.ac,
@@ -467,6 +468,19 @@ class LaserMediumFragment : Fragment() {
             R.id.t32,
             R.id.t21,
         ) // Список идентификаторов для TextInputEditText
+
+        val editTextValue = arrayOf(
+            laser.laserMedium.nwion.toString(),
+            "7.997E",
+            laser.laserMedium.s0p.toString(),
+            laser.laserMedium.ac.toString(),
+            laser.ks.toString(),
+            laser.laserMedium.se.toString(),
+            laser.laserMedium.t43.toString(),
+            laser.laserMedium.t31.toString(),
+            laser.laserMedium.t32.toString(),
+            laser.laserMedium.t21.toString(),
+        )// Список идентификаторов для TextInputEditText
 
         textInputLayouts.forEachIndexed { index, hint1 ->
             val textInputLayout = TextInputLayout(context).apply {
@@ -484,6 +498,7 @@ class LaserMediumFragment : Fragment() {
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
                 hint = hint1
+                setText(editTextValue[index])
             }
 
             textInputLayout.addView(textInputEditText)
@@ -517,33 +532,48 @@ class LaserMediumFragment : Fragment() {
         linearLayout.addView(textView)
 
         val textInputLayouts = arrayOf(
-            "Concentration Nd, cm^-3",
-            "Concentration Nd, at %",
-            "Peak absorption cross-section, cm^2",
-            "Absorption coefficient, cm^-1",
-            "Spectra overlap coefficient",
-            "Stimulated emission cross-section, cm^2",
-            "Stimulated emission cross-section(1.32 um), cm^2",
-            "Stimulated emission cross-section(1.44 um), cm^2",
+            "N2, cm^-1",
+            "N3, cm^-1",
+            "N4, cm^-1",
+            "N2`, cm^-1",
+            "Tau 21, us",
+            "Tau 31, us",
             "Tau 32, us",
             "Tau 43, us",
-            "Tau 31, us",
-            "Tau 21, us",
+            "Tau 41, us",
+            "Tau 2`1`, us",
+            "Tau 54, us",
+            "Tau 51, us",
         ) // Список подсказок для TextInputLayout
         val editTextIds = arrayOf(
-            R.id.nd,
-            R.id.nd_proc,
-            R.id.s0p,
-            R.id.ac,
-            R.id.ks,
-            R.id.se,
-            R.id.se32,
-            R.id.se44,
+            R.id.n2,
+            R.id.n3,
+            R.id.n4,
+            R.id.n22,
+            R.id.t21,
+            R.id.t31,
             R.id.t32,
             R.id.t43,
-            R.id.t31,
-            R.id.t21,
+            R.id.t41,
+            R.id.t2211,
+            R.id.t54,
+            R.id.t51,
         ) // Список идентификаторов для TextInputEditText
+
+        val editTextValue = arrayOf(
+            laser.laserMedium.e2w.toString(),
+            laser.laserMedium.e3w.toString(),
+            laser.laserMedium.e4w.toString(),
+            laser.laserMedium.e2s.toString(),
+            laser.laserMedium.t21.toString(),
+            laser.laserMedium.t31.toString(),
+            laser.laserMedium.t32.toString(),
+            laser.laserMedium.t43.toString(),
+            laser.laserMedium.t41.toString(),
+            laser.laserMedium.t31Yb.toString(),
+            laser.laserMedium.t54.toString(),
+            laser.laserMedium.t51.toString(),
+        )// Список идентификаторов для TextInputEditText
 
         textInputLayouts.forEachIndexed { index, hint1 ->
             val textInputLayout = TextInputLayout(context).apply {
@@ -561,6 +591,7 @@ class LaserMediumFragment : Fragment() {
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
                 hint = hint1
+                setText(editTextValue[index])
             }
 
             textInputLayout.addView(textInputEditText)
@@ -775,6 +806,11 @@ class LaserMediumFragment : Fragment() {
         }
 
         return linearLayout
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.hh = true
     }
 
 

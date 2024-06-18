@@ -55,11 +55,6 @@ class MainPageFragment : Fragment() {
                 .navigate(R.id.action_mainPageFragment_to_selectLaserMediumFragment)
         }
 
-        binding!!.examplesButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view)
-                .navigate(R.id.action_mainPageFragment_to_usageExamplesFragment)
-        }
-
         binding!!.informationButton.setOnClickListener { view: View ->
             Navigation.findNavController(view)
                 .navigate(R.id.action_mainPageFragment_to_referenceInformationFragment)

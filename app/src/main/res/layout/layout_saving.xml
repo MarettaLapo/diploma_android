@@ -10,43 +10,61 @@
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
         <!-- ImageVIew to display our Course Image -->
         <ImageView
             android:id="@+id/idIVCourseImage"
             android:layout_width="120dp"
             android:layout_height="60dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="20dp"
             android:contentDescription="@string/app_name"
-            android:padding="5dp" />
+            android:src="@drawable/nd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Text View to display Course Name -->
+
         <TextView
             android:id="@+id/idTVCourseName"
-            android:layout_width="match_parent"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@id/idIVCourseImage"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/idIVCourseImage"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/idTVCourseRating"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/idIVCourseImage" />
+
+        <ImageView
+            android:id="@+id/delete_but"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/cross"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/idTVCourseName"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            android:focusable="true">
+
+        </ImageView>
 
         <!-- Text VIew to display Course Rating -->
         <!-- Image used in present in drawable folder -->
-        <TextView
-            android:id="@+id/idTVCourseRating"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/idTVCourseName"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@id/idIVCourseImage"
-            android:drawablePadding="2dp" />
-    </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

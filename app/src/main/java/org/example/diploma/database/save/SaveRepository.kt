@@ -11,13 +11,14 @@ class SaveRepository(private val saveDao: SaveDao) {
 
     fun getAllSaves(): Flow<List<SaveEntity>> = saveDao.getAllSaves()
 
-    suspend fun insert(save: SaveEntity) {
-        saveDao.insert(save)
+    suspend fun insert(save: SaveEntity) : Long {
+        return saveDao.insert(save)
     }
 
     suspend fun delete(save: SaveEntity){
         saveDao.delete(save)
     }
+
     suspend fun update(save: SaveEntity){
         saveDao.update(save)
     }

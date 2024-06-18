@@ -11,7 +11,7 @@ data class LaserMediumEntity (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val laserMediumId: Long?,
+    var laserMediumId: Long?,
 
     val host: String?,
     val type: String?,

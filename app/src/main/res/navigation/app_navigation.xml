@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_settingFragment_to_referenceInformationFragment"
             app:destination="@id/referenceInformationFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_ampResultFragment"
+            app:destination="@id/ampResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/resultFragment"
@@ -82,5 +85,11 @@
     <fragment
         android:id="@+id/allGraph"
         android:name="org.example.diploma.fragments.pages.graph.AllGraph"
-        android:label="AllGraph" />
+        android:label="AllGraph"
+        tools:layout="@layout/fragment_all_graph" />
+    <fragment
+        android:id="@+id/ampResultFragment"
+        android:name="org.example.diploma.fragments.pages.AmpResultFragment"
+        android:label="fragment_amp_result"
+        tools:layout="@layout/fragment_amp_result" />
 </navigation>

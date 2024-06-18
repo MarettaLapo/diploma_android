@@ -2,6 +2,7 @@ package org.example.diploma.fragments.pages
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,20 +65,33 @@ class SavedSettingsFragment : Fragment() {
         adapter.setOnClickListener(object :
             SavingAdapter.OnClickListener {
             override fun onClick(position: Int, model: SaveEntity, view: View) {
-
                 viewModel.selectedSave(model)
                 Navigation.findNavController(view)
                     .navigate(R.id.action_savedSettingsFragment_to_settingFragment)
+            }
 
+            override fun onDelete(model: SaveEntity) {
+                viewModel.deleteSave(model)
             }
         })
 
         lifecycleScope.launch {
             viewModel.allSaves.collect { saves ->
-                adapter.setListSaves(ArrayList(saves))
-                adapter.notifyDataSetChanged()
+                if(saves.isEmpty()){
+                    binding!!.textIn.visibility = View.VISIBLE
+                    binding!!.recyclerView.visibility = View.GONE
+                }
+                else{
+                    binding!!.textIn.visibility = View.GONE
+                    binding!!.recyclerView.visibility = View.VISIBLE
+                    Log.d("saveError", saves.toString())
+                    Log.d("saveError", saves.size.toString())
+                    adapter.setListSaves(ArrayList(saves))
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
+
 
         val activity = activity as AppCompatActivity
         val headline  = activity.findViewById<TextView>(R.id.textView6)

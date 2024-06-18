@@ -106,7 +106,7 @@ class SettingFragment : Fragment(), NavigationListener {
         saveButton.setOnClickListener{
             lifecycleScope.launch {
                 viewModel.save()
-                val toast = Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(requireContext(), "Сохранено", Toast.LENGTH_SHORT)
                 toast.show()
             }
         }
@@ -118,9 +118,15 @@ class SettingFragment : Fragment(), NavigationListener {
         }
 
         calculationButton.setOnClickListener {
-            viewModel.selectedGraph()
-            Navigation.findNavController(view)
-                .navigate(R.id.action_settingFragment_to_resultFragment)
+            if(viewModel.isAmplifier.value){
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_settingFragment_to_ampResultFragment)
+            }
+            else {
+                viewModel.selectedGraph()
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_settingFragment_to_resultFragment)
+            }
         }
 
 

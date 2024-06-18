@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -54,24 +56,23 @@ class GraphUFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         lifecycleScope.launch {
             viewModel.output.collect{
 //                if (hehe != 0){
                         val lineChart = binding!!.lineChart
-                        //Log.d("resultHHHH", uFile)
-                        val data1Entries = readDataFromFile(it.output_power!!, 1)
-                        val data2Entries = readDataFromFile(it.u!!, 24000)
-                        Log.d("resultHHHH", it.output_power)
-                        Log.d("resultHHHH", it.u)
 
-                        val dataSet1 = LineDataSet(data1Entries, "Output power").apply {
+                        val data1Entries = readDataFromFile(it.output_power!!)
+                        val data2Entries = readDataFromFile(it.u!!)
+                        Log.d("resultHHHH", it.output_power.toString())
+                        val dataSet1 = LineDataSet(data1Entries, "Output power, ΔP = " + it.del_sout.toString() + " kW").apply {
                             color = R.color.black
                             setDrawCircles(false)
                             setDrawValues(false)
                             mode = LineDataSet.Mode.LINEAR
                             lineWidth = 2f// Или Mode.CUBIC_BEZIER для сглаживания
                         }
-                        val dataSet2 = LineDataSet(data2Entries, "U*").apply {
+                        val dataSet2 = LineDataSet(data2Entries, "Inversion, ΔU = " + it.del_u.toString()).apply {
                             color = R.color.purple_700
                             setDrawCircles(false)
                             setDrawValues(false)
@@ -105,7 +106,7 @@ class GraphUFragment : Fragment(){
         }
     }
 
-    private fun readDataFromFile(fileName: String, mult: Int): List<Entry> {
+    private fun readDataFromFile(fileName: String): List<Entry> {
         val entries = mutableListOf<Entry>()
         val resId = resources.getIdentifier(fileName, "raw", requireContext().packageName)
         val inputStream = resources.openRawResource(resId)
@@ -114,7 +115,7 @@ class GraphUFragment : Fragment(){
         var line: String? = reader.readLine()
         var x = 0
         while (line != null) {
-            val y = line.toFloat() * mult
+            val y = line.toFloat()
             entries.add(Entry(x.toFloat(), y))
             x++
             line = reader.readLine()

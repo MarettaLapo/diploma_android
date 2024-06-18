@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -52,7 +55,7 @@ class ResultFragment : Fragment() {
         )
     }
 
-    var hehe = 0
+
     var uFile: String = ""
     var lossFile: String = ""
     var tshFile: String? = null
@@ -64,7 +67,7 @@ class ResultFragment : Fragment() {
     var del_loss: Double = 0.0
     var del_tsh: Double? = null
     var del_p: Double = 0.0
-    var flag = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,10 +80,17 @@ class ResultFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentResultBinding.inflate(inflater, container, false)
+        viewModel.flag = false
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        val activity = activity as AppCompatActivity
+//        val headline = activity.findViewById<TextView>(R.id.textView6)
+//        if(headline != null){
+//            headline.text = "Результат симуляции"
+//        }
+
         lifecycleScope.launch {
             combine(
                 viewModel.output,
@@ -89,26 +99,21 @@ class ResultFragment : Fragment() {
             ) { output, laser, pulse ->
                 Triple(output, laser, pulse)
             }.collect { (output, laser, pulse) ->
-                if (hehe != 0) {
-
+                Log.d("resultErrorHH", output.toString())
+                Log.d("resultErrorHH", viewModel.hehe.toString())
+                if (viewModel.hehe != 0) {
+                    Log.d("resultErrorHH", viewModel.flag.toString())
 
                     uFile = output.u!!
-                    lossFile = output.loss!!
-                    tshFile = output.tsh
-                    pumpFile = output.pump!!
                     output_powerFile = output.output_power!!
 
-                    del_sout = output.del_sout!!
-                    del_u = output.del_u!!
-                    del_loss = output.del_loss!!
-                    del_tsh = output.del_tsh
-                    del_p = output.del_p!!
+                    if(output_powerFile.isNotEmpty() && uFile.isNotEmpty() && !viewModel.flag){
 
-                    if(output_powerFile.isNotEmpty() && uFile.isNotEmpty() && !flag && hehe == 2){
+
                         val lineChart = binding!!.lineChart
-                        //Log.d("resultHHHH", uFile)
-                        val data1Entries = readDataFromFile(output_powerFile, 1)
-                        val data2Entries = readDataFromFile(uFile, 24000)
+                        Log.d("resultHHHH", "вау я тут")
+                        val data1Entries = readDataFromFile(output_powerFile)
+                        val data2Entries = readDataFromFile(uFile)
 
                         val dataSet1 = LineDataSet(data1Entries, "Output power").apply {
                             color = R.color.black
@@ -146,7 +151,7 @@ class ResultFragment : Fragment() {
                         // Обновление графика
                         lineChart.invalidate()
 
-                        flag = true
+                        viewModel.flag = true
                     }
 
                     binding!!.imaxInput.setText(laser.imax.toString())
@@ -154,12 +159,10 @@ class ResultFragment : Fragment() {
                     binding!!.hfInput.setText(laser.hf.toString())
                     binding!!.aopInput.setText(laser.aop.toString())
 
-
-
                     if (output.pump_type == 1) {
                         binding!!.upCardText.text = "CW pump mode"
                     }
-                    if (pulse?.giantPulseId == null && hehe != 0) {
+                    if (pulse?.giantPulseId == null && viewModel.hehe != 0) {
                         binding!!.tmUpLayout.visibility = View.VISIBLE
                         binding!!.tmUpInput.setText(laser.tm.toString())
                     } else {
@@ -182,8 +185,11 @@ class ResultFragment : Fragment() {
                         }
                     }
                 }
-                hehe++
+
+                viewModel.hehe++
+
             }
+
         }
 
         binding!!.allGraphButton.setOnClickListener {
@@ -192,7 +198,7 @@ class ResultFragment : Fragment() {
         }
     }
 
-    private fun readDataFromFile(fileName: String, mult: Int): List<Entry> {
+    private fun readDataFromFile(fileName: String): List<Entry> {
         val entries = mutableListOf<Entry>()
         val resId = resources.getIdentifier(fileName, "raw", requireContext().packageName)
         val inputStream = resources.openRawResource(resId)
@@ -201,7 +207,7 @@ class ResultFragment : Fragment() {
         var line: String? = reader.readLine()
         var x = 0
         while (line != null) {
-            val y = line.toFloat() * mult
+            val y = line.toFloat()
             entries.add(Entry(x.toFloat(), y))
             x++
             line = reader.readLine()
@@ -209,6 +215,32 @@ class ResultFragment : Fragment() {
 
         reader.close()
         return entries
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateToolbar()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        resetToolbar()
+    }
+
+    private fun updateToolbar() {
+        val toolbar: Toolbar? = activity?.findViewById(R.id.toolbar)
+        toolbar?.let {
+            val titleTextView: TextView? = it.findViewById(R.id.textView6)
+            titleTextView?.text = "Результат симуляции"
+        }
+    }
+
+    private fun resetToolbar() {
+        val toolbar: Toolbar? = activity?.findViewById(R.id.toolbar)
+        toolbar?.let {
+            val titleTextView: TextView? = it.findViewById(R.id.textView6)
+            titleTextView?.text = "Default Title"
+        }
     }
 
     override fun onDestroyView() {

@@ -148,7 +148,7 @@ class PumpFragment : Fragment() {
                             viewModel.updatePumpType(1)
                         }else{
                             binding!!.typePump.check(binding!!.type1.id)
-                            val toast = Toast.makeText(requireContext(), "Off all Q-Switches", Toast.LENGTH_SHORT)
+                            val toast = Toast.makeText(requireContext(), "Перейдите в режим свободной генерации", Toast.LENGTH_SHORT)
                             toast.show()
                         }
                     }

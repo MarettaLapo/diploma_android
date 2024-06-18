@@ -81,6 +81,11 @@ class MainViewModel(
     var giantPulse: MutableStateFlow<GiantPulseEntity?>
     var laserOutput: MutableStateFlow<LaserOutputEntity>
 
+    var hh = false
+
+    var flag = false
+    var hehe = 0
+
     init {
         // Инициализируем laserDataFlow при создании экземпляра MainViewModel
         val defaultLaser = Laser(
@@ -119,12 +124,16 @@ class MainViewModel(
         shutter = MutableStateFlow(0)
 
         val lo = LaserOutputEntity(null, null, null, null, null, null)
-        val ou = OutputEntity(null, null, null, null, null, null, null,
+        val ou = OutputEntity(
+            null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null,
-            null, null, null)
+            null, null, null
+        )
 
-        val gp = GiantPulseEntity(null, null, null, null, null, null,
-            null, null)
+        val gp = GiantPulseEntity(
+            null, null, null, null, null, null,
+            null, null
+        )
         laserOutput = MutableStateFlow(lo)
         output = MutableStateFlow(ou)
         giantPulse = MutableStateFlow(gp)
@@ -241,40 +250,58 @@ class MainViewModel(
         }
     }
 
-    fun selectedGraph(){
+    fun selectedGraph() {
         viewModelScope.launch {
-            val t = laserMedium?.host + ":" + laserMedium?.type
+            var t = laserMedium?.host + ":" + laserMedium?.type
             val sh = if (shutter.value == 3) 1 else shutter.value
-            val heh = if(isCylinder.value) 1 else 0
+            val heh = if (isCylinder.value) 1 else 0
 
             var ou: OutputEntity
 
-            if(pumpType.value == 1){
-                ou = outputRepository.getOutputData(t, 1, 1,
-                        1, 0).first()
-            }
-            else{
-                ou = outputRepository.getOutputData(t, heh, pumpScheme.value,
-                    pumpType.value, sh).first()
-            }
+            Log.d("outputError", "host $t  shutter $sh  cylinder$heh")
+
+            if (t == "Er:Yb:glass") {
+                if (sh == 0) {
+                    ou = outputRepository.getOutputData(
+                        t, 1, 1,
+                        1, 0
+                    ).first()
+                } else {
+                    ou = outputRepository.getOutputData(
+                        t, 1, 1,
+                        1, 1
+                    ).first()
+                }
+            } else {
+                if (t != "Yb:YAG") {
+                    t = "Nd:YAG"
+                }
+
+                if (pumpType.value == 1) {
+                    ou = outputRepository.getOutputData(
+                        t, 1, 1,
+                        1, 0
+                    ).first()
+                } else {
+                    ou = outputRepository.getOutputData(
+                        t, heh, pumpScheme.value,
+                        pumpType.value, sh
+                    ).first()
+                }
 
 
-            if (ou == null && shutter.value == 2){
-                ou = outputRepository.getOutputData(t, 1, 1,
-                    0, 2).first()
-//                if (t == "Yb:YAG"){
-//                    ou = outputRepository.getOutputData(t, 1, 1,
-//                        0, 2).first()
-//                }
-//                if (t == "Nd:YAG"){
-//                    ou = outputRepository.getOutputData(t, 1, 1,
-//                        0, 2).first()
-//                }
+                if (ou == null || shutter.value == 2) {
+                    ou = outputRepository.getOutputData(
+                        t, 1, 1,
+                        0, 2
+                    ).first()
+                }
             }
-
 
             val lo = laserOutputRepository.getLaserOutputData(ou.laserOutputId).first()
             val gp = giantPulseRepository.getGiantPulseData(ou.giantPulseId).firstOrNull()
+
+            Log.d("outputError", ou.toString())
 
             output.value = ou
             laserOutput.value = lo
@@ -282,27 +309,107 @@ class MainViewModel(
         }
     }
 
-    suspend fun save(){
-        val saveAmplifier = amplifierRepository.insert(amplifier!!)
-        val saveConfiguration = configurationRepository.insert(configuration!!)
-        val saveLaserMedium = laserMediumRepository.insert(laserMedium!!)
-        val savePump = pumpRepository.insert(pump!!)
-        val saveQSwitch = qSwitchRepository.insert(qSwitch!!)
-        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-        val saveHost = SaveEntity(
-            0,
-            saveLaserMedium,
-            savePump,
-            saveQSwitch,
-            saveConfiguration,
-            saveAmplifier,
-            laserMedium!!.host,
-            laserMedium!!.type,
-            LocalDateTime.now().format(formatter)
-        )
+    fun save() {
+        viewModelScope.launch {
+            val saveAmplifier = amplifierRepository.insert(
+                AmplifierEntity(
+                    null,
+                    amplifier!!.ampLength,
+                    amplifier!!.ampPulseDuration,
+                    amplifier!!.ampPulseEnergy,
+                    amplifier!!.isMultipass,
+                    waveform.value,
+                    isAmplifier.value
+                )
+            )
 
-        saveRepository.insert(saveHost)
+            val saveConfiguration = configurationRepository.insert(
+                ConfigurationEntity(
+                    null,
+                    isCylinder.value,
+                    configuration!!.lc,
+                    configuration!!.la,
+                    configuration!!.ld,
+                    configuration!!.lb,
+                    configuration!!.roc,
+                    configuration!!.ga,
+                    configuration!!.gc,
+                    configuration!!.hov,
+                    configuration!!.dia
+                )
+            )
+            val newLas = laserMedium!!.copy(laserMediumId = null)
+            val saveLaserMedium = laserMediumRepository.insert(newLas)
+            val savePump = pumpRepository.insert(
+                PumpEntity(
+                    null,
+                    pump!!.tp,
+                    pump!!.wp,
+                    pump!!.hc,
+                    pump!!.rp,
+                    pump!!.lp,
+                    pumpScheme.value,
+                    pumpType.value,
+                    pump!!.pformId,
+                    pump!!.t1p,
+                    pump!!.t2p,
+                    pump!!.pformText
+                )
+            )
+            val saveQSwitch = qSwitchRepository.insert(
+                QSwitchEntity(
+                    null,
+                    isQSwitch.value,
+                    isPQS.value,
+                    qSwitch!!.lpsh,
+                    qSwitch!!.npsh,
+                    qSwitch!!.spt0,
+                    qSwitch!!.sptd,
+                    qSwitch!!.spt,
+                    qSwitch!!.ssh,
+                    qSwitch!!.fom,
+                    isAQS.value,
+                    qSwitch!!.lsh,
+                    qSwitch!!.nsh,
+                    qSwitch!!.st0,
+                    qSwitch!!.stmax,
+                    qSwitch!!.sts,
+                    qSwitch!!.stf,
+                    qSwitch!!.stoff,
+                    qSwitch!!.AQStype,
+                    qSwitch!!.sFrontType,
+                    qSwitch!!.mode,
+                    qSwitch!!.sf,
+                    qSwitch!!.sk,
+                    qSwitch!!.sb,
+                    qSwitch!!.absCoef
+                )
+            )
+
+            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+            val saveHost = SaveEntity(
+                null,
+                saveLaserMedium,
+                savePump,
+                saveQSwitch,
+                saveConfiguration,
+                saveAmplifier,
+                laserMedium!!.host,
+                laserMedium!!.type,
+                LocalDateTime.now().format(formatter)
+            )
+
+            saveRepository.insert(saveHost)
+        }
     }
+
+    fun deleteSave(save: SaveEntity){
+        viewModelScope.launch {
+            saveRepository.delete(save)
+        }
+    }
+
     fun updateDataPumpWp(newText: String) {
         viewModelScope.launch {
             try {
@@ -318,7 +425,7 @@ class MainViewModel(
         }
     }
 
-    private fun updateShutter(){
+    private fun updateShutter() {
         shutter.value = when {
             isAQS.value && isPQS.value && isQSwitch.value -> 3
             isPQS.value && isQSwitch.value -> 2
@@ -327,7 +434,7 @@ class MainViewModel(
         }
     }
 
-    fun updatePumpType(id: Int){
+    fun updatePumpType(id: Int) {
         try {
             Log.d("laserH", id.toString())
             pumpType.value = id
@@ -336,6 +443,7 @@ class MainViewModel(
             Log.e("YourTag", "An error occurred in updateDataPumpWp: ${e.message}")
         }
     }
+
     fun updatePumpScheme(id: Int) {
         try {
             Log.d("laserH", id.toString())
@@ -346,7 +454,7 @@ class MainViewModel(
         }
     }
 
-    fun updateIsCylinder(bool: Boolean){
+    fun updateIsCylinder(bool: Boolean) {
         try {
             isCylinder.value = bool
         } catch (e: Exception) {
@@ -355,7 +463,7 @@ class MainViewModel(
         }
     }
 
-    fun updateIsQSwitch(bool: Boolean){
+    fun updateIsQSwitch(bool: Boolean) {
         try {
             isQSwitch.value = bool
             updateShutter()
@@ -365,7 +473,7 @@ class MainViewModel(
         }
     }
 
-    fun updateIsAQS(bool: Boolean){
+    fun updateIsAQS(bool: Boolean) {
         try {
             isAQS.value = bool
             updateShutter()
@@ -375,7 +483,7 @@ class MainViewModel(
         }
     }
 
-    fun updateIsPQS(bool: Boolean){
+    fun updateIsPQS(bool: Boolean) {
         try {
             isPQS.value = bool
             updateShutter()
@@ -415,7 +523,7 @@ class MainViewModel(
         }
     }
 
-    fun updateIsAmplifier(bool: Boolean){
+    fun updateIsAmplifier(bool: Boolean) {
         try {
             isAmplifier.value = bool
         } catch (e: Exception) {
